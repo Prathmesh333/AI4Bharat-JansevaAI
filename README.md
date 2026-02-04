@@ -1,4 +1,4 @@
-# JanSeva AI - **"Seva Har Samasya Ki"**
+# JanSeva AI - ***Seva Har Samasya Ki***
 
 <div align="center">
 
