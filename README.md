@@ -246,13 +246,11 @@ Prize Pool: ₹40 Lakhs
 
 ### Deliverables Status
 
-- Complete: Requirements Document (14 functional + 5 non-functional requirements)
-- Complete: Design Document (Complete architecture with security, scalability, CI/CD)
-- Complete: Implementation Plan (15 tasks with property-based testing)
-- Complete: Technical Architecture (AWS services, data models, API specs)
-- Planned: Demo Video (3-5 minutes)
-- Planned: Working Prototype
-- Planned: Submission Form (To be completed by Jan 25, 2026)
+-  Requirements Document (14 functional + 5 non-functional requirements)
+-  Design Document (Complete architecture with security, scalability, CI/CD)
+-  Implementation Plan (15 tasks with property-based testing)
+-  Technical Architecture (AWS services, data models, API specs)
+
 
 ---
 
