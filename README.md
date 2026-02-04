@@ -10,7 +10,7 @@
 [![AWS](https://img.shields.io/badge/Powered_by-AWS_Bedrock-FF9900?style=flat-square&logo=amazon-aws)](https://aws.amazon.com/bedrock/)
 [![Languages](https://img.shields.io/badge/Languages-10+_Indian-green?style=flat-square)](.)
 
-[Demo Video](#demo) • [Documentation](#documentation) • [Architecture](#architecture) • [Team](#team)
+
 
 </div>
 
@@ -116,49 +116,8 @@ AI responds: "आप PM फसल बीमा योजना के लिए 
 | Languages | 10+ |
 | Benefits Unlocked | ₹50 Crore+ |
 
----
 
-## Quick Start
 
-### Viewing Documentation
-
-```bash
-# Clone repository
-git clone https://github.com/your-team/janseva-ai.git
-cd janseva-ai
-
-# View complete specifications
-cat .kiro/specs/janseva-ai/requirements.md  # 14 requirements
-cat .kiro/specs/janseva-ai/design.md        # Full architecture
-cat .kiro/specs/janseva-ai/tasks.md         # Implementation plan
-
-# View project documentation
-cat PROJECT_OVERVIEW.md
-cat TECHNICAL_ARCHITECTURE.md
-cat IMPLEMENTATION_PLAN.md
-cat PITCH_DECK_SCRIPT.md
-```
-
----
-
-## Project Structure
-
-```
-janseva-ai/
-├── .kiro/
-│   └── specs/
-│       └── janseva-ai/
-│           ├── requirements.md      # 14 functional + 5 non-functional requirements
-│           ├── design.md            # Complete system design with security & deployment
-│           └── tasks.md             # Implementation plan with 15 tasks
-├── docs/
-│   ├── PROJECT_OVERVIEW.md          # Executive summary & problem statement
-│   ├── TECHNICAL_ARCHITECTURE.md    # AWS architecture & component design
-│   ├── IMPLEMENTATION_PLAN.md       # Sprint breakdown & code samples
-│   ├── PITCH_DECK_SCRIPT.md         # 5-minute presentation script
-│   └── AI4Bharat.txt                # Hackathon research & recommendations
-└── README.md
-```
 
 ---
 
@@ -166,20 +125,11 @@ janseva-ai/
 
 ### Core Specifications
 
-| Document | Description | Status |
-|----------|-------------|--------|
-| [requirements.md](.kiro/specs/janseva-ai/requirements.md) | 14 functional requirements with acceptance criteria | Complete |
-| [design.md](.kiro/specs/janseva-ai/design.md) | System architecture, security, scalability, CI/CD | Complete |
-| [tasks.md](.kiro/specs/janseva-ai/tasks.md) | 15 implementation tasks with property tests | Complete |
+| Document | Description | 
+|----------|-------------|
+| [requirements.md](requirements.md) | 14 functional requirements with acceptance criteria | 
+| [design.md](design.md) | System architecture, security, scalability, CI/CD |
 
-### Project Documentation
-
-| Document | Description | Status |
-|----------|-------------|--------|
-| [PROJECT_OVERVIEW.md](./PROJECT_OVERVIEW.md) | Problem statement, solution, impact metrics | Complete |
-| [TECHNICAL_ARCHITECTURE.md](./TECHNICAL_ARCHITECTURE.md) | AWS services, data models, API specs | Complete |
-| [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md) | 12-day sprint plan with code samples | Complete |
-| [PITCH_DECK_SCRIPT.md](./PITCH_DECK_SCRIPT.md) | 5-minute presentation with Q&A prep | Complete |
 
 ### Key Features Documented
 
@@ -275,14 +225,14 @@ cd janseva-ai
 
 ## Performance Targets
 
-| Metric | Target | Current | Status |
-|--------|--------|---------|--------|
-| API Response (P95) | <500ms | TBD | In Progress |
-| Voice Transcription | <2s | TBD | In Progress |
-| Eligibility Check | <5s | TBD | In Progress |
-| Form Generation | <10s | TBD | In Progress |
-| Concurrent Users | 10,000 | TBD | In Progress |
-| System Uptime | 99.5% | TBD | In Progress |
+| Metric | Target |
+|--------|--------|
+| API Response (P95) | <500ms | 
+| Voice Transcription | <2s |
+| Eligibility Check | <5s | 
+| Form Generation | <10s | 
+| Concurrent Users | 10,000 | 
+| System Uptime | 99.5% |
 
 ---
 
@@ -315,8 +265,8 @@ Prize Pool: ₹40 Lakhs
 
 ## Contact
 
-- **Project Lead**: [Your Name] - [email@example.com](mailto:email@example.com)
-- **GitHub**: [@your-team](https://github.com/your-team)
+- **Project Lead**: [Prathamesh Nikam] - [prathmeshnikam2208@gmail.com](mailto:prathmeshnikam2208@gmail.com)
+- **GitHub**: [Vanguard3]
 - **Hackathon**: [AI for Bharat 2026](https://vision.hack2skill.com/event/ai-for-bharat)
 
 ---
