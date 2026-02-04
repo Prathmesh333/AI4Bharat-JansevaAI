@@ -159,7 +159,7 @@ AI responds: "आप PM फसल बीमा योजना के लिए 
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-team/janseva-ai.git
+git clone https://github.com/Prathmesh333/AI4Bharat-JansevaAI
 cd janseva-ai
 
 ```
