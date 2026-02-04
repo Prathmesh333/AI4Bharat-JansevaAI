@@ -265,8 +265,8 @@ Prize Pool: ₹40 Lakhs
 
 ## Contact
 
-- **Project Lead**: [Prathamesh Nikam] - [prathmeshnikam2208@gmail.com](mailto:prathmeshnikam2208@gmail.com)
-- **GitHub**: [Vanguard3]
+- **Project Lead**: Prathamesh Nikam - [prathmeshnikam2208@gmail.com](mailto:prathmeshnikam2208@gmail.com)
+- **GitHub**: Vanguard3
 - **Hackathon**: [AI for Bharat 2026](https://vision.hack2skill.com/event/ai-for-bharat)
 
 ---
