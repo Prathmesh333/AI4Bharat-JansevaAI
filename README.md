@@ -155,14 +155,7 @@ AI responds: "आप PM फसल बीमा योजना के लिए 
 - AWS CDK
 ```
 
-### Installation
 
-```bash
-# Clone the repository
-git clone https://github.com/Prathmesh333/AI4Bharat-JansevaAI
-cd janseva-ai
-
-```
 
 ### Completed Deliverables
 
