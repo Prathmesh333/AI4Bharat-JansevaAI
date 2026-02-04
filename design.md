@@ -2,7 +2,7 @@
 
 ## Overview
 
-JanSeva AI is a serverless, voice-first AI assistant built on AWS that helps Indian citizens access government welfare schemes through natural conversation. The system leverages Amazon Bedrock's Claude 3.5 Sonnet for intelligent conversation, combined with AWS speech services for multilingual voice interaction, and a RAG (Retrieval Augmented Generation) system for accurate scheme information retrieval.
+JanSeva AI is a serverless, voice-first AI assistant built on AWS that helps Indian citizens access government welfare schemes through natural conversation. The system leverages Amazon Bedrock's Claude    4 Sonnet for intelligent conversation, combined with AWS speech services for multilingual voice interaction, and a RAG (Retrieval Augmented Generation) system for accurate scheme information retrieval.
 
 The architecture follows a microservices pattern with event-driven communication, designed to handle high concurrency while maintaining low latency for rural users with limited connectivity. The system processes voice input in 10+ Indian languages, performs intelligent eligibility matching across 3,000+ schemes, and generates pre-filled application forms through conversational interaction.
 
@@ -32,7 +32,7 @@ graph TB
     end
     
     subgraph AI["AI/ML Services"]
-        BEDROCK[Amazon Bedrock - Claude 3.5 Sonnet]
+        BEDROCK[Amazon Bedrock - Claude    4 Sonnet]
         TRANSCRIBE[Amazon Transcribe]
         POLLY[Amazon Polly]
         TRANSLATE[Amazon Translate]
@@ -124,7 +124,7 @@ interface TranscriptionResult {
 
 **Responsibilities:**
 - Manage conversation flow and context
-- Interface with Claude 3.5 Sonnet for natural language understanding
+- Interface with Claude    4 Sonnet for natural language understanding
 - Maintain session state and conversation history
 - Handle conversation branching for different user intents
 
@@ -149,7 +149,7 @@ interface ConversationContext {
 ```
 
 **Implementation Details:**
-- Leverages Claude 3.5 Sonnet via Amazon Bedrock for natural conversation
+- Leverages Claude    4 Sonnet via Amazon Bedrock for natural conversation
 - Implements conversation state machine with clear intent transitions
 - Uses DynamoDB for session persistence with 7-day TTL
 - Supports conversation resumption across sessions
@@ -843,7 +843,7 @@ const bedrockCircuitBreaker: CircuitBreakerConfig = {
 **Conversation Errors:**
 - Intent recognition failures → Ask clarifying questions with multiple choice options
 - Context loss → Summarize current progress and ask for confirmation
-- Claude API failures → Fall back to rule-based responses for common queries
+- Claude    API failures → Fall back to rule-based responses for common queries
 - Session timeout → Offer to resume previous session or start fresh
 
 **Eligibility Processing Errors:**
@@ -1550,4 +1550,5 @@ Each property-based test must include a comment referencing its design document 
 - Response time monitoring for all critical paths
 - Error rate tracking by service and language
 - User satisfaction metrics and feedback analysis
+
 - System resource utilization and scaling triggers
