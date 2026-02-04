@@ -79,7 +79,7 @@ AI responds: "आप PM फसल बीमा योजना के लिए 
 │                           │                                 │
 │  ┌────────────────────────▼──────────────────────────────┐  │
 │  │              AMAZON BEDROCK                           │  │
-│  │   Claude 3.5 Sonnet + RAG Knowledge Base              │  │
+│  │   Claude 4 Sonnet + RAG Knowledge Base              │  │
 │  │   • 50+ Government Schemes                            │  │
 │  │   • Eligibility Rules                                 │  │
 │  │   • Document Requirements                             │  │
@@ -97,7 +97,7 @@ AI responds: "आप PM फसल बीमा योजना के लिए 
 
 | Layer | Technology |
 |-------|------------|
-| **AI Engine** | Amazon Bedrock (Claude 3.5 + RAG) |
+| **AI Engine** | Amazon Bedrock (Claude 4 + RAG) |
 | **Voice** | Amazon Polly, Amazon Transcribe |
 | **Translation** | Amazon Translate |
 | **Backend** | AWS Lambda, API Gateway |
@@ -162,7 +162,7 @@ AI responds: "आप PM फसल बीमा योजना के लिए 
 git clone https://github.com/your-team/janseva-ai.git
 cd janseva-ai
 
-
+```
 
 ### Completed Deliverables
 
@@ -184,7 +184,7 @@ cd janseva-ai
 
 **Phase 2: AI Services**
 - Voice processing (Transcribe + Polly)
-- Conversation service (Claude 3.5)
+- Conversation service (Claude 4)
 - RAG knowledge base
 - Eligibility engine
 - Form generation
