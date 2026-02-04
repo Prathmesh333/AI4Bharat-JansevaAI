@@ -79,7 +79,7 @@ AI responds: "आप PM फसल बीमा योजना के लिए 
 │                           │                                 │
 │  ┌────────────────────────▼──────────────────────────────┐  │
 │  │              AMAZON BEDROCK                           │  │
-│  │   Claude 4 Sonnet + RAG Knowledge Base              │  │
+│  │   Claude 4 Sonnet + RAG Knowledge Base                │  │
 │  │   • 50+ Government Schemes                            │  │
 │  │   • Eligibility Rules                                 │  │
 │  │   • Document Requirements                             │  │
