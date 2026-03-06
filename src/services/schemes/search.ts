@@ -14,6 +14,8 @@ export interface SearchQuery {
   language: Language;
   userProfile?: UserProfile;
   limit?: number;
+  page?: number;
+  pageSize?: number;
   category?: string;
   level?: 'Central' | 'State';
 }
@@ -30,6 +32,13 @@ export interface SearchResult {
   benefits: string;
   documents: string;
   officialUrl: string;
+}
+
+export interface SearchResultsPage {
+  results: SearchResult[];
+  total: number;
+  page: number;
+  pages: number;
 }
 
 /**
@@ -54,6 +63,11 @@ function csvSchemeToSearchResult(scheme: CsvScheme, query: SearchQuery, rank: nu
 }
 
 export async function searchSchemes(query: SearchQuery): Promise<SearchResult[]> {
+  const paginatedResults = await searchSchemesPaginated(query);
+  return paginatedResults.results;
+}
+
+export async function searchSchemesPaginated(query: SearchQuery): Promise<SearchResultsPage> {
   try {
     logger.info('Searching schemes', {
       query: query.text,
@@ -61,35 +75,40 @@ export async function searchSchemes(query: SearchQuery): Promise<SearchResult[]>
       hasProfile: !!query.userProfile,
       category: query.category,
       level: query.level,
+      page: query.page,
+      pageSize: query.pageSize || query.limit,
     });
 
     if (!schemeDb.isInitialized()) {
       logger.warn('Scheme database not initialized, returning empty results');
-      return [];
+      return { results: [], total: 0, page: 1, pages: 1 };
     }
 
+    const pageSize = Math.max(1, query.pageSize || query.limit || 10);
+    const page = Math.max(1, query.page || 1);
     let csvResults: CsvScheme[];
+    let total = 0;
+    let pages = 1;
+    let currentPage = page;
 
-    // Use advanced search if filters are provided
-    if (query.category || query.level || (query.userProfile && query.userProfile.occupation)) {
-      csvResults = schemeDb.advancedSearch({
-        query: query.text,
-        category: query.category,
-        level: query.level,
-        tags: query.userProfile?.occupation ? [query.userProfile.occupation] : undefined,
-        limit: query.limit || 10,
-      });
-    } else {
-      csvResults = schemeDb.searchSchemesByText(query.text, query.limit || 10);
-    }
-
-    // Convert to SearchResult format with scoring
-    const results = csvResults.map((scheme, index) =>
-      csvSchemeToSearchResult(scheme, query, index, csvResults.length)
-    );
-
-    // Boost results matching user profile
     if (query.userProfile) {
+      // Profile-based boosting needs the full candidate set before paging.
+      if (query.category || query.level || query.userProfile.occupation) {
+        csvResults = schemeDb.advancedSearch({
+          query: query.text,
+          category: query.category,
+          level: query.level,
+          tags: query.userProfile.occupation ? [query.userProfile.occupation] : undefined,
+          limit: schemeDb.getSchemeCount(),
+        });
+      } else {
+        csvResults = schemeDb.searchSchemesByText(query.text, schemeDb.getSchemeCount());
+      }
+
+      let results = csvResults.map((scheme, index) =>
+        csvSchemeToSearchResult(scheme, query, index, csvResults.length)
+      );
+
       results.forEach(result => {
         const scheme = schemeDb.getSchemeBySlug(result.slug);
         if (scheme) {
@@ -98,12 +117,50 @@ export async function searchSchemes(query: SearchQuery): Promise<SearchResult[]>
         }
       });
 
-      // Re-sort by boosted relevance
       results.sort((a, b) => b.relevanceScore - a.relevanceScore);
+
+      total = results.length;
+      pages = Math.max(1, Math.ceil(total / pageSize));
+      currentPage = Math.min(page, pages);
+      const start = (currentPage - 1) * pageSize;
+      const end = start + pageSize;
+
+      logger.info('Search completed', { resultsCount: results.length, page: currentPage, total });
+      return {
+        results: results.slice(start, end),
+        total,
+        page: currentPage,
+        pages,
+      };
     }
 
-    logger.info('Search completed', { resultsCount: results.length });
-    return results;
+    // Use paginated search directly when no profile boosting is required.
+    if (query.category || query.level) {
+      const paginated = schemeDb.advancedSearchPaginated({
+        query: query.text,
+        category: query.category,
+        level: query.level,
+        page,
+        pageSize,
+      });
+      csvResults = paginated.schemes;
+      total = paginated.total;
+      pages = paginated.pages;
+      currentPage = paginated.page;
+    } else {
+      const paginated = schemeDb.searchSchemesByTextPaginated(query.text, page, pageSize);
+      csvResults = paginated.schemes;
+      total = paginated.total;
+      pages = paginated.pages;
+      currentPage = paginated.page;
+    }
+
+    const results = csvResults.map((scheme, index) =>
+      csvSchemeToSearchResult(scheme, query, index, total || csvResults.length)
+    );
+
+    logger.info('Search completed', { resultsCount: results.length, page: currentPage, total });
+    return { results, total, page: currentPage, pages };
 
   } catch (error) {
     logger.error('Scheme search failed', error as Error);

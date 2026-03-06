@@ -44,6 +44,7 @@ aws-exports.js
 tmp/
 temp/
 *.tmp
+server/saved_forms.json
 
 # OS files
 Thumbs.db

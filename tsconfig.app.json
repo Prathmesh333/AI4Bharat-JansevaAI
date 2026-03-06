@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "outDir": "dist"
+  },
+  "include": [
+    "server/**/*.ts",
+    "src/config/**/*.ts",
+    "src/types/**/*.ts",
+    "src/services/**/*.ts",
+    "src/utils/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "cdk.out",
+    "dist",
+    "infrastructure/**/*",
+    "tests/**/*",
+    "src/handlers/**/*",
+    "src/services/voice/polly.ts"
+  ]
+}

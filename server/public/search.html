@@ -10,17 +10,19 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
         :root {
-            --primary: #1e3c72;
-            --secondary: #2a5298;
-            --accent: #f97316;
+            --primary: #ea580c;
+            --secondary: #c2410c;
+            --accent: #15803d;
+            --primary-soft: #fff7ed;
+            --success-soft: #f0fdf4;
             --text-main: #1e293b;
             --text-muted: #64748b;
-            --bg-body: #f8fafc;
+            --bg-body: #fffdfa;
             --surface: #ffffff;
-            --border: #e2e8f0;
-            --success: #22c55e;
-            --radius-sm: 6px;
-            --radius-md: 12px;
+            --border: #f0e4d8;
+            --success: #16a34a;
+            --radius-sm: 10px;
+            --radius-md: 18px;
             --radius-lg: 24px;
         }
 
@@ -32,7 +34,7 @@
         }
 
         body {
-            background-color: var(--bg-body);
+            background: linear-gradient(180deg, #ffffff 0%, #fffaf4 55%, #ffffff 100%);
             color: var(--text-main);
             line-height: 1.5;
         }
@@ -44,7 +46,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid rgba(194, 65, 12, 0.12);
             transition: all 0.3s ease;
         }
 
@@ -69,7 +71,7 @@
             width: 40px;
             height: 40px;
             border-radius: 12px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--primary), var(--secondary) 58%, var(--accent));
             color: white;
             display: flex;
             align-items: center;
@@ -119,6 +121,11 @@
         .search-hero {
             grid-column: 1 / -1;
             margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary-soft) 0%, #ffffff 58%, var(--success-soft) 100%);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 1.25rem;
+            box-shadow: 0 18px 38px rgba(15, 23, 42, 0.05);
         }
 
         .search-bar-wrapper {
@@ -126,11 +133,11 @@
             gap: 0;
             align-items: center;
             background: var(--surface);
-            border: 2px solid var(--primary);
-            border-radius: var(--radius-sm);
+            border: 1px solid rgba(234, 88, 12, 0.20);
+            border-radius: 18px;
             padding: 0;
             overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 14px 30px rgba(194, 65, 12, 0.08);
         }
 
         .search-input {
@@ -142,7 +149,7 @@
         }
 
         .search-btn {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border: none;
             padding: 1rem 2rem;
@@ -163,32 +170,40 @@
         .scheme-tabs {
             grid-column: 1 / -1;
             display: flex;
-            gap: 2rem;
-            border-bottom: 1px solid var(--border);
+            gap: 0.75rem;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 20px;
+            padding: 0.5rem;
             margin-bottom: 1.5rem;
+            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.05);
         }
 
         .tab {
-            padding: 1rem 0;
+            padding: 0.9rem 1.15rem;
             font-weight: 600;
             color: var(--text-muted);
             cursor: pointer;
             position: relative;
+            border-radius: 14px;
         }
 
         .tab.active {
             color: var(--primary);
+            background: var(--primary-soft);
+            box-shadow: inset 0 0 0 1px rgba(234, 88, 12, 0.12);
         }
 
         .tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--success);
-            border-radius: 3px 3px 0 0;
+            display: none;
+        }
+
+        .results-area {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: 0 18px 38px rgba(15, 23, 42, 0.05);
         }
 
         /* Results Header */
@@ -211,7 +226,13 @@
 
         /* Sidebar Filters */
         .sidebar {
-            background: transparent;
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: 0 18px 38px rgba(15, 23, 42, 0.05);
+            position: sticky;
+            top: 96px;
         }
 
         .filter-header {
@@ -239,6 +260,11 @@
             padding: 1.25rem 0;
         }
 
+        .filter-group:first-of-type {
+            border-top: none;
+            padding-top: 0;
+        }
+
         .filter-label {
             display: flex;
             justify-content: space-between;
@@ -253,19 +279,24 @@
         .filter-label svg {
             width: 16px;
             height: 16px;
-            color: var(--success);
+            color: var(--accent);
         }
 
         .filter-select {
             width: 100%;
             border: 1px solid var(--border);
             padding: 0.75rem 1rem;
-            border-radius: var(--radius-sm);
+            border-radius: 12px;
             font-size: 0.95rem;
             color: var(--text-muted);
             outline: none;
             background: var(--surface);
             cursor: pointer;
+        }
+
+        .filter-select:focus {
+            border-color: rgba(234, 88, 12, 0.35);
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.10);
         }
 
         /* Scheme Cards */
@@ -276,18 +307,18 @@
         }
 
         .scheme-card {
-            background: var(--surface);
+            background: linear-gradient(180deg, #ffffff 0%, #fffdf8 100%);
             border-radius: var(--radius-md);
             padding: 2rem;
             border: 1px solid var(--border);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.04);
             transition: all 0.2s ease;
             position: relative;
         }
 
         .scheme-card:hover {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            border-color: #cbd5e1;
+            box-shadow: 0 18px 36px rgba(194, 65, 12, 0.10);
+            border-color: rgba(234, 88, 12, 0.24);
         }
 
         .scheme-ministry {
@@ -324,13 +355,24 @@
         }
 
         .tag {
-            background: white;
+            background: var(--success-soft);
             border: 1px solid var(--success);
             color: var(--success);
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 600;
+        }
+
+        .read-more-link {
+            border-color: var(--primary);
+            color: var(--primary);
+            text-decoration: none;
+            background: var(--primary-soft);
+        }
+
+        .read-more-link:hover {
+            background: #ffe9d6;
         }
 
         /* Loading State */
@@ -397,9 +439,9 @@
         </div>
 
         <div class="scheme-tabs">
-            <div class="tab active">All Schemes</div>
-            <div class="tab">State Schemes</div>
-            <div class="tab">Central Schemes</div>
+            <div class="tab active" data-level="">All Schemes</div>
+            <div class="tab" data-level="State">State Schemes</div>
+            <div class="tab" data-level="Central">Central Schemes</div>
         </div>
 
         <aside class="sidebar">
@@ -465,7 +507,7 @@
 
         <section class="results-area">
             <div class="results-header">
-                <div class="results-count">Total <span id="totalSchemes">0</span> schemes available</div>
+                <div class="results-count">Showing <span id="shownSchemes">0</span> of <span id="totalSchemes">0</span> schemes</div>
                 <select class="filter-select" style="width:auto; border-color:transparent; font-weight:600;">
                     <option>Sort : Relevance</option>
                     <option>Sort : Newly Added</option>
@@ -489,6 +531,74 @@
 
     <script>
         let currentPage = 1;
+        let activeSearchQuery = '';
+        let activeLevelFilter = '';
+        let cachedFilteredResults = [];
+        let cachedFilteredKey = '';
+        const pageSize = 10;
+
+        function normalizeLevel(level) {
+            const normalized = (level || '').trim().toLowerCase();
+            if (normalized === 'state') return 'State';
+            if (normalized === 'central') return 'Central';
+            return '';
+        }
+
+        const initialFilters = (() => {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                state: (params.get('state') || '').trim(),
+                category: (params.get('category') || '').trim(),
+                level: normalizeLevel(params.get('level') || '')
+            };
+        })();
+        activeLevelFilter = initialFilters.level;
+
+        function ensureSelectOption(selectEl, value) {
+            if (!value) return;
+            const normalized = value.toLowerCase();
+            let matched = Array.from(selectEl.options).find(opt => opt.value.toLowerCase() === normalized);
+
+            if (!matched) {
+                selectEl.add(new Option(value, value));
+                matched = selectEl.options[selectEl.options.length - 1];
+            }
+
+            selectEl.value = matched.value;
+        }
+
+        function buildFilterQuery() {
+            return document.getElementById('searchInput').value.trim();
+        }
+
+        function applyInitialFiltersFromUrl() {
+            ensureSelectOption(document.getElementById('stateFilter'), initialFilters.state);
+            ensureSelectOption(document.getElementById('categoryFilter'), initialFilters.category);
+        }
+
+        function setActiveSchemeTab(level) {
+            activeLevelFilter = normalizeLevel(level);
+            document.querySelectorAll('.scheme-tabs .tab').forEach(tab => {
+                const tabLevel = normalizeLevel(tab.dataset.level || '');
+                tab.classList.toggle('active', tabLevel === activeLevelFilter);
+            });
+        }
+
+        function initializeSchemeTabs() {
+            document.querySelectorAll('.scheme-tabs .tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    setActiveSchemeTab(tab.dataset.level || '');
+                    loadPage(1, activeSearchQuery);
+                });
+            });
+            setActiveSchemeTab(activeLevelFilter);
+        }
+
+        function initializePage() {
+            applyInitialFiltersFromUrl();
+            initializeSchemeTabs();
+            loadPage(1, buildFilterQuery());
+        }
 
         // Load Categories on init
         fetch('/api/schemes/categories')
@@ -500,6 +610,12 @@
                         sel.add(new Option(c.category, c.category));
                     });
                 }
+            })
+            .catch(err => {
+                console.error('Failed to load categories:', err);
+            })
+            .finally(() => {
+                initializePage();
             });
 
         function renderCard(scheme) {
@@ -512,43 +628,153 @@
                     <p class="scheme-desc">${scheme.excerpt || ''}...</p>
                     <div class="scheme-tags">
                         ${tagsHtml}
-                        <span class="tag" style="border-color: var(--primary); color: var(--primary)">Read More →</span>
+                        <a href="scheme.html?slug=${scheme.slug}" class="tag read-more-link">Read More</a>
                     </div>
                 </div>
             `;
         }
 
-        function loadPage(page = 1, searchQuery = '') {
+        function updateResultsSummary(total, shown) {
+            document.getElementById('totalSchemes').textContent = String(total);
+            document.getElementById('shownSchemes').textContent = String(shown);
+        }
+
+        function getActiveFilterState(searchQuery = activeSearchQuery) {
+            return {
+                query: (searchQuery || '').trim(),
+                state: document.getElementById('stateFilter').value.trim(),
+                category: document.getElementById('categoryFilter').value.trim(),
+                gender: document.getElementById('genderFilter').value.trim(),
+                caste: document.getElementById('casteFilter').value.trim(),
+                level: activeLevelFilter || ''
+            };
+        }
+
+        function buildUserProfilePayload(filters) {
+            const userProfile = {};
+
+            if (filters.state) {
+                userProfile.state = filters.state;
+            }
+
+            if (filters.gender) {
+                userProfile.gender = filters.gender.toLowerCase();
+            }
+
+            if (filters.caste) {
+                userProfile.category = filters.caste.toLowerCase();
+            }
+
+            return Object.keys(userProfile).length > 0 ? userProfile : undefined;
+        }
+
+        function buildFilteredResultsKey(filters) {
+            return JSON.stringify(filters);
+        }
+
+        function renderFilteredResults(page) {
+            const safePage = Math.max(1, page);
+            const total = cachedFilteredResults.length;
+            const shown = Math.min(safePage * pageSize, total);
+            const visibleResults = cachedFilteredResults.slice(0, shown);
+
+            document.getElementById('schemeList').innerHTML = visibleResults.map(renderCard).join('');
+            updateResultsSummary(total, visibleResults.length);
+            document.getElementById('loadMoreBtn').style.display = shown < total ? 'block' : 'none';
+
+            if (total === 0) {
+                document.getElementById('schemeList').innerHTML = '<p>No schemes found.</p>';
+            }
+        }
+
+        function loadPage(page = 1, searchQuery = activeSearchQuery) {
             document.getElementById('loader').classList.add('active');
-            if (page === 1) document.getElementById('schemeList').innerHTML = '';
+            document.getElementById('loadMoreBtn').style.display = 'none';
+            if (page === 1) {
+                activeSearchQuery = searchQuery || '';
+                document.getElementById('schemeList').innerHTML = '';
+            }
 
             currentPage = page;
+            const filters = getActiveFilterState(page === 1 ? activeSearchQuery : activeSearchQuery);
+            const shouldUseSearchApi = Boolean(
+                filters.query ||
+                filters.level ||
+                filters.category ||
+                filters.state ||
+                filters.gender ||
+                filters.caste
+            );
 
             // Hit our default paginated endpoint if no complex search required
-            // Or hit search endpoint
-            const url = searchQuery
-                ? '/api/schemes/search'
-                : `/api/schemes?page=${page}&pageSize=10`;
+            // Or fetch the full filtered result set once and paginate on the client.
+            if (shouldUseSearchApi) {
+                const filterKey = buildFilteredResultsKey(filters);
+
+                if (page === 1 || filterKey !== cachedFilteredKey) {
+                    cachedFilteredKey = filterKey;
+                    cachedFilteredResults = [];
+                }
+
+                if (cachedFilteredResults.length > 0) {
+                    document.getElementById('loader').classList.remove('active');
+                    renderFilteredResults(page);
+                    return;
+                }
+
+                fetch('/api/schemes/search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query: filters.query || undefined,
+                        category: filters.category || undefined,
+                        level: filters.level || undefined,
+                        userProfile: buildUserProfilePayload(filters),
+                        limit: 5000,
+                        page: 1,
+                        pageSize: 5000
+                    })
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        document.getElementById('loader').classList.remove('active');
+                        if (!res.success) {
+                            throw new Error('Failed to load schemes');
+                        }
+
+                        cachedFilteredResults = Array.isArray(res.data) ? res.data : [];
+                        renderFilteredResults(page);
+                    })
+                    .catch(err => {
+                        document.getElementById('loader').classList.remove('active');
+                        console.error(err);
+                    });
+                return;
+            }
+
+            const url = `/api/schemes?page=${page}&pageSize=${pageSize}`;
 
             fetch(url, {
-                method: searchQuery ? 'POST' : 'GET',
-                headers: searchQuery ? { 'Content-Type': 'application/json' } : undefined,
-                body: searchQuery ? JSON.stringify({ query: searchQuery, limit: 10 }) : undefined
+                method: 'GET'
             })
                 .then(res => res.json())
                 .then(res => {
                     document.getElementById('loader').classList.remove('active');
                     if (res.success) {
                         const list = res.data; // array of schemes
-                        document.getElementById('totalSchemes').textContent = res.total || list.length;
+                        const total = typeof res.total === 'number' ? res.total : list.length;
+                        const pages = typeof res.pages === 'number' ? res.pages : 1;
 
                         if (list.length > 0) {
                             list.forEach(s => {
                                 document.getElementById('schemeList').insertAdjacentHTML('beforeend', renderCard(s));
                             });
-                            document.getElementById('loadMoreBtn').style.display = 'block';
+                            const shown = document.querySelectorAll('#schemeList .scheme-card').length;
+                            updateResultsSummary(total, shown);
+                            document.getElementById('loadMoreBtn').style.display = currentPage < pages ? 'block' : 'none';
                         } else {
                             document.getElementById('loadMoreBtn').style.display = 'none';
+                            updateResultsSummary(total, 0);
                             if (page === 1) document.getElementById('schemeList').innerHTML = '<p>No schemes found.</p>';
                         }
                     }
@@ -567,10 +793,7 @@
 
         function applyFilters() {
             // Simplified: In full integration, we would POST all these fields to evaluateEligibilityRAG or advancedSearch
-            const state = document.getElementById('stateFilter').value;
-            const cat = document.getElementById('categoryFilter').value;
-            const query = [state, cat].filter(Boolean).join(' ');
-            loadPage(1, query);
+            loadPage(1, buildFilterQuery());
         }
 
         function resetFilters() {
@@ -578,11 +801,13 @@
             document.getElementById('categoryFilter').value = '';
             document.getElementById('genderFilter').value = '';
             document.getElementById('casteFilter').value = '';
+            document.getElementById('searchInput').value = '';
+            cachedFilteredResults = [];
+            cachedFilteredKey = '';
+            setActiveSchemeTab('');
             loadPage(1);
         }
 
-        // Init load
-        loadPage(1);
     </script>
 </body>
 

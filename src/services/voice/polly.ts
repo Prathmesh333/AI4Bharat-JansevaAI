@@ -1,6 +1,6 @@
 // Text-to-speech processing with Amazon Polly
 
-import { PollyClient, SynthesizeSpeechCommand, Engine, OutputFormat } from '@aws-sdk/client-polly';
+import { PollyClient, SynthesizeSpeechCommand, Engine, OutputFormat, VoiceId } from '@aws-sdk/client-polly';
 import { Language, VoiceOutput } from '../../types';
 import { config } from '../../config';
 import { createLogger } from '../../utils/logger';
@@ -10,7 +10,7 @@ const logger = createLogger('PollyService');
 const pollyClient = new PollyClient({ region: config.aws.region });
 
 // Voice ID mapping for Indian languages
-const voiceIdMap: Record<Language, string> = {
+const voiceIdMap: Record<Language, VoiceId> = {
   [Language.HINDI]: 'Aditi',
   [Language.ENGLISH]: 'Kajal',
   [Language.BENGALI]: 'Aditi', // Fallback to Hindi voice
@@ -41,7 +41,6 @@ export async function synthesizeSpeech(text: string, language: Language): Promis
       OutputFormat: config.polly.outputFormat as OutputFormat,
       VoiceId: voiceId,
       Engine: Engine.NEURAL,
-      LanguageCode: getPollyLanguageCode(language),
       SampleRate: '16000', // Optimized for 2G networks
     });
 
@@ -84,24 +83,6 @@ export async function synthesizeSpeech(text: string, language: Language): Promis
       { originalError: (error as Error).message }
     );
   }
-}
-
-function getPollyLanguageCode(language: Language): string {
-  const codeMap: Record<Language, string> = {
-    [Language.HINDI]: 'hi-IN',
-    [Language.ENGLISH]: 'en-IN',
-    [Language.BENGALI]: 'bn-IN',
-    [Language.TELUGU]: 'te-IN',
-    [Language.MARATHI]: 'mr-IN',
-    [Language.TAMIL]: 'ta-IN',
-    [Language.GUJARATI]: 'gu-IN',
-    [Language.KANNADA]: 'kn-IN',
-    [Language.MALAYALAM]: 'ml-IN',
-    [Language.PUNJABI]: 'pa-IN',
-    [Language.ODIA]: 'or-IN',
-  };
-  
-  return codeMap[language] || 'en-IN';
 }
 
 async function streamToBuffer(stream: any): Promise<Buffer> {

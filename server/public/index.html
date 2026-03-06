@@ -18,6 +18,13 @@
         }
 
         :root {
+            --o50: #fff7ed;
+            --o100: #ffedd5;
+            --o200: #fed7aa;
+            --o500: #f97316;
+            --o600: #ea580c;
+            --o700: #c2410c;
+            --o800: #9a3412;
             --g50: #f0fdf4;
             --g100: #dcfce7;
             --g500: #22c55e;
@@ -25,22 +32,22 @@
             --g700: #15803d;
             --g800: #166534;
             --g900: #14532d;
-            --s50: #f8fafc;
-            --s100: #f1f5f9;
-            --s200: #e2e8f0;
-            --s300: #cbd5e1;
+            --s50: #fffdfa;
+            --s100: #faf5ee;
+            --s200: #f0e4d8;
+            --s300: #dfcfbd;
             --s500: #64748b;
             --s600: #475569;
             --s700: #334155;
-            --s800: #1e293b;
-            --s900: #0f172a;
-            --footbg: #1e1b3a;
-            --r: 12px
+            --s800: #1f2937;
+            --s900: #111827;
+            --footbg: #183225;
+            --r: 16px
         }
 
         body {
             font-family: 'Mulish', sans-serif;
-            background: #fff;
+            background: linear-gradient(180deg, #ffffff 0%, #fffdf8 35%, #ffffff 100%);
             color: var(--s800);
             overflow-x: hidden;
             line-height: 1.6
@@ -51,13 +58,13 @@
             top: 0;
             width: 100%;
             z-index: 1000;
-            background: #fff;
-            border-bottom: 1px solid var(--s200);
+            background: rgba(255, 255, 255, .92);
+            border-bottom: 1px solid rgba(194, 65, 12, .12);
             transition: box-shadow .3s
         }
 
         .site-header.scrolled {
-            box-shadow: 0 2px 20px rgba(0, 0, 0, .08)
+            box-shadow: 0 12px 32px rgba(15, 23, 42, .08)
         }
 
         .header-inner {
@@ -79,7 +86,7 @@
         .logo-icon {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, var(--g600), var(--g700));
+            background: linear-gradient(135deg, var(--o500), var(--o700) 55%, var(--g700));
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -96,7 +103,7 @@
         }
 
         .logo-text span {
-            color: var(--g700)
+            color: var(--o600)
         }
 
         .header-nav {
@@ -116,15 +123,15 @@
         }
 
         .header-nav a:hover {
-            background: var(--g50);
-            color: var(--g700)
+            background: var(--o50);
+            color: var(--o700)
         }
 
         .nav-lang-select {
             padding: 6px 12px;
             border-radius: 8px;
             border: 1px solid var(--s200);
-            background: #fff;
+            background: var(--s50);
             font-family: 'Mulish', sans-serif;
             font-weight: 600;
             font-size: 13px;
@@ -134,7 +141,7 @@
         }
 
         .btn-primary {
-            background: var(--g700);
+            background: linear-gradient(135deg, var(--o500), var(--o700));
             color: #fff !important;
             padding: 10px 24px;
             border-radius: 8px;
@@ -146,18 +153,22 @@
             transition: all .2s;
             display: inline-flex;
             align-items: center;
-            gap: 6px
+            gap: 6px;
+            box-shadow: 0 8px 20px rgba(234, 88, 12, .18)
         }
 
         .btn-primary:hover {
-            background: var(--g800);
+            background: linear-gradient(135deg, var(--o600), var(--o800));
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(21, 128, 61, .3)
+            box-shadow: 0 12px 24px rgba(194, 65, 12, .22)
         }
 
         .hero {
             padding: 120px 24px 60px;
-            background: linear-gradient(180deg, var(--g50) 0%, #fff 100%);
+            background:
+                radial-gradient(circle at top left, rgba(249, 115, 22, .14), transparent 32%),
+                radial-gradient(circle at top right, rgba(34, 197, 94, .12), transparent 28%),
+                linear-gradient(180deg, #fffaf4 0%, #ffffff 56%, #f8fff9 100%);
             text-align: center
         }
 
@@ -170,13 +181,14 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: var(--g100);
-            color: var(--g800);
+            background: var(--o50);
+            color: var(--o700);
             font-weight: 700;
             font-size: 13px;
             padding: 6px 16px;
             border-radius: 20px;
-            margin-bottom: 24px
+            margin-bottom: 24px;
+            border: 1px solid var(--o100)
         }
 
         .hero h1 {
@@ -188,7 +200,7 @@
         }
 
         .hero h1 span {
-            color: var(--g700)
+            color: var(--o600)
         }
 
         .hero-tagline {
@@ -218,7 +230,7 @@
             padding: 14px 36px;
             font-size: 16px;
             font-weight: 800;
-            border-radius: 12px;
+            border-radius: 14px;
             border: none;
             cursor: pointer;
             transition: all .3s;
@@ -226,43 +238,62 @@
         }
 
         .btn-hero-primary {
-            background: var(--g700);
+            background: linear-gradient(135deg, var(--o500), var(--o700));
             color: #fff;
-            box-shadow: 0 4px 16px rgba(21, 128, 61, .3)
+            box-shadow: 0 12px 28px rgba(234, 88, 12, .18)
         }
 
         .btn-hero-primary:hover {
-            background: var(--g800);
+            background: linear-gradient(135deg, var(--o600), var(--o800));
             transform: translateY(-2px);
-            box-shadow: 0 6px 24px rgba(21, 128, 61, .4)
+            box-shadow: 0 16px 34px rgba(194, 65, 12, .22)
         }
 
         .btn-hero-outline {
             background: #fff;
             color: var(--g700);
-            border: 2px solid var(--g700)
+            border: 2px solid rgba(21, 128, 61, .18);
+            box-shadow: 0 10px 24px rgba(21, 128, 61, .08)
         }
 
         .btn-hero-outline:hover {
-            background: var(--g50)
+            background: var(--g50);
+            border-color: var(--g500);
+            transform: translateY(-2px)
+        }
+
+        .btn-hero-chat {
+            background: linear-gradient(135deg, var(--g600), var(--g800));
+            color: #fff;
+            box-shadow: 0 12px 28px rgba(21, 128, 61, .16)
+        }
+
+        .btn-hero-chat:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 34px rgba(21, 128, 61, .22)
         }
 
         .stats-bar {
-            background: var(--s900);
-            padding: 0 24px
+            background: linear-gradient(90deg, rgba(255, 237, 213, .6), rgba(255, 255, 255, .92) 50%, rgba(220, 252, 231, .68));
+            padding: 10px 24px 24px
         }
 
         .stats-inner {
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(4, 1fr)
+            grid-template-columns: repeat(4, 1fr);
+            background: #fff;
+            border: 1px solid var(--s200);
+            border-radius: 24px;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, .06);
+            overflow: hidden
         }
 
         .stat-item {
             text-align: center;
             padding: 28px 16px;
-            border-right: 1px solid rgba(255, 255, 255, .1)
+            border-right: 1px solid var(--s200)
         }
 
         .stat-item:last-child {
@@ -272,20 +303,24 @@
         .stat-number {
             font-size: 32px;
             font-weight: 900;
-            color: var(--g500);
+            color: var(--o600);
             display: block
+        }
+
+        .stat-item:nth-child(even) .stat-number {
+            color: var(--g700)
         }
 
         .stat-label {
             font-size: 13px;
-            color: rgba(255, 255, 255, .7);
+            color: var(--s600);
             font-weight: 600;
             margin-top: 4px
         }
 
         .categories-section {
             padding: 80px 24px;
-            background: var(--s50)
+            background: linear-gradient(180deg, #fff 0%, #fffaf2 52%, #fff 100%)
         }
 
         .section-container {
@@ -320,19 +355,20 @@
 
         .category-card {
             background: #fff;
-            border: 1px solid var(--s200);
+            border: 1px solid rgba(194, 65, 12, .10);
             border-radius: var(--r);
             padding: 24px 16px;
             text-align: center;
             cursor: pointer;
             transition: all .25s;
             text-decoration: none;
-            display: block
+            display: block;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, .04)
         }
 
         .category-card:hover {
-            border-color: var(--g500);
-            box-shadow: 0 8px 24px rgba(21, 128, 61, .12);
+            border-color: rgba(194, 65, 12, .35);
+            box-shadow: 0 18px 36px rgba(194, 65, 12, .12);
             transform: translateY(-4px)
         }
 
@@ -372,16 +408,18 @@
         }
 
         .feature-card {
-            background: #fff;
-            border: 1px solid var(--s200);
+            background: linear-gradient(180deg, #fff 0%, var(--s50) 100%);
+            border: 1px solid rgba(15, 23, 42, .08);
             border-radius: var(--r);
             padding: 32px 24px;
-            transition: all .25s
+            transition: all .25s;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, .04)
         }
 
         .feature-card:hover {
-            box-shadow: 0 8px 24px rgba(0, 0, 0, .06);
-            transform: translateY(-2px)
+            border-color: rgba(234, 88, 12, .24);
+            box-shadow: 0 18px 36px rgba(15, 23, 42, .08);
+            transform: translateY(-4px)
         }
 
         .feature-icon-box {
@@ -392,7 +430,8 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 16px;
-            font-size: 24px
+            font-size: 24px;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .8)
         }
 
         .feature-card h3 {
@@ -408,9 +447,27 @@
             line-height: 1.7
         }
 
+        .feature-card.feature-card-interactive {
+            cursor: pointer;
+        }
+
+        .feature-card-action {
+            margin-top: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(21, 128, 61, .16);
+            background: var(--g50);
+            color: var(--g800);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
         .how-section {
             padding: 80px 24px;
-            background: var(--g50)
+            background: linear-gradient(180deg, #fffdf8 0%, #fff 48%, #f7fff9 100%)
         }
 
         .steps-row {
@@ -424,14 +481,15 @@
             padding: 32px 20px;
             background: #fff;
             border-radius: var(--r);
-            border: 1px solid var(--g100)
+            border: 1px solid rgba(21, 128, 61, .12);
+            box-shadow: 0 12px 28px rgba(15, 23, 42, .04)
         }
 
         .step-num {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: var(--g700);
+            background: linear-gradient(135deg, var(--o500), var(--o700));
             color: #fff;
             font-weight: 900;
             font-size: 18px;
@@ -439,6 +497,10 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 16px
+        }
+
+        .step-card:nth-child(even) .step-num {
+            background: linear-gradient(135deg, var(--g600), var(--g800))
         }
 
         .step-card h3 {
@@ -456,9 +518,11 @@
 
         .cta-section {
             padding: 80px 24px;
-            background: linear-gradient(135deg, var(--g700) 0%, var(--g900) 100%);
+            background: linear-gradient(135deg, rgba(249, 115, 22, .12) 0%, rgba(255, 255, 255, 1) 35%, rgba(34, 197, 94, .12) 100%);
             text-align: center;
-            color: #fff
+            color: var(--s900);
+            border-top: 1px solid rgba(194, 65, 12, .10);
+            border-bottom: 1px solid rgba(21, 128, 61, .10)
         }
 
         .cta-section h2 {
@@ -469,7 +533,7 @@
 
         .cta-section p {
             font-size: 17px;
-            opacity: .9;
+            color: var(--s600);
             margin-bottom: 32px;
             max-width: 500px;
             margin-left: auto;
@@ -477,8 +541,8 @@
         }
 
         .btn-cta {
-            background: #fff;
-            color: var(--g700);
+            background: linear-gradient(135deg, var(--o500), var(--o700));
+            color: #fff;
             padding: 16px 40px;
             border-radius: 12px;
             font-size: 17px;
@@ -489,16 +553,17 @@
             transition: all .3s;
             display: inline-flex;
             align-items: center;
-            gap: 8px
+            gap: 8px;
+            box-shadow: 0 12px 28px rgba(234, 88, 12, .18)
         }
 
         .btn-cta:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, .2)
+            box-shadow: 0 16px 32px rgba(194, 65, 12, .22)
         }
 
         .site-footer {
-            background: var(--footbg);
+            background: linear-gradient(135deg, #1d2939 0%, var(--footbg) 100%);
             color: rgba(255, 255, 255, .8);
             padding: 64px 24px 32px
         }
@@ -580,6 +645,250 @@
             display: flex;
         }
 
+        .csc-container {
+            width: 90%;
+            max-width: 760px;
+            background: #fff;
+            border-radius: 22px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+            max-height: 90vh;
+        }
+
+        .csc-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--s200);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            background: linear-gradient(135deg, rgba(249, 115, 22, .08), rgba(34, 197, 94, .08));
+        }
+
+        .csc-header h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--s900);
+            margin-bottom: 6px;
+        }
+
+        .csc-header p {
+            color: var(--s600);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .csc-body {
+            padding: 28px 32px 32px;
+            overflow-y: auto;
+        }
+
+        .csc-search-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .csc-field label {
+            display: block;
+            font-weight: 700;
+            color: var(--s800);
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .csc-field input {
+            width: 100%;
+            border: 2px solid var(--s200);
+            border-radius: 12px;
+            padding: 13px 14px;
+            font-family: 'Mulish', sans-serif;
+            font-size: 15px;
+            outline: none;
+            transition: border-color .2s;
+        }
+
+        .csc-field input:focus {
+            border-color: var(--o500);
+        }
+
+        .csc-helper-box {
+            background: linear-gradient(135deg, rgba(249, 115, 22, .08), rgba(255, 255, 255, .9), rgba(34, 197, 94, .08));
+            border: 1px solid rgba(234, 88, 12, .12);
+            border-radius: 16px;
+            padding: 14px 16px;
+            color: var(--s700);
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 18px;
+        }
+
+        .csc-search-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .csc-search-btn {
+            background: linear-gradient(135deg, var(--o500), var(--g700));
+            border: none;
+            color: white;
+            padding: 13px 22px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-family: 'Mulish', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 12px 28px rgba(21, 128, 61, .16);
+        }
+
+        .csc-search-btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .csc-reset-btn {
+            background: transparent;
+            border: none;
+            color: var(--o700);
+            font-weight: 800;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .csc-results {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .csc-empty {
+            text-align: center;
+            padding: 28px 18px;
+            border: 1px dashed var(--s300);
+            border-radius: 18px;
+            color: var(--s600);
+            background: var(--s50);
+        }
+
+        .csc-result-card {
+            border: 1px solid rgba(15, 23, 42, .08);
+            border-radius: 18px;
+            padding: 18px 18px 16px;
+            background: white;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, .04);
+        }
+
+        .csc-result-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .csc-result-card h3 {
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--s900);
+            margin-bottom: 4px;
+        }
+
+        .csc-result-address {
+            color: var(--s600);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .csc-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .csc-badge-google {
+            background: var(--g50);
+            color: var(--g800);
+        }
+
+        .csc-badge-search {
+            background: var(--o50);
+            color: var(--o700);
+        }
+
+        .csc-meta {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px 16px;
+            margin-bottom: 14px;
+        }
+
+        .csc-meta-item {
+            font-size: 13px;
+            color: var(--s700);
+            line-height: 1.5;
+        }
+
+        .csc-meta-item strong {
+            display: block;
+            color: var(--s900);
+            margin-bottom: 2px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .csc-note {
+            margin-bottom: 14px;
+            font-size: 12px;
+            color: var(--o800);
+            background: var(--o50);
+            border: 1px solid rgba(249, 115, 22, .16);
+            border-radius: 12px;
+            padding: 10px 12px;
+            line-height: 1.6;
+        }
+
+        .csc-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .csc-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+        .csc-link-primary {
+            background: linear-gradient(135deg, var(--o500), var(--o700));
+            color: white;
+        }
+
+        .csc-link-secondary {
+            background: var(--g50);
+            color: var(--g800);
+            border: 1px solid rgba(21, 128, 61, .14);
+        }
+
         .wizard-container {
             width: 90%;
             max-width: 600px;
@@ -621,7 +930,7 @@
         }
 
         .wizard-step-dot.active {
-            background: var(--g600);
+            background: var(--o600);
         }
 
         .wizard-body {
@@ -684,15 +993,15 @@
         }
 
         .wizard-option:hover {
-            border-color: var(--g500);
-            background: var(--g50);
-            color: var(--g700);
+            border-color: var(--o500);
+            background: var(--o50);
+            color: var(--o700);
         }
 
         .wizard-option.selected {
-            border-color: var(--g600);
-            background: var(--g100);
-            color: var(--g800);
+            border-color: var(--o600);
+            background: var(--o100);
+            color: var(--o800);
         }
 
         .wizard-input,
@@ -710,7 +1019,7 @@
 
         .wizard-input:focus,
         .wizard-select:focus {
-            border-color: var(--g500);
+            border-color: var(--o500);
         }
 
         .wizard-footer {
@@ -733,7 +1042,7 @@
         }
 
         .btn-wizard-next {
-            background: var(--g700);
+            background: linear-gradient(135deg, var(--o500), var(--o700));
             border: none;
             color: white;
             padding: 12px 32px;
@@ -749,12 +1058,13 @@
         }
 
         .scheme-result-card {
-            border: 1px solid var(--s200);
+            border: 1px solid rgba(194, 65, 12, .12);
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 16px;
             background: white;
             text-align: left;
+            box-shadow: 0 12px 28px rgba(15, 23, 42, .04);
         }
 
         .scheme-result-card h3 {
@@ -778,8 +1088,8 @@
         }
 
         .scheme-result-tag {
-            background: var(--g50);
-            color: var(--g700);
+            background: var(--o50);
+            color: var(--o700);
             font-size: 12px;
             font-weight: 700;
             padding: 4px 10px;
@@ -818,7 +1128,7 @@
         }
 
         .chat-header {
-            background: linear-gradient(135deg, var(--g700) 0%, var(--g900) 100%);
+            background: linear-gradient(135deg, var(--o600) 0%, var(--g700) 100%);
             color: #fff;
             padding: 16px 20px;
             display: flex;
@@ -843,7 +1153,7 @@
             flex: 1;
             overflow-y: auto;
             padding: 20px;
-            background: var(--s50)
+            background: linear-gradient(180deg, var(--s50) 0%, #ffffff 100%)
         }
 
         .message {
@@ -871,7 +1181,7 @@
         }
 
         .message.user .message-content {
-            background: var(--g700);
+            background: linear-gradient(135deg, var(--o500), var(--o700));
             color: #fff;
             border-bottom-right-radius: 4px
         }
@@ -937,11 +1247,11 @@
         }
 
         #messageInput:focus {
-            border-color: var(--g500)
+            border-color: var(--o500)
         }
 
         #sendButton {
-            background: var(--g700);
+            background: linear-gradient(135deg, var(--o500), var(--o700));
             color: #fff;
             border: none;
             padding: 12px 24px;
@@ -953,7 +1263,7 @@
         }
 
         #sendButton:hover {
-            background: var(--g800)
+            background: linear-gradient(135deg, var(--o600), var(--o800))
         }
 
         #sendButton:disabled {
@@ -1071,7 +1381,7 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: var(--g700);
+            background: linear-gradient(135deg, var(--g600), var(--g800));
             color: #fff !important;
             text-decoration: none;
             padding: 10px 20px;
@@ -1083,7 +1393,7 @@
         }
 
         .form-download-btn:hover {
-            background: var(--g800);
+            background: linear-gradient(135deg, var(--g700), var(--g900));
             transform: translateY(-1px)
         }
 
@@ -1132,7 +1442,7 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: var(--g700);
+            background: linear-gradient(135deg, var(--o500), var(--g700));
             color: #fff;
             border: none;
             cursor: pointer;
@@ -1165,6 +1475,14 @@
 
             .features-grid {
                 grid-template-columns: 1fr
+            }
+
+            .csc-search-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .csc-meta {
+                grid-template-columns: 1fr;
             }
 
             .steps-row {
@@ -1221,7 +1539,6 @@
     </header>
     <section class="hero">
         <div class="hero-inner">
-            <div class="hero-badge">Powered by Google Gemini AI</div>
             <h1 id="heroTitle">Find <span>Government Schemes</span> You Deserve</h1>
             <p class="hero-tagline" id="heroTagline">Seva Har Samasya Ki</p>
             <p class="hero-desc" id="heroDesc">AI-powered assistant that helps Indian citizens discover, check
@@ -1229,6 +1546,7 @@
             <div class="hero-actions">
                 <button class="btn-hero btn-hero-primary" onclick="openWizard()" id="ctaBtn">Find Schemes For You
                     &#8594;</button>
+                <button class="btn-hero btn-hero-chat" onclick="openChat()" id="heroChatBtn">Talk to JanSeva AI</button>
                 <button class="btn-hero btn-hero-outline"
                     onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">Browse
                     Categories</button>
@@ -1265,9 +1583,9 @@
             </div>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon-box" style="background:#fff7ed">
+                    <div class="feature-icon-box" style="background:var(--o50)">
                         <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                            style="width:24px;height:24px;color:#f97316">
+                            style="width:24px;height:24px;color:var(--o600)">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
                         </svg>
@@ -1277,9 +1595,9 @@
                         forms for you.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon-box" style="background:#eff6ff">
+                    <div class="feature-icon-box" style="background:var(--g50)">
                         <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                            style="width:24px;height:24px;color:#3b82f6">
+                            style="width:24px;height:24px;color:var(--g700)">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
                         </svg>
@@ -1289,9 +1607,9 @@
                         language.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon-box" style="background:#f0fdf4">
+                    <div class="feature-icon-box" style="background:var(--o50)">
                         <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                            style="width:24px;height:24px;color:#22c55e">
+                            style="width:24px;height:24px;color:var(--o600)">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
                         </svg>
@@ -1301,9 +1619,9 @@
                         your information.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon-box" style="background:#fdf4ff">
+                    <div class="feature-icon-box" style="background:var(--g50)">
                         <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                            style="width:24px;height:24px;color:#d946ef">
+                            style="width:24px;height:24px;color:var(--g700)">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zm-7.518-.267A8.25 8.25 0 1120.25 10.5M8.288 14.212A5.25 5.25 0 1117.25 10.55M11.618 12.18A2.25 2.25 0 1115.01 10.5" />
                         </svg>
@@ -1312,10 +1630,10 @@
                     <p>AI analyzes your profile (age, income, occupation, location) and matches you with all eligible
                         schemes instantly.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon-box" style="background:#fefce8">
+                <div class="feature-card feature-card-interactive" onclick="openCSCModal()">
+                    <div class="feature-icon-box" style="background:var(--o50)">
                         <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                            style="width:24px;height:24px;color:#eab308">
+                            style="width:24px;height:24px;color:var(--o600)">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -1323,13 +1641,21 @@
                         </svg>
                     </div>
                     <h3>Nearest CSC Finder</h3>
-                    <p>Share your pincode and we guide you to the nearest Common Service Center with timings and
-                        directions.</p>
+                    <p>Share your pincode and we show nearby Common Service Centers with address, timings, and direct
+                        Google Maps links.</p>
+                    <div class="feature-card-action">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            style="width:16px;height:16px">
+                            <path d="M12 2C8.134 2 5 5.134 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.866-3.134-7-7-7z" />
+                            <circle cx="12" cy="9" r="2.5" />
+                        </svg>
+                        Find Nearby CSC
+                    </div>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon-box" style="background:#fef2f2">
+                    <div class="feature-icon-box" style="background:var(--g50)">
                         <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                            style="width:24px;height:24px;color:#ef4444">
+                            style="width:24px;height:24px;color:var(--g700)">
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M9 12.75L11.25 15 15 9.752M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 4.556 4.03 8.25 9 8.25z" />
                         </svg>
@@ -1395,7 +1721,7 @@
                 <div class="footer-col">
                     <h4>Resources</h4><a href="https://myscheme.gov.in" target="_blank">MyScheme.gov.in</a><a
                         href="https://pgportal.gov.in" target="_blank">Grievance Portal</a><a
-                        href="https://locator.csccloud.in" target="_blank">Find CSC</a><a
+                        href="#" onclick="openCSCModal(); return false;">Find CSC</a><a
                         href="https://services.india.gov.in" target="_blank">Services India</a>
                 </div>
                 <div class="footer-col">
@@ -1403,8 +1729,7 @@
                         Service</a><a href="#">Contact Us</a>
                 </div>
             </div>
-            <div class="footer-bottom"><span>Built for AI for Bharat 2026 Hackathon | Team Vanguard3</span><span>Powered
-                    by Google Gemini AI</span></div>
+            <div class="footer-bottom"><span>Built for AI for Bharat 2026 Hackathon | Team Vanguard3</span></div>
         </div>
     </footer>
     <button class="floating-chat-btn" onclick="openChat()" title="Talk to JanSeva AI">
@@ -1434,13 +1759,16 @@
                 'Public Safety,Law & Justice': '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><path d=\'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\'/></svg>',
                 'Animal Husbandry': '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><circle cx=\'12\' cy=\'12\' r=\'10\'/><path d=\'M12 8v4l3 3\'/></svg>'
             };
-            const colors = { Agriculture: '#f0fdf4', Education: '#eff6ff', 'Social welfare & Empowerment': '#fdf4ff', Health: '#fef2f2', 'Banking,Financial Services and Insurance': '#f0fdf4', 'Business & Entrepreneurship': '#fff7ed', 'Science, IT & Communications': '#eff6ff', 'Skill & Employment': '#fefce8', 'Housing & Shelter': '#fdf4ff', 'Transport & Infrastructure': '#f1f5f9', 'Sports & Culture': '#fefce8', 'Utility & Sanitation': '#f0fdf4', 'Women and Child': '#fdf4ff', 'Travel & Tourism': '#eff6ff', 'Public Safety,Law & Justice': '#fef2f2' };
+            const colors = { Agriculture: '#f0fdf4', Education: '#fff7ed', 'Social welfare & Empowerment': '#fffaf2', Health: '#f0fdf4', 'Banking,Financial Services and Insurance': '#fff7ed', 'Business & Entrepreneurship': '#fff7ed', 'Science, IT & Communications': '#f0fdf4', 'Skill & Employment': '#fffaf2', 'Housing & Shelter': '#f0fdf4', 'Transport & Infrastructure': '#fffaf2', 'Sports & Culture': '#fff7ed', 'Utility & Sanitation': '#f0fdf4', 'Women and Child': '#fffaf2', 'Travel & Tourism': '#fff7ed', 'Public Safety,Law & Justice': '#f0fdf4' };
+            const iconColors = { Agriculture: '#15803d', Education: '#c2410c', 'Social welfare & Empowerment': '#c2410c', Health: '#15803d', 'Banking,Financial Services and Insurance': '#c2410c', 'Business & Entrepreneurship': '#c2410c', 'Science, IT & Communications': '#15803d', 'Skill & Employment': '#c2410c', 'Housing & Shelter': '#15803d', 'Transport & Infrastructure': '#c2410c', 'Sports & Culture': '#c2410c', 'Utility & Sanitation': '#15803d', 'Women and Child': '#c2410c', 'Travel & Tourism': '#c2410c', 'Public Safety,Law & Justice': '#15803d' };
             const grid = document.getElementById('categoriesGrid');
             data.data.categories.forEach(cat => {
                 const card = document.createElement('div');
                 card.className = 'category-card';
                 card.onclick = () => { window.location.href = `/search.html?category=${encodeURIComponent(cat.category)}`; };
-                card.innerHTML = '<div class="cat-icon" style="background:' + (colors[cat.category] || '#f1f5f9') + '; color: ' + (colors[cat.category] ? colors[cat.category].replace('fdf4ff', 'd946ef').replace('fff7ed', 'f97316').replace('eff6ff', '3b82f6').replace('f0fdf4', '22c55e').replace('fef2f2', 'ef4444').replace('f1f5f9', '64748b').replace('fefce8', 'eab308') : '#64748b') + ';">' + (icons[cat.category] || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>') + '</div><h3>' + cat.category + '</h3><div class="cat-count">' + cat.count + ' Schemes</div>';
+                const formattedCount = Number(cat.count || 0).toLocaleString();
+                const schemeLabel = Number(cat.count || 0) === 1 ? 'Scheme' : 'Schemes';
+                card.innerHTML = '<div class="cat-icon" style="background:' + (colors[cat.category] || '#fffaf5') + '; color: ' + (iconColors[cat.category] || '#475569') + ';">' + (icons[cat.category] || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>') + '</div><h3>' + cat.category + '</h3><div class="cat-count">' + formattedCount + ' ' + schemeLabel + '</div>';
                 grid.appendChild(card);
             });
         }).catch(() => { });
@@ -1448,6 +1776,58 @@
         window.addEventListener('scroll', () => { document.getElementById('siteHeader').classList.toggle('scrolled', window.scrollY > 10) });
     </script>
 
+
+    <!-- CSC Finder Modal -->
+    <div class="wizard-modal" id="cscModal" onclick="if(event.target === this) closeCSCModal()">
+        <div class="csc-container">
+            <div class="csc-header">
+                <div>
+                    <h2>Nearest CSC Finder</h2>
+                    <p>Enter your pincode or district and we will give you direct map links, directions, and visit
+                        details instead of sending you away to a separate portal.</p>
+                </div>
+                <button class="close-button" onclick="closeCSCModal()"
+                    style="color: black; border-color: var(--s200); background: var(--s100);">×</button>
+            </div>
+            <div class="csc-body">
+                <div class="csc-helper-box">
+                    We use Google Maps-ready links for CSC discovery. If a `GOOGLE_MAPS_API_KEY` is configured, you
+                    get real place listings with formatted addresses. Otherwise, JanSeva AI opens a direct Google Maps
+                    CSC search for your area.
+                </div>
+
+                <div class="csc-search-grid">
+                    <div class="csc-field">
+                        <label for="cscPincode">PIN Code</label>
+                        <input id="cscPincode" type="text" maxlength="6" inputmode="numeric"
+                            placeholder="e.g. 422007">
+                    </div>
+                    <div class="csc-field">
+                        <label for="cscDistrict">District</label>
+                        <input id="cscDistrict" type="text" placeholder="e.g. Nashik">
+                    </div>
+                    <div class="csc-field">
+                        <label for="cscState">State</label>
+                        <input id="cscState" type="text" placeholder="e.g. Maharashtra">
+                    </div>
+                </div>
+
+                <div class="csc-search-actions">
+                    <button class="csc-search-btn" id="cscSearchBtn" onclick="findNearestCSC()">
+                        Find Nearby CSC
+                    </button>
+                    <button class="csc-reset-btn" onclick="resetCSCFinder()">Reset</button>
+                </div>
+
+                <div class="csc-results" id="cscResults">
+                    <div class="csc-empty">
+                        Share your pincode to get the nearest CSC address, timings, and `Open Map` / `Directions`
+                        links.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Wizard Modal -->
     <div class="wizard-modal" id="wizardModal">
@@ -1640,7 +2020,7 @@
                         onkeydown="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"></textarea>
 
                     <button id="aiButton" onclick="toggleMic()" Title="Voice Input"
-                        style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 10px; border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); min-width: 48px; min-height: 48px; border: none; cursor: pointer;">
+                        style="background: linear-gradient(135deg, var(--o500) 0%, var(--g700) 100%); padding: 10px; border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); min-width: 48px; min-height: 48px; border: none; cursor: pointer; box-shadow: 0 10px 20px rgba(194, 65, 12, 0.16);">
                         <svg id="micIcon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
                             style="width: 24px; height: 24px;">
                             <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
@@ -1668,6 +2048,7 @@
 
     <script>
         let sessionId = null;
+        let pendingChatIntent = null;
         let voiceMode = false; // Voice is OFF by default
         let lastAssistantMessage = ''; // Track last AI message for voice toggle
 
@@ -1690,7 +2071,7 @@
                     const lastMsg = allMessages[allMessages.length - 1].textContent.trim();
                     const cleaned = lastMsg
                         .replace(/\[FORM_DOWNLOAD:[^\]]+\]/g, 'Your application form is ready for download.')
-                        .replace(/http:\/\/localhost:3000\/api\/schemes\/form\/print\/[^\s]*/g, '');
+                        .replace(/(?:https?:\/\/[^\s]+)?\/api\/schemes\/form\/print\/[^\s]*/g, '');
                     speakText(cleaned);
                 }
             } else {
@@ -1704,12 +2085,51 @@
             }
         }
 
+        function loadStoredChatIntent() {
+            try {
+                return sessionStorage.getItem('janseva_chat_intent');
+            } catch (error) {
+                console.warn('Failed to load stored chat intent', error);
+                return null;
+            }
+        }
+
+        function clearStoredChatIntent() {
+            pendingChatIntent = null;
+            try {
+                sessionStorage.removeItem('janseva_chat_intent');
+            } catch (error) {
+                console.warn('Failed to clear stored chat intent', error);
+            }
+        }
+
+        async function consumePendingChatIntent() {
+            if (!pendingChatIntent || !sessionId) {
+                return;
+            }
+
+            const intent = pendingChatIntent.trim();
+            clearStoredChatIntent();
+            if (!intent) {
+                return;
+            }
+
+            document.getElementById('messageInput').value = intent;
+            await sendMessage();
+        }
+
+        async function openChatWithIntent(intent) {
+            pendingChatIntent = intent;
+            await openChat();
+        }
+
         // Open chat modal
-        function openChat() {
+        async function openChat() {
             document.getElementById('chatModal').classList.add('active');
             if (!sessionId) {
-                initSession();
+                await initSession();
             }
+            await consumePendingChatIntent();
         }
 
         // Close chat modal and reset session for the next user
@@ -1738,7 +2158,7 @@
         async function initSession() {
             try {
                 const language = document.getElementById('languageSelect').value;
-                const response = await fetch('http://localhost:3000/api/session', {
+                const response = await fetch('/api/session', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ language: language })
@@ -1755,6 +2175,7 @@
                 };
                 const greeting = greetings[language] || greetings['en'];
                 addMessage(greeting, 'assistant');
+                await consumePendingChatIntent();
             } catch (error) {
                 console.error('Failed to create session:', error);
             }
@@ -1778,7 +2199,7 @@
             document.getElementById('aiButton').disabled = true;
 
             try {
-                const response = await fetch('http://localhost:3000/api/message', {
+                const response = await fetch('/api/message', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ sessionId, message })
@@ -1979,7 +2400,7 @@
             });
 
             // Also convert any plain http form print URLs into download buttons
-            processed = processed.replace(/(?:Pre-filled Form:\s*)?http:\/\/localhost:3000\/api\/schemes\/form\/print\/([a-zA-Z0-9_-]+)(\?[^\s<]*)?/g, (match, slug, params) => {
+            processed = processed.replace(/(?:Pre-filled Form:\s*)?(?:https?:\/\/[^\s<]+)?\/api\/schemes\/form\/print\/([a-zA-Z0-9_-]+)(\?[^\s<]*)?/g, (match, slug, params) => {
                 const formUrl = `/api/schemes/form/print/${slug}${params || ''}`;
                 return `<div style="margin-top: 8px;"><a href="${formUrl}" target="_blank" class="form-download-btn" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Download Application Form</a></div>`;
             });
@@ -2017,7 +2438,7 @@
                 if (voiceMode) {
                     // Strip form markers before speaking
                     const speakableText = text.replace(/\[FORM_DOWNLOAD:[^\]]+\]/g, 'Your application form is ready for download.')
-                        .replace(/http:\/\/localhost:3000\/api\/schemes\/form\/print\/[^\s]*/g, '');
+                        .replace(/(?:https?:\/\/[^\s]+)?\/api\/schemes\/form\/print\/[^\s]*/g, '');
                     speakText(speakableText);
                 }
             }
@@ -2104,6 +2525,7 @@
             document.getElementById('ctaTitle').innerText = t.ctaTitle;
             document.getElementById('ctaSub').innerText = t.ctaSub;
             document.getElementById('ctaBtn').innerText = t.ctaBtn;
+            document.getElementById('heroChatBtn').innerText = t.heroChatBtn || 'Talk to AI';
         }
     </script>
 
@@ -2112,6 +2534,39 @@
         let currentStep = 1;
         const totalSteps = 5;
         const wizData = { gender: '', category: '', occupation: '' };
+        const eligibilityPageParams = new URLSearchParams(window.location.search);
+        let eligibilityTargetScheme = null;
+
+        function loadEligibilityTarget() {
+            try {
+                const raw = sessionStorage.getItem('janseva_eligibility_target');
+                if (!raw) return null;
+
+                const parsed = JSON.parse(raw);
+                if (!parsed || !parsed.slug) return null;
+                return parsed;
+            } catch (error) {
+                console.warn('Failed to load stored eligibility target', error);
+                return null;
+            }
+        }
+
+        function clearEligibilityTarget() {
+            eligibilityTargetScheme = null;
+            try {
+                sessionStorage.removeItem('janseva_eligibility_target');
+            } catch (error) {
+                console.warn('Failed to clear eligibility target', error);
+            }
+        }
+
+        function getEligibilityRequestPayload(userProfile) {
+            const payload = { userProfile };
+            if (eligibilityTargetScheme && eligibilityTargetScheme.slug) {
+                payload.slug = eligibilityTargetScheme.slug;
+            }
+            return payload;
+        }
 
         function openWizard() {
             document.getElementById('wizardModal').classList.add('active');
@@ -2123,6 +2578,7 @@
         function closeWizard() {
             document.getElementById('wizardModal').classList.remove('active');
             document.body.style.overflow = '';
+            clearEligibilityTarget();
         }
 
         function selectOption(key, element, value) {
@@ -2212,24 +2668,41 @@
             fetch('/api/eligibility/check', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userProfile })
+                body: JSON.stringify(getEligibilityRequestPayload(userProfile))
             })
                 .then(res => res.json())
                 .then(data => {
                     const container = document.getElementById('wizResultsContainer');
-                    if (!data.success || !data.data.eligibleSchemes || data.data.eligibleSchemes.length === 0) {
+                    const subtitle = document.getElementById('wizResultsSubtitle');
+                    const schemes = (data.success && data.data && data.data.eligibleSchemes) ? data.data.eligibleSchemes : [];
+
+                    if (!schemes || schemes.length === 0) {
+                        if (eligibilityTargetScheme) {
+                            container.innerHTML = '<div style="text-align:center; padding: 40px;"><h3 style="color:var(--s900)">No clear eligibility result found</h3><p style="color:var(--s500); margin-top:8px;">We could not confirm this scheme from the current profile details. You can still ask the AI for a detailed manual review.</p><button class="btn-primary" style="margin-top:24px;" onclick="closeWizard(); openChat();">Talk to AI</button></div>';
+                            subtitle.innerText = 'Eligibility review for ' + (eligibilityTargetScheme.name || 'selected scheme');
+                            return;
+                        }
+
                         container.innerHTML = '<div style="text-align:center; padding: 40px;"><h3 style="color:var(--s900)">No exact matches found</h3><p style="color:var(--s500); margin-top:8px;">Try adjusting your criteria or ask our AI to help you search broadly.</p><button class="btn-primary" style="margin-top:24px;" onclick="closeWizard(); openChat();">Talk to AI</button></div>';
-                        document.getElementById('wizResultsSubtitle').innerText = '0 schemes found';
+                        subtitle.innerText = '0 schemes found';
                         return;
                     }
 
-                    const schemes = data.data.eligibleSchemes;
-                    document.getElementById('wizResultsSubtitle').innerText = 'Found ' + schemes.length + ' schemes you might be eligible for';
+                    subtitle.innerText = eligibilityTargetScheme
+                        ? 'Eligibility review for ' + (eligibilityTargetScheme.name || 'selected scheme')
+                        : 'Found ' + schemes.length + ' schemes you might be eligible for';
 
                     let html = '';
                     schemes.forEach((sm, idx) => {
                         const basicTitle = sm.title || sm.schemeName || 'Government Scheme';
                         const catTitle = sm.category || 'General';
+                        const eligibilityTag = typeof sm.eligible === 'boolean'
+                            ? `<span class="scheme-result-tag" style="background:${sm.eligible ? '#dcfce7' : '#fee2e2'}; color:${sm.eligible ? '#166534' : '#991b1b'};">${sm.eligible ? 'Likely Eligible' : 'Needs Review'}</span>`
+                            : '';
+                        const summary = sm.description
+                            || sm.reason
+                            || (sm.missingCriteria && sm.missingCriteria.length ? 'Missing criteria: ' + sm.missingCriteria.join(', ') : '')
+                            || 'Click below to learn more about this scheme';
                         // The backend returns a full string usually for "title" like "[1] Scheme Name"
                         const cleanTitle = basicTitle.replace(/^\[\d+\]\s*/, '');
 
@@ -2238,8 +2711,9 @@
                             <h3>${cleanTitle}</h3>
                             <div class="scheme-result-tags">
                                 <span class="scheme-result-tag">${catTitle}</span>
+                                ${eligibilityTag}
                             </div>
-                            <p>${(sm.description || sm.reason || 'Click below to learn more about this scheme').substring(0, 150)}...</p>
+                            <p>${summary.substring(0, 180)}${summary.length > 180 ? '...' : ''}</p>
                             <button class="btn-primary" onclick="chatAboutScheme('${cleanTitle.replace(/'/g, "\'")}')">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
                                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
@@ -2258,12 +2732,253 @@
 
         function chatAboutScheme(schemeName) {
             closeWizard();
-            openChat();
-            setTimeout(() => {
-                document.getElementById('messageInput').value = 'Tell me everything about ' + schemeName + ', check my eligibility and give me the application form.';
-                sendMessage();
-            }, 1000);
+            openChatWithIntent('Tell me everything about ' + schemeName + ', check my eligibility and give me the application form.');
         }
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function buildGoogleMapsSearchUrl(query) {
+            return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+        }
+
+        function buildGoogleDirectionsUrl(destination) {
+            return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}`;
+        }
+
+        function buildCSCSearchQuery({ pincode, district, state }) {
+            return ['Common Service Center', district, state, pincode, 'India']
+                .filter(Boolean)
+                .join(' ');
+        }
+
+        function buildLocalCSCSearchFallback({ pincode, district, state }) {
+            const displayArea = [district, state, pincode].filter(Boolean).join(', ') || 'your area';
+            const searchQuery = buildCSCSearchQuery({ pincode, district, state });
+            const mapsUrl = buildGoogleMapsSearchUrl(searchQuery);
+
+            return {
+                cscId: 'CSC-FRONTEND-FALLBACK',
+                name: `CSC search near ${displayArea}`,
+                address: `Open Google Maps results for Common Service Centers near ${displayArea}.`,
+                district: district || '',
+                state: state || '',
+                pincode: pincode || '',
+                contactNumber: 'CSC Helpline: 1800-121-3468',
+                operatingHours: 'Please confirm timings with the selected center before visiting.',
+                servicesOffered: ['Government Schemes', 'Assisted Application', 'Document Support'],
+                mapsUrl,
+                directionsUrl: mapsUrl,
+                source: 'maps_search',
+                note: 'Using direct Google Maps search for nearby CSC centers in your area.',
+            };
+        }
+
+        function normalizeCSCResults(results, searchContext) {
+            return (Array.isArray(results) ? results : []).map((center, index) => {
+                const destination = [
+                    center.address,
+                    center.district || searchContext.district,
+                    center.state || searchContext.state,
+                    center.pincode || searchContext.pincode,
+                    'India',
+                ].filter(Boolean).join(', ');
+
+                return {
+                    cscId: center.cscId || `CSC-${index + 1}`,
+                    name: center.name || `CSC ${index + 1}`,
+                    address: center.address || `CSC near ${[searchContext.district, searchContext.state, searchContext.pincode].filter(Boolean).join(', ')}`,
+                    district: center.district || searchContext.district || '',
+                    state: center.state || searchContext.state || '',
+                    pincode: center.pincode || searchContext.pincode || '',
+                    distance: center.distance,
+                    contactNumber: center.contactNumber || 'Contact not available',
+                    operatingHours: center.operatingHours || 'Please confirm timings before visiting.',
+                    servicesOffered: center.servicesOffered || [],
+                    mapsUrl: center.mapsUrl || buildGoogleMapsSearchUrl(destination || buildCSCSearchQuery(searchContext)),
+                    directionsUrl: center.directionsUrl || buildGoogleDirectionsUrl(destination || buildCSCSearchQuery(searchContext)),
+                    source: center.source || 'catalog',
+                    note: center.note || '',
+                };
+            });
+        }
+
+        function openCSCModal(prefill = {}) {
+            document.getElementById('cscModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            if (prefill.pincode) {
+                document.getElementById('cscPincode').value = prefill.pincode;
+            }
+            if (prefill.district) {
+                document.getElementById('cscDistrict').value = prefill.district;
+            }
+            if (prefill.state) {
+                document.getElementById('cscState').value = prefill.state;
+            }
+        }
+
+        function closeCSCModal() {
+            document.getElementById('cscModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function resetCSCFinder() {
+            document.getElementById('cscPincode').value = '';
+            document.getElementById('cscDistrict').value = '';
+            document.getElementById('cscState').value = '';
+            document.getElementById('cscResults').innerHTML = `
+                <div class="csc-empty">
+                    Share your pincode to get the nearest CSC address, timings, and <code>Open Map</code> /
+                    <code>Directions</code> links.
+                </div>
+            `;
+        }
+
+        function renderCSCResults(results) {
+            const container = document.getElementById('cscResults');
+
+            if (!results || results.length === 0) {
+                container.innerHTML = `
+                    <div class="csc-empty">
+                        No nearby CSC result was found for the current input. Try adding district or state details.
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = results.map((center) => {
+                const badgeClass = center.source === 'google_places'
+                    ? 'csc-badge csc-badge-google'
+                    : 'csc-badge csc-badge-search';
+                const badgeLabel = center.source === 'google_places'
+                    ? 'Google Maps Listing'
+                    : center.source === 'catalog'
+                        ? 'JanSeva Directory'
+                        : 'Google Maps Search';
+                const services = Array.isArray(center.servicesOffered) && center.servicesOffered.length > 0
+                    ? center.servicesOffered.join(', ')
+                    : 'CSC assisted services';
+                const distanceHtml = typeof center.distance === 'number'
+                    ? `<div class="csc-meta-item"><strong>Distance</strong>${escapeHtml(center.distance)} km</div>`
+                    : '';
+                const noteHtml = center.note
+                    ? `<div class="csc-note">${escapeHtml(center.note)}</div>`
+                    : '';
+                const directionsUrl = center.directionsUrl || center.mapsUrl;
+
+                return `
+                    <div class="csc-result-card">
+                        <div class="csc-result-top">
+                            <div>
+                                <h3>${escapeHtml(center.name)}</h3>
+                                <div class="csc-result-address">${escapeHtml(center.address)}</div>
+                            </div>
+                            <span class="${badgeClass}">${badgeLabel}</span>
+                        </div>
+                        <div class="csc-meta">
+                            <div class="csc-meta-item"><strong>Timings</strong>${escapeHtml(center.operatingHours || 'Please confirm timings before visiting.')}</div>
+                            <div class="csc-meta-item"><strong>Contact</strong>${escapeHtml(center.contactNumber || 'Contact not available')}</div>
+                            <div class="csc-meta-item"><strong>Coverage</strong>${escapeHtml([center.district, center.state, center.pincode].filter(Boolean).join(', ') || 'Area-based result')}</div>
+                            <div class="csc-meta-item"><strong>Services</strong>${escapeHtml(services)}</div>
+                            ${distanceHtml}
+                        </div>
+                        ${noteHtml}
+                        <div class="csc-actions">
+                            <a class="csc-link csc-link-primary" href="${escapeHtml(center.mapsUrl || '#')}" target="_blank" rel="noopener noreferrer">
+                                Open Map
+                            </a>
+                            <a class="csc-link csc-link-secondary" href="${escapeHtml(directionsUrl || '#')}" target="_blank" rel="noopener noreferrer">
+                                Directions
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function findNearestCSC() {
+            const pincode = document.getElementById('cscPincode').value.trim();
+            const district = document.getElementById('cscDistrict').value.trim();
+            const state = document.getElementById('cscState').value.trim();
+            const button = document.getElementById('cscSearchBtn');
+            const container = document.getElementById('cscResults');
+            const searchContext = { pincode, district, state };
+
+            if (!pincode && !district && !state) {
+                container.innerHTML = `
+                    <div class="csc-empty">
+                        Enter at least a PIN code, district, or state to find nearby CSC locations.
+                    </div>
+                `;
+                return;
+            }
+
+            button.disabled = true;
+            button.textContent = 'Searching...';
+            container.innerHTML = `
+                <div class="csc-empty">
+                    Searching nearby CSC locations and preparing direct map links...
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/location/csc', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        pincode: pincode || undefined,
+                        district: district || undefined,
+                        state: state || undefined,
+                    }),
+                });
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error((data.error && data.error.message) || 'Failed to find CSC locations');
+                }
+
+                const normalized = normalizeCSCResults(data.data, searchContext);
+                renderCSCResults(normalized.length > 0 ? normalized : [buildLocalCSCSearchFallback(searchContext)]);
+            } catch (error) {
+                console.error('CSC search failed', error);
+                renderCSCResults([buildLocalCSCSearchFallback(searchContext)]);
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Find Nearby CSC';
+            }
+        }
+
+        if (eligibilityPageParams.get('eligibility') === 'true') {
+            eligibilityTargetScheme = loadEligibilityTarget();
+            history.replaceState(null, '', '/');
+            openWizard();
+        } else if (eligibilityPageParams.get('csc') === 'true') {
+            history.replaceState(null, '', '/');
+            openCSCModal();
+        } else if (eligibilityPageParams.get('chat') === 'true') {
+            pendingChatIntent = loadStoredChatIntent();
+            history.replaceState(null, '', '/');
+            openChat();
+        }
+
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                if (document.getElementById('cscModal').classList.contains('active')) {
+                    closeCSCModal();
+                } else if (document.getElementById('chatModal').classList.contains('active')) {
+                    closeChat();
+                } else if (document.getElementById('wizardModal').classList.contains('active')) {
+                    closeWizard();
+                }
+            }
+        });
     </script>
 </body>
 

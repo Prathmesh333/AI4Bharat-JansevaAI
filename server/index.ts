@@ -7,8 +7,8 @@ import { Language, ConversationState, UserProfile, Message } from '../src/types'
 import { extractIntent } from '../src/services/conversation/bedrock';
 import { transitionState, addMessageToContext, getNextState, resetContext } from '../src/services/conversation/stateManager';
 import { checkEligibility } from '../src/services/eligibility/matcher';
-import { searchSchemes } from '../src/services/schemes/search';
-import { initializeDatabase, getSchemeCount, getAllCategories, getSchemeBySlug, searchSchemesByText, searchSchemesByCategory, searchSchemesByLevel, advancedSearch, getAllSchemes } from '../src/services/schemes/schemeDatabase';
+import { searchSchemesPaginated } from '../src/services/schemes/search';
+import { initializeDatabase, getSchemeCount, getAllCategories, getAllCategoriesWithCounts, getSchemeBySlug, searchSchemesByText, searchSchemesByCategory, searchSchemesByLevel, advancedSearch, getAllSchemes } from '../src/services/schemes/schemeDatabase';
 import { detectLanguage } from '../src/services/voice/transcribe';
 import { findNearestCSC } from '../src/services/location/csc';
 import { getDocumentGuidance } from '../src/services/location/documents';
@@ -18,11 +18,91 @@ import { generatePrintableForm, FormData } from '../src/services/form/pdfGenerat
 import { saveForm, getAllSavedForms, getSavedFormById, deleteSavedForm } from './formStorage';
 
 const app = express();
-const PORT = 3000;
+const PORT = Number(process.env.PORT || 3000);
+const STATIC_DIR = path.resolve(__dirname, 'public');
+const rawCorsOrigins = (process.env.CORS_ORIGINS || '')
+  .split(',')
+  .map(origin => origin.trim())
+  .filter(Boolean);
 
-app.use(cors());
+const corsOptions: cors.CorsOptions = rawCorsOrigins.length > 0
+  ? {
+      origin: (origin, callback) => {
+        if (!origin || rawCorsOrigins.includes(origin)) {
+          callback(null, true);
+          return;
+        }
+        callback(new Error(`Origin ${origin} is not allowed by CORS`));
+      },
+    }
+  : {
+      origin: true,
+    };
+
+const FORM_FIELD_ALIASES: Record<string, string> = {
+  applicant_name: 'full_name',
+  name: 'full_name',
+  guardian_name: 'father_name',
+  husband_name: 'father_name',
+  dob: 'date_of_birth',
+  dateOfBirth: 'date_of_birth',
+  aadhaar: 'aadhaar_number',
+  aadhaar_no: 'aadhaar_number',
+  aadhaarNo: 'aadhaar_number',
+  mobile: 'mobile_number',
+  phone: 'mobile_number',
+  mobileNo: 'mobile_number',
+  mobile_no: 'mobile_number',
+  pin: 'pincode',
+  pin_code: 'pincode',
+  caste: 'caste_category',
+  education: 'education_level',
+  educational_qualification: 'education_level',
+  qualification: 'education_level',
+  institution: 'institution_name',
+  institution_school_college: 'institution_name',
+  course: 'course_name',
+  course_program: 'course_name',
+  course_program_name: 'course_name',
+  spouse: 'spouse_name',
+  bank_account_number: 'bank_account',
+  ifsc: 'ifsc_code',
+  bank_name_branch: 'bank_name',
+};
+
+function normalizeFormData(rawData: Record<string, unknown> = {}): FormData {
+  const normalized: FormData = {};
+
+  for (const [rawKey, rawValue] of Object.entries(rawData)) {
+    if (rawValue === undefined || rawValue === null) {
+      continue;
+    }
+
+    const key = rawKey.trim();
+    const canonicalKey = FORM_FIELD_ALIASES[key] || key;
+    const value = Array.isArray(rawValue) ? rawValue[0] : rawValue;
+    const cleanedValue = typeof value === 'string' ? value.trim() : value;
+
+    if (cleanedValue === '') {
+      continue;
+    }
+
+    const shouldOverride =
+      canonicalKey === key ||
+      normalized[canonicalKey] === undefined ||
+      normalized[canonicalKey] === '';
+
+    if (shouldOverride) {
+      normalized[canonicalKey] = cleanedValue as string | number | boolean;
+    }
+  }
+
+  return normalized;
+}
+
+app.use(cors(corsOptions));
 app.use(express.json());
-app.use(express.static('server/public'));
+app.use(express.static(STATIC_DIR));
 
 // In-memory session storage
 const sessions = new Map<string, any>();
@@ -198,18 +278,26 @@ async function startServer() {
   // ========================================
   app.post('/api/schemes/search', async (req, res) => {
     try {
-      const { query, language, userProfile, category, level, limit } = req.body;
+      const { query, language, userProfile, category, level, limit, page, pageSize } = req.body;
 
-      const results = await searchSchemes({
+      const results = await searchSchemesPaginated({
         text: query || '',
         language: language || Language.ENGLISH,
         userProfile,
         category,
         level,
-        limit: limit || 10,
+        limit: limit || pageSize || 10,
+        page: page || 1,
+        pageSize: pageSize || limit || 10,
       });
 
-      res.json({ success: true, data: results });
+      res.json({
+        success: true,
+        data: results.results,
+        total: results.total,
+        page: results.page,
+        pages: results.pages,
+      });
     } catch (error) {
       res.status(500).json({
         success: false,
@@ -222,11 +310,11 @@ async function startServer() {
   // Get all categories
   // ========================================
   app.get('/api/schemes/categories', (req, res) => {
-    const categories = getAllCategories();
+    const categories = getAllCategoriesWithCounts();
     res.json({
       success: true,
       data: {
-        categories: categories.map(cat => ({ category: cat, count: '100+' }))
+        categories
       }
     });
   });
@@ -351,7 +439,7 @@ async function startServer() {
       }
 
       const template = generateDynamicTemplate(scheme);
-      const formData: FormData = userData || {};
+      const formData: FormData = normalizeFormData(userData || {});
       const printableHtml = generatePrintableForm(
         scheme,
         template,
@@ -385,7 +473,7 @@ async function startServer() {
   // ========================================
   // Serve printable form as HTML page
   // ========================================
-  app.get('/api/schemes/form/print/:slug', (req, res) => {
+  app.get('/api/schemes/form/print/:slug', async (req, res) => {
     try {
       const scheme = getSchemeBySlug(req.params.slug);
       if (!scheme) {
@@ -396,18 +484,19 @@ async function startServer() {
       const template = generateDynamicTemplate(scheme);
 
       // Parse query params as form data
-      const formData: FormData = {};
+      const rawFormData: Record<string, unknown> = {};
       for (const [key, value] of Object.entries(req.query)) {
         if (key !== 'lang') {
-          formData[key] = value as string;
+          rawFormData[key] = value;
         }
       }
+      const formData = normalizeFormData(rawFormData);
 
       // Auto-save the form if it has any user data
       const hasUserData = Object.keys(formData).length > 0;
       if (hasUserData) {
         try {
-          const saved = saveForm(
+          const saved = await saveForm(
             req.params.slug,
             scheme.scheme_name,
             scheme.level,
@@ -439,9 +528,9 @@ async function startServer() {
   // ========================================
 
   // List all saved forms
-  app.get('/api/forms/saved', (req, res) => {
+  app.get('/api/forms/saved', async (req, res) => {
     try {
-      const forms = getAllSavedForms();
+      const forms = await getAllSavedForms();
       res.json({
         success: true,
         data: {
@@ -455,9 +544,9 @@ async function startServer() {
   });
 
   // Get a saved form by ID
-  app.get('/api/forms/saved/:id', (req, res) => {
+  app.get('/api/forms/saved/:id', async (req, res) => {
     try {
-      const form = getSavedFormById(req.params.id);
+      const form = await getSavedFormById(req.params.id);
       if (!form) {
         res.status(404).json({ success: false, error: { message: 'Saved form not found' } });
         return;
@@ -469,9 +558,9 @@ async function startServer() {
   });
 
   // Delete a saved form
-  app.delete('/api/forms/saved/:id', (req, res) => {
+  app.delete('/api/forms/saved/:id', async (req, res) => {
     try {
-      const deleted = deleteSavedForm(req.params.id);
+      const deleted = await deleteSavedForm(req.params.id);
       if (!deleted) {
         res.status(404).json({ success: false, error: { message: 'Saved form not found' } });
         return;
@@ -487,15 +576,28 @@ async function startServer() {
   // ========================================
   app.post('/api/eligibility/check', async (req, res) => {
     try {
-      const { userProfile, category, level } = req.body;
+      const { userProfile, category, level, slug } = req.body;
 
       // Search for relevant schemes using advanced search
       // Search for a broad set of schemes so the matcher has enough data
-      const csvSchemes = advancedSearch({
-        category,
-        level,
-        limit: 40, // Reduced to 40 to prevent Gemini token truncation error
-      });
+      let csvSchemes;
+      if (slug) {
+        const targetedScheme = getSchemeBySlug(slug);
+        if (!targetedScheme) {
+          res.status(404).json({
+            success: false,
+            error: { message: 'Scheme not found for eligibility check' },
+          });
+          return;
+        }
+        csvSchemes = [targetedScheme];
+      } else {
+        csvSchemes = advancedSearch({
+          category,
+          level,
+          limit: 40, // Reduced to 40 to prevent Gemini token truncation error
+        });
+      }
 
       // Convert to Scheme format for the eligibility matcher
       const schemes = csvSchemes.map(s => ({
@@ -525,13 +627,17 @@ async function startServer() {
       }));
 
       // Use the RAG AI evaluator instead of the hardcoded logic
-      const results = await evaluateEligibilityRAG(userProfile, schemes as any);
+      let results = await evaluateEligibilityRAG(userProfile, schemes as any);
+      if (slug && results.length === 0) {
+        // For single-scheme checks, fall back to the deterministic matcher so the UI still gets a result.
+        results = await checkEligibility(userProfile, schemes as any);
+      }
 
       res.json({
         success: true,
         data: {
           eligibleSchemes: results,
-          ineligibleSchemes: []
+          ineligibleSchemes: slug ? results.filter(r => !r.eligible) : []
         },
         totalSchemesSearched: csvSchemes.length,
       });

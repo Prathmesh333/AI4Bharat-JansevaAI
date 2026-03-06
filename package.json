@@ -4,13 +4,16 @@
   "description": "Voice-first multilingual AI assistant for government welfare schemes",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "npm run build:app",
+    "build:app": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsc -p tsconfig.app.json && node scripts/copy-runtime-assets.js",
+    "build:infra": "tsc",
     "watch": "tsc -w",
     "test": "jest",
     "cdk": "cdk",
     "deploy": "cdk deploy",
     "destroy": "cdk destroy",
     "start": "ts-node server/index.ts",
+    "start:prod": "node dist/server/index.js",
     "dev": "nodemon --exec ts-node server/index.ts"
   },
   "keywords": [

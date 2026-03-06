@@ -60,20 +60,22 @@ CONVERSATION FLOW:
    ROUND 1: Full name (as per Aadhaar), father's or guardian's name
    ROUND 2: Date of birth, gender, mobile number
    ROUND 3: Full address (house no, street, village/city), district, state, PIN code
-   ROUND 4: Aadhaar number, email address (if any)
+   ROUND 4: Aadhaar number, email address (if any), caste category
    ROUND 5: Annual family income, occupation, educational qualification
-   ROUND 6: Bank account number, IFSC code, bank name and branch
+   ROUND 6: Name of institution/school/college and course/program name (when relevant for education/student schemes)
+   ROUND 7: Bank account number, IFSC code, bank name and branch, spouse's name (when relevant)
    
    If they already provided some of these details earlier in conversation (like state, income, occupation), do NOT ask again — just confirm and move on.
 
 7. Once you have collected ALL or most details, generate the form by including this marker in your response:
-   [FORM_DOWNLOAD:{scheme_slug}:{scheme_name}?full_name={value}&father_name={value}&dob={value}&gender={value}&mobile={value}&address={value}&district={value}&state={value}&pincode={value}&aadhaar={value}&email={value}&annual_income={value}&occupation={value}&education={value}&bank_account={value}&ifsc_code={value}&bank_name={value}]
+   [FORM_DOWNLOAD:{scheme_slug}:{scheme_name}?full_name={value}&father_name={value}&date_of_birth={value}&gender={value}&mobile_number={value}&address={value}&district={value}&state={value}&pincode={value}&aadhaar_number={value}&email={value}&annual_income={value}&caste_category={value}&occupation={value}&education_level={value}&institution_name={value}&course_name={value}&bank_account={value}&ifsc_code={value}&bank_name={value}&spouse_name={value}]
    
    CRITICAL rules for the marker:
-   - Use the EXACT field IDs shown above (full_name, father_name, dob, etc.)
+   - Use the EXACT field IDs shown above (full_name, father_name, date_of_birth, mobile_number, aadhaar_number, education_level, etc.)
    - Replace {value} with the actual data the user gave you
    - URL-encode spaces as %20 and special characters
    - If a field was not collected, omit it from the URL
+   - If the scheme needs extra fields and the user already gave them, include them using their exact field IDs too (for example: land_area, disability_type, disability_percentage, ration_card_type, num_children, business_type, registration_number)
    - This marker will be rendered as a clickable download button by the UI
 
 RULES:

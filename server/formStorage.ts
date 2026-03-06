@@ -1,10 +1,15 @@
-// Local storage for saved pre-filled forms
-// Stores form data as JSON on disk so users can access their forms later
+// Saved form storage.
+// Uses S3 when FORMS_BUCKET is configured, otherwise falls back to local JSON storage.
 
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
+import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 
 const STORAGE_FILE = path.resolve(__dirname, 'saved_forms.json');
+const FORMS_BUCKET = process.env.FORMS_BUCKET || '';
+const FORMS_KEY = process.env.SAVED_FORMS_KEY || 'saved-forms/forms.json';
+const AWS_REGION = process.env.AWS_REGION || 'ap-south-1';
+const s3Client = FORMS_BUCKET ? new S3Client({ region: AWS_REGION }) : null;
 
 export interface SavedForm {
     id: string;
@@ -17,26 +22,85 @@ export interface SavedForm {
     updatedAt: string;
 }
 
-// Load all saved forms from disk
-function loadForms(): SavedForm[] {
+async function loadFormsFromDisk(): Promise<SavedForm[]> {
     try {
-        if (fs.existsSync(STORAGE_FILE)) {
-            const data = fs.readFileSync(STORAGE_FILE, 'utf-8');
-            return JSON.parse(data);
+        const data = await fs.readFile(STORAGE_FILE, 'utf-8');
+        return JSON.parse(data) as SavedForm[];
+    } catch (error: any) {
+        if (error?.code !== 'ENOENT') {
+            console.error('Error loading saved forms from disk:', error);
         }
-    } catch (error) {
-        console.error('Error loading saved forms:', error);
+        return [];
     }
-    return [];
 }
 
-// Save forms to disk
-function saveForms(forms: SavedForm[]): void {
+async function saveFormsToDisk(forms: SavedForm[]): Promise<void> {
     try {
-        fs.writeFileSync(STORAGE_FILE, JSON.stringify(forms, null, 2), 'utf-8');
+        await fs.writeFile(STORAGE_FILE, JSON.stringify(forms, null, 2), 'utf-8');
     } catch (error) {
-        console.error('Error saving forms:', error);
+        console.error('Error saving forms to disk:', error);
     }
+}
+
+async function loadFormsFromS3(): Promise<SavedForm[]> {
+    if (!s3Client || !FORMS_BUCKET) {
+        return [];
+    }
+
+    try {
+        const response = await s3Client.send(new GetObjectCommand({
+            Bucket: FORMS_BUCKET,
+            Key: FORMS_KEY,
+        }));
+
+        if (!response.Body) {
+            return [];
+        }
+
+        const body = await response.Body.transformToString();
+        return body ? JSON.parse(body) as SavedForm[] : [];
+    } catch (error: any) {
+        const code = error?.name || error?.Code;
+        if (code === 'NoSuchKey' || code === 'NotFound') {
+            return [];
+        }
+        console.error(`Error loading saved forms from S3 s3://${FORMS_BUCKET}/${FORMS_KEY}:`, error);
+        return [];
+    }
+}
+
+async function saveFormsToS3(forms: SavedForm[]): Promise<void> {
+    if (!s3Client || !FORMS_BUCKET) {
+        return;
+    }
+
+    try {
+        await s3Client.send(new PutObjectCommand({
+            Bucket: FORMS_BUCKET,
+            Key: FORMS_KEY,
+            Body: JSON.stringify(forms, null, 2),
+            ContentType: 'application/json',
+        }));
+    } catch (error) {
+        console.error(`Error saving forms to S3 s3://${FORMS_BUCKET}/${FORMS_KEY}:`, error);
+    }
+}
+
+async function loadForms(): Promise<SavedForm[]> {
+    if (s3Client && FORMS_BUCKET) {
+        return loadFormsFromS3();
+    }
+
+    return loadFormsFromDisk();
+}
+
+async function saveForms(forms: SavedForm[]): Promise<void> {
+    if (s3Client && FORMS_BUCKET) {
+        await saveFormsToS3(forms);
+        return;
+    }
+
+    await saveFormsToDisk(forms);
 }
 
 // Generate a unique ID
@@ -45,14 +109,14 @@ function generateId(): string {
 }
 
 // Save a new form or update existing one for the same scheme+user
-export function saveForm(
+export async function saveForm(
     schemeSlug: string,
     schemeName: string,
     schemeLevel: string,
     schemeCategory: string,
     formData: Record<string, string | number | boolean>
-): SavedForm {
-    const forms = loadForms();
+): Promise<SavedForm> {
+    const forms = await loadForms();
     const now = new Date().toISOString();
 
     // Check if a form already exists for this scheme (by slug and applicant name)
@@ -64,7 +128,7 @@ export function saveForm(
         // Update existing form
         forms[existingIndex].formData = formData;
         forms[existingIndex].updatedAt = now;
-        saveForms(forms);
+        await saveForms(forms);
         return forms[existingIndex];
     }
 
@@ -81,33 +145,35 @@ export function saveForm(
     };
 
     forms.push(savedForm);
-    saveForms(forms);
+    await saveForms(forms);
     return savedForm;
 }
 
 // Get all saved forms
-export function getAllSavedForms(): SavedForm[] {
+export async function getAllSavedForms(): Promise<SavedForm[]> {
     return loadForms();
 }
 
 // Get a saved form by ID
-export function getSavedFormById(id: string): SavedForm | undefined {
-    return loadForms().find(f => f.id === id);
+export async function getSavedFormById(id: string): Promise<SavedForm | undefined> {
+    const forms = await loadForms();
+    return forms.find(f => f.id === id);
 }
 
 // Delete a saved form by ID
-export function deleteSavedForm(id: string): boolean {
-    const forms = loadForms();
+export async function deleteSavedForm(id: string): Promise<boolean> {
+    const forms = await loadForms();
     const index = forms.findIndex(f => f.id === id);
     if (index >= 0) {
         forms.splice(index, 1);
-        saveForms(forms);
+        await saveForms(forms);
         return true;
     }
     return false;
 }
 
 // Get forms by scheme slug
-export function getFormsByScheme(slug: string): SavedForm[] {
-    return loadForms().filter(f => f.schemeSlug === slug);
+export async function getFormsByScheme(slug: string): Promise<SavedForm[]> {
+    const forms = await loadForms();
+    return forms.filter(f => f.schemeSlug === slug);
 }

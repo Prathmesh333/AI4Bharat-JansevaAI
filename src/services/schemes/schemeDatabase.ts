@@ -16,6 +16,34 @@ let categoryIndex: Map<string, CsvScheme[]> = new Map();
 let tagIndex: Map<string, CsvScheme[]> = new Map();
 let allCategories: string[] = [];
 
+export interface CategoryCount {
+    category: string;
+    count: number;
+}
+
+export interface PaginatedSchemeResults {
+    schemes: CsvScheme[];
+    total: number;
+    pages: number;
+    page: number;
+}
+
+function paginateResults(results: CsvScheme[], page: number = 1, pageSize: number = 20): PaginatedSchemeResults {
+    const safePageSize = Math.max(1, pageSize);
+    const total = results.length;
+    const pages = Math.max(1, Math.ceil(total / safePageSize));
+    const safePage = Math.min(Math.max(1, page), pages);
+    const start = (safePage - 1) * safePageSize;
+    const end = start + safePageSize;
+
+    return {
+        schemes: results.slice(start, end),
+        total,
+        pages,
+        page: safePage,
+    };
+}
+
 /**
  * Initialize the scheme database from CSV file.
  * Should be called once at server startup.
@@ -182,16 +210,71 @@ export function getAllCategories(): string[] {
 }
 
 /**
+ * Get all categories with exact scheme counts
+ */
+export function getAllCategoriesWithCounts(): CategoryCount[] {
+    return allCategories.map(category => ({
+        category,
+        count: (categoryIndex.get(category.toLowerCase()) || []).length,
+    }));
+}
+
+/**
  * Get all schemes (paginated)
  */
-export function getAllSchemes(page: number = 1, pageSize: number = 20): { schemes: CsvScheme[]; total: number; pages: number } {
-    const start = (page - 1) * pageSize;
-    const end = start + pageSize;
-    return {
-        schemes: schemes.slice(start, end),
-        total: schemes.length,
-        pages: Math.ceil(schemes.length / pageSize),
-    };
+export function getAllSchemes(page: number = 1, pageSize: number = 20): PaginatedSchemeResults {
+    return paginateResults(schemes, page, pageSize);
+}
+
+/**
+ * Paginated full-text search across scheme name, details, benefits, eligibility, tags
+ */
+export function searchSchemesByTextPaginated(query: string, page: number = 1, pageSize: number = 10): PaginatedSchemeResults {
+    if (!query.trim()) {
+        return paginateResults(schemes, page, pageSize);
+    }
+
+    const queryLower = query.toLowerCase();
+    const queryTerms = queryLower.split(/\s+/).filter(Boolean);
+
+    const scored = schemes.map(scheme => {
+        let score = 0;
+        const nameLower = scheme.scheme_name.toLowerCase();
+        const detailsLower = scheme.details.toLowerCase();
+        const benefitsLower = scheme.benefits.toLowerCase();
+        const eligibilityLower = scheme.eligibility.toLowerCase();
+        const tagsLower = scheme.tags.join(' ').toLowerCase();
+        const categoryLower = scheme.schemeCategory.toLowerCase();
+
+        if (nameLower.includes(queryLower)) {
+            score += 100;
+        }
+
+        if (categoryLower.includes(queryLower)) {
+            score += 50;
+        }
+
+        if (tagsLower.includes(queryLower)) {
+            score += 40;
+        }
+
+        for (const term of queryTerms) {
+            if (nameLower.includes(term)) score += 30;
+            if (tagsLower.includes(term)) score += 15;
+            if (benefitsLower.includes(term)) score += 10;
+            if (eligibilityLower.includes(term)) score += 10;
+            if (detailsLower.includes(term)) score += 5;
+        }
+
+        return { scheme, score };
+    });
+
+    const results = scored
+        .filter(s => s.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map(s => s.scheme);
+
+    return paginateResults(results, page, pageSize);
 }
 
 /**
@@ -252,4 +335,60 @@ export function advancedSearch(filters: {
     }
 
     return results.slice(0, limit);
+}
+
+/**
+ * Advanced search with pagination and exact totals
+ */
+export function advancedSearchPaginated(filters: {
+    query?: string;
+    category?: string;
+    level?: 'Central' | 'State';
+    tags?: string[];
+    page?: number;
+    pageSize?: number;
+}): PaginatedSchemeResults {
+    let results = [...schemes];
+
+    if (filters.level) {
+        results = results.filter(s => s.level === filters.level);
+    }
+
+    if (filters.category) {
+        const catLower = filters.category.toLowerCase();
+        results = results.filter(s =>
+            s.categories.some(c => c.toLowerCase().includes(catLower))
+        );
+    }
+
+    if (filters.tags && filters.tags.length > 0) {
+        const tagLowers = filters.tags.map(t => t.toLowerCase());
+        results = results.filter(s =>
+            tagLowers.some(tag =>
+                s.tags.some(t => t.toLowerCase().includes(tag))
+            )
+        );
+    }
+
+    if (filters.query && filters.query.trim()) {
+        const queryLower = filters.query.toLowerCase();
+        const queryTerms = queryLower.split(/\s+/).filter(Boolean);
+
+        const scored = results.map(scheme => {
+            let score = 0;
+            const searchable = `${scheme.scheme_name} ${scheme.details} ${scheme.benefits} ${scheme.eligibility} ${scheme.tags.join(' ')}`.toLowerCase();
+
+            for (const term of queryTerms) {
+                if (searchable.includes(term)) score++;
+            }
+            return { scheme, score };
+        });
+
+        results = scored
+            .filter(s => s.score > 0)
+            .sort((a, b) => b.score - a.score)
+            .map(s => s.scheme);
+    }
+
+    return paginateResults(results, filters.page, filters.pageSize || 10);
 }

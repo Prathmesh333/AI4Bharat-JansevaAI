@@ -550,8 +550,8 @@ export function generatePrintableForm(
         </div>` : ''}
         <div class="helpline-item">
           <strong>Nearest CSC</strong>
-          Find your nearest CSC at:<br>
-          <a href="https://locator.csccloud.in/" style="color: #1565c0;">locator.csccloud.in</a>
+          Find your nearest CSC with JanSeva AI:<br>
+          <a href="/?csc=true" style="color: #1565c0;">Open CSC Finder</a>
         </div>
       </div>
     </div>

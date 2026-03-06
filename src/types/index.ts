@@ -153,6 +153,11 @@ export interface CSCLocation {
   email?: string;
   operatingHours: string;
   servicesOffered: string[];
+  distance?: number;
+  mapsUrl?: string;
+  directionsUrl?: string;
+  source?: 'catalog' | 'google_places' | 'maps_search';
+  note?: string;
 }
 
 export interface VoiceInput {
