@@ -1,5 +1,6 @@
-// Form services - Main entry point
+// Form service - exports all form-related modules
 
-export { generateForm, generateReferenceNumber, getForm } from './generator';
-export { generateQuestion, getNextQuestion, parseResponse, validateField } from './conversational';
-export type { FormQuestion } from './conversational';
+export { generateForm, getForm, generateReferenceNumber } from './generator';
+export { generateQuestion, getNextQuestion, parseResponse, validateField, FormQuestion } from './conversational';
+export { generateDynamicTemplate, extractDocumentChecklist, getCachedTemplateCount } from './dynamicTemplate';
+export { generatePrintableForm, FormData } from './pdfGenerator';

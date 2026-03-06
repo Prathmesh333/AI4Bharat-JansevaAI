@@ -1,6 +1,5 @@
-// Scheme services - Main entry point
+// Schemes service - exports all scheme-related modules
 
-export { ingestSchemeDocument, chunkDocument, getSchemeDocument } from './processor';
-export { searchSchemes, getSchemeDetails } from './search';
-export type { SchemeDocument } from './processor';
-export type { SearchQuery, SearchResult } from './search';
+export { loadSchemesFromCSV, CsvScheme } from './csvLoader';
+export { initializeDatabase, isInitialized, getSchemeCount, searchSchemesByText, searchSchemesByCategory, searchSchemesByTag, searchSchemesByLevel, getSchemeBySlug, getAllCategories, getAllSchemes, advancedSearch } from './schemeDatabase';
+export { searchSchemes, getSchemeDetails, SearchQuery, SearchResult } from './search';

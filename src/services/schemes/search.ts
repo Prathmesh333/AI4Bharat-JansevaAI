@@ -1,8 +1,11 @@
 // Semantic search and retrieval for schemes
+// Now powered by real CSV data instead of mock schemes
 
 import { Scheme, UserProfile, Language } from '../../types';
 import { createLogger } from '../../utils/logger';
 import { JanSevaError, ErrorCodes } from '../../utils/errors';
+import { CsvScheme } from './csvLoader';
+import * as schemeDb from './schemeDatabase';
 
 const logger = createLogger('SchemeSearch');
 
@@ -11,76 +14,93 @@ export interface SearchQuery {
   language: Language;
   userProfile?: UserProfile;
   limit?: number;
+  category?: string;
+  level?: 'Central' | 'State';
 }
 
 export interface SearchResult {
   schemeId: string;
   schemeName: string;
+  slug: string;
   relevanceScore: number;
   excerpt: string;
   matchedCriteria: string[];
+  category: string;
+  level: string;
+  benefits: string;
+  documents: string;
+  officialUrl: string;
 }
 
-// Mock scheme database (in production, this would query OpenSearch)
-const mockSchemes: Scheme[] = [
-  {
-    schemeId: 'PM-KISAN',
-    name: 'PM-KISAN',
-    nameTranslations: {
-      [Language.HINDI]: 'प्रधानमंत्री किसान सम्मान निधि',
-      [Language.ENGLISH]: 'PM Kisan Samman Nidhi',
-      [Language.BENGALI]: 'পিএম কিষাণ সম্মান নিধি',
-      [Language.TELUGU]: 'పిఎం కిసాన్ సమ్మాన్ నిధి',
-      [Language.MARATHI]: 'पीएम किसान सन्मान निधी',
-      [Language.TAMIL]: 'பிஎம் கிசான் சம்மான் நிதி',
-      [Language.GUJARATI]: 'પીએમ કિસાન સમ્માન નિધિ',
-      [Language.KANNADA]: 'ಪಿಎಂ ಕಿಸಾನ್ ಸಮ್ಮಾನ್ ನಿಧಿ',
-      [Language.MALAYALAM]: 'പിഎം കിസാൻ സമ്മാൻ നിധി',
-      [Language.PUNJABI]: 'ਪੀਐਮ ਕਿਸਾਨ ਸਮਾਨ ਨਿਧੀ',
-      [Language.ODIA]: 'ପିଏମ୍ କିଷାଣ ସମ୍ମାନ ନିଧି',
-    },
-    description: 'Income support to farmers',
-    descriptionTranslations: {} as any,
-    ministry: 'Ministry of Agriculture',
-    category: 'Agriculture',
-    benefits: ['₹6000 per year in 3 installments'],
-    eligibilityCriteria: {
-      occupation: ['farmer'],
-      landOwnership: true,
-    },
-    documents: ['Land records', 'Aadhaar', 'Bank account'],
-    applicationProcess: 'Online through PM-KISAN portal',
-    officialUrl: 'https://pmkisan.gov.in',
-    lastUpdated: Date.now(),
-  },
-];
+/**
+ * Convert CsvScheme to SearchResult with relevance scoring
+ */
+function csvSchemeToSearchResult(scheme: CsvScheme, query: SearchQuery, rank: number, totalResults: number): SearchResult {
+  const relevanceScore = Math.max(0.1, 1.0 - (rank / Math.max(totalResults, 1)) * 0.8);
+
+  return {
+    schemeId: scheme.slug || scheme.scheme_name.toLowerCase().replace(/\s+/g, '-').substring(0, 30),
+    schemeName: scheme.scheme_name,
+    slug: scheme.slug,
+    relevanceScore,
+    excerpt: scheme.details.substring(0, 300) + (scheme.details.length > 300 ? '...' : ''),
+    matchedCriteria: getMatchedCriteria(scheme, query.userProfile),
+    category: scheme.schemeCategory,
+    level: scheme.level,
+    benefits: scheme.benefits.substring(0, 200) + (scheme.benefits.length > 200 ? '...' : ''),
+    documents: scheme.documents.substring(0, 200) + (scheme.documents.length > 200 ? '...' : ''),
+    officialUrl: scheme.officialUrl,
+  };
+}
 
 export async function searchSchemes(query: SearchQuery): Promise<SearchResult[]> {
   try {
-    logger.info('Searching schemes', { 
-      query: query.text, 
+    logger.info('Searching schemes', {
+      query: query.text,
       language: query.language,
-      hasProfile: !!query.userProfile 
+      hasProfile: !!query.userProfile,
+      category: query.category,
+      level: query.level,
     });
 
-    // In production, this would:
-    // 1. Generate embedding for query using Cohere
-    // 2. Search OpenSearch vector index
-    // 3. Apply user profile filters
-    // 4. Rank results by relevance
+    if (!schemeDb.isInitialized()) {
+      logger.warn('Scheme database not initialized, returning empty results');
+      return [];
+    }
 
-    // Mock implementation
-    const results: SearchResult[] = mockSchemes
-      .filter(scheme => matchesQuery(scheme, query))
-      .map(scheme => ({
-        schemeId: scheme.schemeId,
-        schemeName: scheme.nameTranslations[query.language] || scheme.name,
-        relevanceScore: calculateRelevance(scheme, query),
-        excerpt: scheme.description,
-        matchedCriteria: getMatchedCriteria(scheme, query.userProfile),
-      }))
-      .sort((a, b) => b.relevanceScore - a.relevanceScore)
-      .slice(0, query.limit || 10);
+    let csvResults: CsvScheme[];
+
+    // Use advanced search if filters are provided
+    if (query.category || query.level || (query.userProfile && query.userProfile.occupation)) {
+      csvResults = schemeDb.advancedSearch({
+        query: query.text,
+        category: query.category,
+        level: query.level,
+        tags: query.userProfile?.occupation ? [query.userProfile.occupation] : undefined,
+        limit: query.limit || 10,
+      });
+    } else {
+      csvResults = schemeDb.searchSchemesByText(query.text, query.limit || 10);
+    }
+
+    // Convert to SearchResult format with scoring
+    const results = csvResults.map((scheme, index) =>
+      csvSchemeToSearchResult(scheme, query, index, csvResults.length)
+    );
+
+    // Boost results matching user profile
+    if (query.userProfile) {
+      results.forEach(result => {
+        const scheme = schemeDb.getSchemeBySlug(result.slug);
+        if (scheme) {
+          const boost = calculateProfileBoost(scheme, query.userProfile!);
+          result.relevanceScore = Math.min(1.0, result.relevanceScore + boost);
+        }
+      });
+
+      // Re-sort by boosted relevance
+      results.sort((a, b) => b.relevanceScore - a.relevanceScore);
+    }
 
     logger.info('Search completed', { resultsCount: results.length });
     return results;
@@ -96,64 +116,95 @@ export async function searchSchemes(query: SearchQuery): Promise<SearchResult[]>
   }
 }
 
-function matchesQuery(scheme: Scheme, query: SearchQuery): boolean {
-  const searchText = query.text.toLowerCase();
-  const schemeName = scheme.name.toLowerCase();
-  const schemeDesc = scheme.description.toLowerCase();
-  
-  return schemeName.includes(searchText) || 
-         schemeDesc.includes(searchText) ||
-         scheme.category.toLowerCase().includes(searchText);
-}
+/**
+ * Calculate a relevance boost based on user profile matching scheme eligibility text
+ */
+function calculateProfileBoost(scheme: CsvScheme, profile: UserProfile): number {
+  let boost = 0;
+  const eligibilityLower = scheme.eligibility.toLowerCase();
+  const tagsLower = scheme.tags.join(' ').toLowerCase();
 
-function calculateRelevance(scheme: Scheme, query: SearchQuery): number {
-  let score = 0.5; // Base score
-  
-  // Boost if user profile matches eligibility
-  if (query.userProfile) {
-    const criteria = scheme.eligibilityCriteria;
-    
-    if (criteria.occupation && query.userProfile.occupation) {
-      if (criteria.occupation.includes(query.userProfile.occupation)) {
-        score += 0.3;
-      }
-    }
-    
-    if (criteria.landOwnership !== undefined && query.userProfile.landOwnership !== undefined) {
-      if (criteria.landOwnership === query.userProfile.landOwnership) {
-        score += 0.2;
-      }
+  // Occupation match
+  if (profile.occupation) {
+    if (eligibilityLower.includes(profile.occupation.toLowerCase()) ||
+      tagsLower.includes(profile.occupation.toLowerCase())) {
+      boost += 0.2;
     }
   }
-  
-  return Math.min(score, 1.0);
+
+  // Category match
+  if (profile.category) {
+    const categoryMap: Record<string, string[]> = {
+      'sc': ['scheduled caste', 'sc'],
+      'st': ['scheduled tribe', 'st'],
+      'obc': ['other backward class', 'obc'],
+      'ews': ['economically weaker', 'ews'],
+      'general': ['general'],
+    };
+    const keywords = categoryMap[profile.category] || [];
+    if (keywords.some(k => eligibilityLower.includes(k))) {
+      boost += 0.15;
+    }
+  }
+
+  // Gender match
+  if (profile.gender) {
+    if (eligibilityLower.includes(profile.gender)) {
+      boost += 0.1;
+    }
+  }
+
+  // BPL/ration card match
+  if (profile.rationCard) {
+    if (eligibilityLower.includes(profile.rationCard)) {
+      boost += 0.1;
+    }
+  }
+
+  return boost;
 }
 
-function getMatchedCriteria(scheme: Scheme, profile?: UserProfile): string[] {
+/**
+ * Extract matched criteria from scheme eligibility text based on user profile
+ */
+function getMatchedCriteria(scheme: CsvScheme, profile?: UserProfile): string[] {
   if (!profile) return [];
-  
+
   const matched: string[] = [];
-  const criteria = scheme.eligibilityCriteria;
-  
-  if (criteria.occupation && profile.occupation && criteria.occupation.includes(profile.occupation)) {
+  const eligibilityLower = scheme.eligibility.toLowerCase();
+  const tagsLower = scheme.tags.join(' ').toLowerCase();
+
+  if (profile.occupation && (eligibilityLower.includes(profile.occupation.toLowerCase()) || tagsLower.includes(profile.occupation.toLowerCase()))) {
     matched.push('occupation');
   }
-  
-  if (criteria.landOwnership !== undefined && profile.landOwnership === criteria.landOwnership) {
-    matched.push('landOwnership');
+
+  if (profile.category) {
+    const catKeywords: Record<string, string[]> = {
+      'sc': ['scheduled caste', 'sc '], 'st': ['scheduled tribe', 'st '],
+      'obc': ['obc', 'backward class'], 'ews': ['ews', 'economically weaker'],
+    };
+    if ((catKeywords[profile.category] || []).some(k => eligibilityLower.includes(k))) {
+      matched.push('category');
+    }
   }
-  
-  if (criteria.states && profile.state && criteria.states.includes(profile.state)) {
+
+  if (profile.gender && eligibilityLower.includes(profile.gender)) {
+    matched.push('gender');
+  }
+
+  if (profile.state && eligibilityLower.includes(profile.state.toLowerCase())) {
     matched.push('state');
   }
-  
+
   return matched;
 }
 
-export async function getSchemeDetails(schemeId: string, language: Language): Promise<Scheme | null> {
+/**
+ * Get full scheme details by slug
+ */
+export async function getSchemeDetails(schemeId: string, language: Language): Promise<CsvScheme | null> {
   try {
-    const scheme = mockSchemes.find(s => s.schemeId === schemeId);
-    return scheme || null;
+    return schemeDb.getSchemeBySlug(schemeId);
   } catch (error) {
     logger.error('Failed to get scheme details', error as Error);
     throw new JanSevaError(

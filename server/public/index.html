@@ -1,329 +1,791 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JanSeva AI - Seva Har Samasya Ki</title>
+    <title>JanSeva AI - Seva Har Samasya Ki | Government Welfare Schemes</title>
+    <meta name="description"
+        content="AI-powered assistant helping Indian citizens discover government welfare schemes, check eligibility, and apply in their own language.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            box-sizing: border-box
         }
-        
+
+        :root {
+            --g50: #f0fdf4;
+            --g100: #dcfce7;
+            --g500: #22c55e;
+            --g600: #16a34a;
+            --g700: #15803d;
+            --g800: #166534;
+            --g900: #14532d;
+            --s50: #f8fafc;
+            --s100: #f1f5f9;
+            --s200: #e2e8f0;
+            --s300: #cbd5e1;
+            --s500: #64748b;
+            --s600: #475569;
+            --s700: #334155;
+            --s800: #1e293b;
+            --s900: #0f172a;
+            --footbg: #1e1b3a;
+            --r: 12px
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f8f9fa;
+            font-family: 'Mulish', sans-serif;
+            background: #fff;
+            color: var(--s800);
             overflow-x: hidden;
+            line-height: 1.6
         }
-        
-        /* Navigation */
-        nav {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            padding: 20px 0;
+
+        .site-header {
             position: fixed;
-            width: 100%;
             top: 0;
+            width: 100%;
             z-index: 1000;
-            box-shadow: 0 2px 20px rgba(30,60,114,0.15);
+            background: #fff;
+            border-bottom: 1px solid var(--s200);
+            transition: box-shadow .3s
         }
-        
-        nav .container {
+
+        .site-header.scrolled {
+            box-shadow: 0 2px 20px rgba(0, 0, 0, .08)
+        }
+
+        .header-inner {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 68px
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--g600), var(--g700));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 900;
+            font-size: 18px
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--s900)
+        }
+
+        .logo-text span {
+            color: var(--g700)
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .header-nav a {
+            text-decoration: none;
+            color: var(--s600);
+            font-weight: 600;
+            font-size: 14px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all .2s
+        }
+
+        .header-nav a:hover {
+            background: var(--g50);
+            color: var(--g700)
+        }
+
+        .nav-lang-select {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--s200);
+            background: #fff;
+            font-family: 'Mulish', sans-serif;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--s700);
+            cursor: pointer;
+            outline: none
+        }
+
+        .btn-primary {
+            background: var(--g700);
+            color: #fff !important;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all .2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .btn-primary:hover {
+            background: var(--g800);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(21, 128, 61, .3)
+        }
+
+        .hero {
+            padding: 120px 24px 60px;
+            background: linear-gradient(180deg, var(--g50) 0%, #fff 100%);
+            text-align: center
+        }
+
+        .hero-inner {
+            max-width: 800px;
+            margin: 0 auto
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--g100);
+            color: var(--g800);
+            font-weight: 700;
+            font-size: 13px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 24px
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--s900);
+            line-height: 1.15;
+            margin-bottom: 8px
+        }
+
+        .hero h1 span {
+            color: var(--g700)
+        }
+
+        .hero-tagline {
+            font-size: 20px;
+            color: var(--g700);
+            font-weight: 700;
+            margin-bottom: 16px
+        }
+
+        .hero-desc {
+            font-size: 17px;
+            color: var(--s500);
+            max-width: 600px;
+            margin: 0 auto 32px;
+            line-height: 1.7
+        }
+
+        .hero-actions {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 48px;
+            flex-wrap: wrap
+        }
+
+        .btn-hero {
+            padding: 14px 36px;
+            font-size: 16px;
+            font-weight: 800;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all .3s;
+            font-family: 'Mulish', sans-serif
+        }
+
+        .btn-hero-primary {
+            background: var(--g700);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(21, 128, 61, .3)
+        }
+
+        .btn-hero-primary:hover {
+            background: var(--g800);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(21, 128, 61, .4)
+        }
+
+        .btn-hero-outline {
+            background: #fff;
+            color: var(--g700);
+            border: 2px solid var(--g700)
+        }
+
+        .btn-hero-outline:hover {
+            background: var(--g50)
+        }
+
+        .stats-bar {
+            background: var(--s900);
+            padding: 0 24px
+        }
+
+        .stats-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr)
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 28px 16px;
+            border-right: 1px solid rgba(255, 255, 255, .1)
+        }
+
+        .stat-item:last-child {
+            border-right: none
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--g500);
+            display: block
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: rgba(255, 255, 255, .7);
+            font-weight: 600;
+            margin-top: 4px
+        }
+
+        .categories-section {
+            padding: 80px 24px;
+            background: var(--s50)
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 48px
+        }
+
+        .section-header h2 {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--s900);
+            margin-bottom: 12px
+        }
+
+        .section-header p {
+            font-size: 16px;
+            color: var(--s500);
+            max-width: 600px;
+            margin: 0 auto
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 16px
+        }
+
+        .category-card {
+            background: #fff;
+            border: 1px solid var(--s200);
+            border-radius: var(--r);
+            padding: 24px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .25s;
+            text-decoration: none;
+            display: block
+        }
+
+        .category-card:hover {
+            border-color: var(--g500);
+            box-shadow: 0 8px 24px rgba(21, 128, 61, .12);
+            transform: translateY(-4px)
+        }
+
+        .cat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            font-size: 24px
+        }
+
+        .category-card h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--s800);
+            margin-bottom: 6px
+        }
+
+        .cat-count {
+            font-size: 12px;
+            color: var(--s500);
+            font-weight: 600
+        }
+
+        .features-section {
+            padding: 80px 24px;
+            background: #fff
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px
+        }
+
+        .feature-card {
+            background: #fff;
+            border: 1px solid var(--s200);
+            border-radius: var(--r);
+            padding: 32px 24px;
+            transition: all .25s
+        }
+
+        .feature-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .06);
+            transform: translateY(-2px)
+        }
+
+        .feature-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            font-size: 24px
+        }
+
+        .feature-card h3 {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--s900);
+            margin-bottom: 8px
+        }
+
+        .feature-card p {
+            font-size: 14px;
+            color: var(--s500);
+            line-height: 1.7
+        }
+
+        .how-section {
+            padding: 80px 24px;
+            background: var(--g50)
+        }
+
+        .steps-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 32px 20px;
+            background: #fff;
+            border-radius: var(--r);
+            border: 1px solid var(--g100)
+        }
+
+        .step-num {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--g700);
+            color: #fff;
+            font-weight: 900;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px
+        }
+
+        .step-card h3 {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--s900);
+            margin-bottom: 8px
+        }
+
+        .step-card p {
+            font-size: 13px;
+            color: var(--s500);
+            line-height: 1.6
+        }
+
+        .cta-section {
+            padding: 80px 24px;
+            background: linear-gradient(135deg, var(--g700) 0%, var(--g900) 100%);
+            text-align: center;
+            color: #fff
+        }
+
+        .cta-section h2 {
+            font-size: 36px;
+            font-weight: 900;
+            margin-bottom: 16px
+        }
+
+        .cta-section p {
+            font-size: 17px;
+            opacity: .9;
+            margin-bottom: 32px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto
+        }
+
+        .btn-cta {
+            background: #fff;
+            color: var(--g700);
+            padding: 16px 40px;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 800;
+            border: none;
+            cursor: pointer;
+            font-family: 'Mulish', sans-serif;
+            transition: all .3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .2)
+        }
+
+        .site-footer {
+            background: var(--footbg);
+            color: rgba(255, 255, 255, .8);
+            padding: 64px 24px 32px
+        }
+
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px
+        }
+
+        .footer-brand h3 {
+            font-size: 22px;
+            font-weight: 900;
+            color: #fff;
+            margin-bottom: 12px
+        }
+
+        .footer-brand p {
+            font-size: 14px;
+            line-height: 1.7;
+            opacity: .7
+        }
+
+        .footer-col h4 {
+            font-size: 14px;
+            font-weight: 800;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px
+        }
+
+        .footer-col a {
+            display: block;
+            color: rgba(255, 255, 255, .6);
+            text-decoration: none;
+            font-size: 14px;
+            padding: 4px 0;
+            transition: color .2s
+        }
+
+        .footer-col a:hover {
+            color: var(--g500)
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, .1);
+            padding-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            opacity: .5
+        }
+
+
+        /* Wizard Modal */
+        .wizard-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2000;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wizard-modal.active {
+            display: flex;
+        }
+
+        .wizard-container {
+            width: 90%;
+            max-width: 600px;
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.2);
+            max-height: 90vh;
+        }
+
+        .wizard-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--s200);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
-        nav .logo {
-            color: white;
-            font-size: 1.5em;
-            font-weight: bold;
+
+        .wizard-header h2 {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--s900);
+        }
+
+        .wizard-progress {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            gap: 8px;
+            padding: 24px 32px 0;
         }
-        
-        nav .logo svg {
-            width: 32px;
-            height: 32px;
+
+        .wizard-step-dot {
+            height: 6px;
+            flex: 1;
+            border-radius: 4px;
+            background: var(--s200);
+            transition: background 0.3s;
         }
-        
-        nav .nav-links {
-            display: flex;
-            gap: 30px;
+
+        .wizard-step-dot.active {
+            background: var(--g600);
         }
-        
-        nav a {
-            color: white;
-            text-decoration: none;
-            transition: opacity 0.3s;
+
+        .wizard-body {
+            padding: 32px;
+            overflow-y: auto;
+            flex: 1;
+            min-height: 300px;
         }
-        
-        nav a:hover {
-            opacity: 0.8;
+
+        .wizard-step {
+            display: none;
+            animation: fadeIn 0.3s;
         }
-        
-        .cta-button {
-            background: white;
-            color: #1e3c72;
-            padding: 10px 25px;
-            border-radius: 25px;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-        
-        .cta-button:hover {
-            background: #f0f0f0;
-            transform: translateY(-2px);
-        }
-        
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            padding: 120px 20px 80px;
-            text-align: center;
-        }
-        
-        .hero h1 {
-            font-size: 3.5em;
-            margin-bottom: 20px;
-            animation: fadeInUp 1s;
-        }
-        
-        .hero .tagline {
-            font-size: 1.8em;
-            margin-bottom: 10px;
-            opacity: 0.95;
-        }
-        
-        .hero .subtitle {
-            font-size: 1.2em;
-            margin-bottom: 40px;
-            opacity: 0.9;
-        }
-        
-        .hero .stats {
-            display: flex;
-            justify-content: center;
-            gap: 60px;
-            margin-top: 50px;
-            flex-wrap: wrap;
-        }
-        
-        .stat-item {
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 2.5em;
-            font-weight: bold;
+
+        .wizard-step.active {
             display: block;
         }
-        
-        .stat-label {
-            font-size: 1em;
-            opacity: 0.9;
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
         }
-        
-        /* Problem Section */
-        .problem-section {
-            padding: 80px 20px;
-            background: white;
+
+        .wizard-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: var(--s900);
         }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+
+        .wizard-subtitle {
+            font-size: 15px;
+            color: var(--s500);
+            margin-bottom: 24px;
         }
-        
-        .section-title {
-            text-align: center;
-            font-size: 2.5em;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        
-        .section-subtitle {
-            text-align: center;
-            font-size: 1.2em;
-            color: #666;
-            margin-bottom: 50px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .problem-highlight {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
-            border-radius: 20px;
-            font-size: 1.3em;
-            text-align: center;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 30px rgba(102,126,234,0.3);
-        }
-        
-        /* Features Section */
-        .features-section {
-            padding: 80px 20px;
-            background: #f8f9fa;
-        }
-        
-        .features-grid {
+
+        .wizard-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 50px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
         }
-        
-        .feature-card {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            border: 1px solid #e8e8e8;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(30,60,114,0.15);
-            border-color: #1e3c72;
-        }
-        
-        .feature-icon {
-            font-size: 3em;
-            margin-bottom: 20px;
-        }
-        
-        .feature-icon svg {
-            width: 64px;
-            height: 64px;
-        }
-        
-        .feature-card h3 {
-            color: #1e3c72;
-            font-size: 1.5em;
-            margin-bottom: 15px;
-        }
-        
-        .feature-card p {
-            color: #666;
-            line-height: 1.6;
-        }
-        
-        /* How It Works */
-        .how-it-works {
-            padding: 80px 20px;
-            background: white;
-        }
-        
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-top: 50px;
-        }
-        
-        .step {
-            text-align: center;
-            position: relative;
-        }
-        
-        .step-number {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #00b4d8 0%, #0096c7 100%);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5em;
-            font-weight: bold;
-            margin: 0 auto 20px;
-            box-shadow: 0 4px 15px rgba(0,180,216,0.3);
-        }
-        
-        .step h3 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-        
-        .step p {
-            color: #666;
-            line-height: 1.6;
-        }
-        
-        /* Languages Section */
-        .languages-section {
-            padding: 80px 20px;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-        }
-        
-        .languages-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            margin-top: 40px;
-        }
-        
-        .language-badge {
-            background: rgba(255,255,255,0.2);
-            padding: 15px 20px;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 1.1em;
-            backdrop-filter: blur(10px);
-        }
-        
-        .language-badge span {
-            white-space: nowrap;
-        }
-        
-        /* CTA Section */
-        .cta-section {
-            padding: 80px 20px;
-            background: #f8f9fa;
-            text-align: center;
-        }
-        
-        .cta-section h2 {
-            font-size: 2.5em;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        
-        .cta-section p {
-            font-size: 1.2em;
-            color: #666;
-            margin-bottom: 40px;
-        }
-        
-        .start-button {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            padding: 20px 50px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.3em;
+
+        .wizard-option {
+            border: 2px solid var(--s200);
+            border-radius: 12px;
+            padding: 16px;
             cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 10px 30px rgba(30,60,114,0.3);
+            text-align: center;
+            font-weight: 700;
+            color: var(--s700);
+            transition: all 0.2s;
         }
-        
-        .start-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(30,60,114,0.4);
+
+        .wizard-option:hover {
+            border-color: var(--g500);
+            background: var(--g50);
+            color: var(--g700);
         }
-        
+
+        .wizard-option.selected {
+            border-color: var(--g600);
+            background: var(--g100);
+            color: var(--g800);
+        }
+
+        .wizard-input,
+        .wizard-select {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 12px;
+            border: 2px solid var(--s200);
+            font-family: 'Mulish', sans-serif;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+            margin-bottom: 24px;
+        }
+
+        .wizard-input:focus,
+        .wizard-select:focus {
+            border-color: var(--g500);
+        }
+
+        .wizard-footer {
+            padding: 24px 32px;
+            border-top: 1px solid var(--s200);
+            display: flex;
+            justify-content: space-between;
+            background: var(--s50);
+        }
+
+        .btn-wizard-back {
+            background: white;
+            border: 1px solid var(--s300);
+            color: var(--s700);
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            display: none;
+        }
+
+        .btn-wizard-next {
+            background: var(--g700);
+            border: none;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        .btn-wizard-next:disabled {
+            background: var(--s300);
+            cursor: not-allowed;
+        }
+
+        .scheme-result-card {
+            border: 1px solid var(--s200);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            background: white;
+            text-align: left;
+        }
+
+        .scheme-result-card h3 {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--g800);
+            margin-bottom: 8px;
+        }
+
+        .scheme-result-card p {
+            font-size: 14px;
+            color: var(--s600);
+            margin-bottom: 16px;
+        }
+
+        .scheme-result-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .scheme-result-tag {
+            background: var(--g50);
+            color: var(--g700);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
         /* Chat Modal */
         .chat-modal {
             display: none;
@@ -332,491 +794,785 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
             z-index: 2000;
-            align-items: center;
+            background: rgba(0, 0, 0, .5);
+            backdrop-filter: blur(5px);
             justify-content: center;
+            align-items: center
         }
-        
+
         .chat-modal.active {
-            display: flex;
+            display: flex
         }
-        
+
         .chat-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 900px;
             width: 90%;
-            max-height: 90vh;
-            overflow: hidden;
+            max-width: 650px;
+            height: 85vh;
+            background: #fff;
+            border-radius: 20px;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .2)
         }
-        
+
         .chat-header {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            padding: 20px 30px;
+            background: linear-gradient(135deg, var(--g700) 0%, var(--g900) 100%);
+            color: #fff;
+            padding: 16px 20px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: center
         }
-        
+
         .chat-header h2 {
+            font-size: 18px;
+            font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px
         }
-        
-        .chat-header svg {
-            width: 28px;
-            height: 28px;
+
+        .chat-header h2 svg {
+            width: 22px;
+            height: 22px
         }
-        
-        .close-button {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2em;
-            transition: background 0.3s;
-        }
-        
-        .close-button:hover {
-            background: rgba(255,255,255,0.3);
-        }
-        
+
         .chat-messages {
             flex: 1;
             overflow-y: auto;
             padding: 20px;
-            background: #f5f5f5;
+            background: var(--s50)
         }
-        
+
         .message {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: flex-start;
+            margin-bottom: 16px;
+            display: flex
         }
-        
+
         .message.user {
-            justify-content: flex-end;
+            justify-content: flex-end
         }
-        
+
         .message-content {
-            max-width: 70%;
-            padding: 12px 18px;
-            border-radius: 18px;
-            word-wrap: break-word;
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.6
         }
-        
+
         .message.assistant .message-content {
-            background: white;
-            color: #333;
-            border: 1px solid #e0e0e0;
+            background: #fff;
+            color: var(--s800);
+            border: 1px solid var(--s200);
+            border-bottom-left-radius: 4px
         }
-        
+
         .message.user .message-content {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
+            background: var(--g700);
+            color: #fff;
+            border-bottom-right-radius: 4px
         }
-        
-        .chat-input-container {
-            padding: 20px;
-            background: white;
-            border-top: 1px solid #e0e0e0;
-            display: flex;
-            gap: 10px;
-        }
-        
-        #messageInput {
-            flex: 1;
-            padding: 12px 18px;
-            border: 2px solid #e0e0e0;
-            border-radius: 25px;
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-        
-        #messageInput:focus {
-            border-color: #1e3c72;
-        }
-        
-        #sendButton {
-            padding: 12px 30px;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        #sendButton:hover {
-            transform: scale(1.05);
-        }
-        
+
         .typing-indicator {
             display: none;
-            padding: 10px;
-            background: white;
-            border-radius: 18px;
-            width: 60px;
-            margin-bottom: 15px;
+            padding: 10px 20px;
+            gap: 6px
         }
-        
+
         .typing-indicator.active {
-            display: block;
+            display: flex
         }
-        
+
         .typing-indicator span {
-            height: 8px;
             width: 8px;
-            background: #1e3c72;
+            height: 8px;
             border-radius: 50%;
-            display: inline-block;
-            margin: 0 2px;
-            animation: typing 1.4s infinite;
+            background: var(--s300);
+            animation: typingBounce 1.4s infinite both
         }
-        
+
         .typing-indicator span:nth-child(2) {
-            animation-delay: 0.2s;
+            animation-delay: .2s
         }
-        
+
         .typing-indicator span:nth-child(3) {
-            animation-delay: 0.4s;
+            animation-delay: .4s
         }
-        
-        @keyframes typing {
-            0%, 60%, 100% {
-                transform: translateY(0);
+
+        @keyframes typingBounce {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(.7);
+                opacity: .5
             }
-            30% {
-                transform: translateY(-10px);
-            }
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+
+            40% {
+                transform: scale(1);
+                opacity: 1
             }
         }
-        
-        /* Footer */
-        footer {
-            background: #333;
-            color: white;
-            padding: 40px 20px;
-            text-align: center;
+
+        .chat-input-container {
+            padding: 12px 16px;
+            border-top: 1px solid var(--s200);
+            background: #fff
         }
-        
-        footer p {
-            margin-bottom: 10px;
+
+        #messageInput {
+            flex: 1;
+            border: 1px solid var(--s200);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-family: 'Mulish', sans-serif;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            width: 100%;
+            transition: border-color .2s
         }
-        
-        @media (max-width: 768px) {
+
+        #messageInput:focus {
+            border-color: var(--g500)
+        }
+
+        #sendButton {
+            background: var(--g700);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-family: 'Mulish', sans-serif;
+            cursor: pointer;
+            transition: all .2s
+        }
+
+        #sendButton:hover {
+            background: var(--g800)
+        }
+
+        #sendButton:disabled {
+            opacity: .5;
+            cursor: not-allowed
+        }
+
+        .close-button {
+            background: rgba(255, 255, 255, .15);
+            border: 1px solid rgba(255, 255, 255, .3);
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all .2s
+        }
+
+        .close-button:hover {
+            background: rgba(255, 255, 255, .25)
+        }
+
+        .stop-speech-btn {
+            display: none;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: #ff5252;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Mulish', sans-serif;
+            margin: 4px auto
+        }
+
+        .voice-wave {
+            display: none;
+            gap: 3px;
+            align-items: center;
+            height: 24px
+        }
+
+        .voice-wave.active {
+            display: flex
+        }
+
+        .voice-wave span {
+            width: 3px;
+            background: #fff;
+            border-radius: 2px;
+            animation: wave 1s ease-in-out infinite
+        }
+
+        .voice-wave span:nth-child(1) {
+            height: 10px;
+            animation-delay: 0s
+        }
+
+        .voice-wave span:nth-child(2) {
+            height: 16px;
+            animation-delay: .1s
+        }
+
+        .voice-wave span:nth-child(3) {
+            height: 22px;
+            animation-delay: .2s
+        }
+
+        .voice-wave span:nth-child(4) {
+            height: 16px;
+            animation-delay: .3s
+        }
+
+        .voice-wave span:nth-child(5) {
+            height: 10px;
+            animation-delay: .4s
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                transform: scaleY(.5)
+            }
+
+            50% {
+                transform: scaleY(1)
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(21, 128, 61, .4)
+            }
+
+            50% {
+                box-shadow: 0 0 0 12px rgba(21, 128, 61, 0)
+            }
+        }
+
+        .pulse {
+            animation: pulse 1.5s infinite
+        }
+
+        .form-download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--g700);
+            color: #fff !important;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 13px;
+            margin-top: 8px;
+            transition: all .2s
+        }
+
+        .form-download-btn:hover {
+            background: var(--g800);
+            transform: translateY(-1px)
+        }
+
+        .form-download-btn svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0
+        }
+
+        .voice-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, .15);
+            border: 1px solid rgba(255, 255, 255, .3);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all .3s;
+            white-space: nowrap;
+            font-family: 'Mulish', sans-serif
+        }
+
+        .voice-toggle:hover {
+            background: rgba(255, 255, 255, .25)
+        }
+
+        .voice-toggle.active {
+            background: rgba(76, 175, 80, .4);
+            border-color: rgba(76, 175, 80, .6)
+        }
+
+        .voice-toggle svg {
+            width: 16px;
+            height: 16px
+        }
+
+        .floating-chat-btn {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 999;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--g700);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 6px 24px rgba(21, 128, 61, .4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .3s;
+            animation: pulse 2s infinite
+        }
+
+        .floating-chat-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 32px rgba(21, 128, 61, .5)
+        }
+
+        .floating-chat-btn svg {
+            width: 28px;
+            height: 28px
+        }
+
+        @media(max-width:768px) {
             .hero h1 {
-                font-size: 2em;
+                font-size: 32px
             }
-            
-            .hero .tagline {
-                font-size: 1.3em;
+
+            .stats-inner {
+                grid-template-columns: repeat(2, 1fr)
             }
-            
-            .nav-links {
-                display: none;
+
+            .features-grid {
+                grid-template-columns: 1fr
+            }
+
+            .steps-row {
+                grid-template-columns: repeat(2, 1fr)
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .header-nav a {
+                display: none
+            }
+
+            .categories-grid {
+                grid-template-columns: repeat(2, 1fr)
             }
         }
     </style>
 </head>
+
 <body>
-    <!-- Navigation -->
-    <nav>
-        <div class="container">
-            <div class="logo">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M12 6v6l4 2"/>
-                </svg>
-                JanSeva AI
+    <header class="site-header" id="siteHeader">
+        <div class="header-inner">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                        style="width:24px;height:24px">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                    </svg>
+                </div>
+                <div class="logo-text">Jan<span>Seva</span> AI</div>
             </div>
-            <div class="nav-links">
-                <a href="#problem">Problem</a>
-                <a href="#features">Features</a>
-                <a href="#how-it-works">How It Works</a>
-                <a href="#languages">Languages</a>
-                <a href="#" class="cta-button" onclick="openChat()">Start Chat</a>
+            <div class="header-nav">
+                <a href="#categories">Schemes</a><a href="#features">Features</a><a href="#how-it-works">How It
+                    Works</a>
+                <select id="siteLanguageSelect" onchange="translateSite()" class="nav-lang-select">
+                    <option value="en">A English</option>
+                    <option value="hi">&#2309; Hindi</option>
+                    <option value="te">&#3077; Telugu</option>
+                    <option value="ta">&#2949; Tamil</option>
+                    <option value="bn">&#2437; Bengali</option>
+                    <option value="mr">&#2309; Marathi</option>
+                </select>
+                <a href="#" class="btn-primary" onclick="openChat(); return false;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        style="width:16px;height:16px">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>Talk to AI
+                </a>
             </div>
         </div>
-    </nav>
-
-    <!-- Hero Section -->
+    </header>
     <section class="hero">
-        <h1>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 60px; height: 60px; display: inline-block; vertical-align: middle; margin-right: 10px;">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M12 6v6l4 2"/>
-            </svg>
-            JanSeva AI
-        </h1>
-        <p class="tagline">Seva Har Samasya Ki</p>
-        <p class="subtitle">Service for Every Problem</p>
-        <p style="font-size: 1.1em; max-width: 800px; margin: 0 auto;">
-            Voice-first, multilingual AI assistant helping Indian citizens discover and access 
-            government welfare schemes in their own language
-        </p>
-        
-        <div class="stats">
-            <div class="stat-item">
-                <span class="stat-number">80 Cr+</span>
-                <span class="stat-label">Citizens Eligible</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">₹1.5L Cr</span>
-                <span class="stat-label">Benefits Unclaimed</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">3000+</span>
-                <span class="stat-label">Govt Schemes</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">22+</span>
-                <span class="stat-label">Languages</span>
+        <div class="hero-inner">
+            <div class="hero-badge">Powered by Google Gemini AI</div>
+            <h1 id="heroTitle">Find <span>Government Schemes</span> You Deserve</h1>
+            <p class="hero-tagline" id="heroTagline">Seva Har Samasya Ki</p>
+            <p class="hero-desc" id="heroDesc">AI-powered assistant that helps Indian citizens discover, check
+                eligibility, and apply for 3,400+ government welfare schemes in their own language.</p>
+            <div class="hero-actions">
+                <button class="btn-hero btn-hero-primary" onclick="openWizard()" id="ctaBtn">Find Schemes For You
+                    &#8594;</button>
+                <button class="btn-hero btn-hero-outline"
+                    onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">Browse
+                    Categories</button>
             </div>
         </div>
     </section>
-
-    <!-- Problem Section -->
-    <section id="problem" class="problem-section">
-        <div class="container">
-            <h2 class="section-title">The Problem We Solve</h2>
-            <p class="section-subtitle">
-                Millions of Indians miss out on welfare benefits they're entitled to
-            </p>
-            
-            <div class="problem-highlight">
-                80 crore Indians miss ₹1.5 lakh crore in entitled welfare benefits annually 
-                due to language barriers, digital illiteracy, and complex government portals
-            </div>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#1e3c72" stroke-width="2">
-                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                            <line x1="12" y1="19" x2="12" y2="23"/>
-                            <line x1="8" y1="23" x2="16" y2="23"/>
-                        </svg>
-                    </div>
-                    <h3>Language Barriers</h3>
-                    <p>Most government portals are in English, but 90% of Indians prefer their native language</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="2">
-                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
-                            <line x1="12" y1="18" x2="12.01" y2="18"/>
-                        </svg>
-                    </div>
-                    <h3>Digital Illiteracy</h3>
-                    <p>Complex forms and navigation make it difficult for rural citizens to apply</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#1e3c72" stroke-width="2">
-                            <circle cx="11" cy="11" r="8"/>
-                            <path d="m21 21-4.35-4.35"/>
-                        </svg>
-                    </div>
-                    <h3>Lack of Awareness</h3>
-                    <p>Citizens don't know which schemes they're eligible for among 3000+ options</p>
-                </div>
+    <div class="stats-bar">
+        <div class="stats-inner">
+            <div class="stat-item"><span class="stat-number">3,400+</span><span class="stat-label"
+                    id="stat1Label">Government Schemes</span></div>
+            <div class="stat-item"><span class="stat-number">19</span><span class="stat-label">Categories</span></div>
+            <div class="stat-item"><span class="stat-number">6+</span><span class="stat-label">Languages
+                    Supported</span></div>
+            <div class="stat-item"><span class="stat-number">100%</span><span class="stat-label">Free to Use</span>
             </div>
         </div>
+    </div>
+    <section id="categories" class="categories-section">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 id="probTitle">Browse Schemes by Category</h2>
+                <p id="probSub">Explore 3,400+ government welfare schemes across 19 categories. Click any category to
+                    chat with our AI about schemes in that area.</p>
+            </div>
+            <div class="categories-grid" id="categoriesGrid"></div>
+        </div>
     </section>
-
-    <!-- Features Section -->
     <section id="features" class="features-section">
-        <div class="container">
-            <h2 class="section-title">Our Solution</h2>
-            <p class="section-subtitle">
-                AI-powered assistance that makes government schemes accessible to everyone
-            </p>
-            
+        <div class="section-container">
+            <div class="section-header">
+                <h2 id="featTitle">Why JanSeva AI?</h2>
+                <p id="featSub">Unlike traditional portals, JanSeva AI talks to you like a friend and does the hard work
+                    for you.</p>
+            </div>
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#1e3c72" stroke-width="2">
-                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                            <line x1="12" y1="19" x2="12" y2="23"/>
-                            <line x1="8" y1="23" x2="16" y2="23"/>
+                    <div class="feature-icon-box" style="background:#fff7ed">
+                        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                            style="width:24px;height:24px;color:#f97316">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
                         </svg>
                     </div>
-                    <h3>Voice-First Interface</h3>
-                    <p>Speak naturally in your language. No typing, no complex navigation. Just talk!</p>
+                    <h3>Conversational AI</h3>
+                    <p>No forms, no menus. Just chat naturally and our AI finds schemes, checks eligibility, and fills
+                        forms for you.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <line x1="2" y1="12" x2="22" y2="12"/>
-                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    <div class="feature-icon-box" style="background:#eff6ff">
+                        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                            style="width:24px;height:24px;color:#3b82f6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
                         </svg>
                     </div>
-                    <h3>22+ Indian Languages</h3>
-                    <p>Hindi, English, Bengali, Telugu, Marathi, Tamil, Gujarati, Kannada, Malayalam, Punjabi, Odia, Urdu, Assamese, and more</p>
+                    <h3>Multilingual Support</h3>
+                    <p>Speak in Hindi, Telugu, Tamil, Bengali, Marathi, or English. Voice input and output in your
+                        language.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#1e3c72" stroke-width="2">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                            <circle cx="9" cy="10" r="1" fill="#1e3c72"/>
-                            <circle cx="12" cy="10" r="1" fill="#1e3c72"/>
-                            <circle cx="15" cy="10" r="1" fill="#1e3c72"/>
+                    <div class="feature-icon-box" style="background:#f0fdf4">
+                        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                            style="width:24px;height:24px;color:#22c55e">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
                         </svg>
                     </div>
-                    <h3>AI-Powered Matching</h3>
-                    <p>Intelligent eligibility checking across 3000+ schemes based on your profile</p>
+                    <h3>Pre-filled Forms</h3>
+                    <p>AI collects your details conversationally and generates ready-to-print application forms with all
+                        your information.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                            <polyline points="14 2 14 8 20 8"/>
-                            <line x1="16" y1="13" x2="8" y2="13"/>
-                            <line x1="16" y1="17" x2="8" y2="17"/>
-                            <polyline points="10 9 9 9 8 9"/>
+                    <div class="feature-icon-box" style="background:#fdf4ff">
+                        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                            style="width:24px;height:24px;color:#d946ef">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zm-7.518-.267A8.25 8.25 0 1120.25 10.5M8.288 14.212A5.25 5.25 0 1117.25 10.55M11.618 12.18A2.25 2.25 0 1115.01 10.5" />
                         </svg>
                     </div>
-                    <h3>Conversational Forms</h3>
-                    <p>Fill complex forms through simple conversation. We ask, you answer!</p>
+                    <h3>Smart Matching</h3>
+                    <p>AI analyzes your profile (age, income, occupation, location) and matches you with all eligible
+                        schemes instantly.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#1e3c72" stroke-width="2">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                            <circle cx="12" cy="10" r="3"/>
+                    <div class="feature-icon-box" style="background:#fefce8">
+                        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                            style="width:24px;height:24px;color:#eab308">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                         </svg>
                     </div>
-                    <h3>Location Services</h3>
-                    <p>Find nearest Common Service Centers and get directions</p>
+                    <h3>Nearest CSC Finder</h3>
+                    <p>Share your pincode and we guide you to the nearest Common Service Center with timings and
+                        directions.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="#00b4d8" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    <div class="feature-icon-box" style="background:#fef2f2">
+                        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                            style="width:24px;height:24px;color:#ef4444">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 12.75L11.25 15 15 9.752M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 4.556 4.03 8.25 9 8.25z" />
                         </svg>
                     </div>
                     <h3>Privacy First</h3>
-                    <p>No data storage. UIDAI compliant. Your information stays private</p>
+                    <p>Your data stays on your device. We never store personal data on our servers. UIDAI compliant.</p>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- How It Works -->
-    <section id="how-it-works" class="how-it-works">
-        <div class="container">
-            <h2 class="section-title">How It Works</h2>
-            <p class="section-subtitle">
-                Simple 4-step process to access your benefits
-            </p>
-            
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <h3>Speak Your Language</h3>
-                    <p>Start a conversation in any of 11 Indian languages. Voice or text, your choice!</p>
+    <section id="how-it-works" class="how-section">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 id="howTitle">How It Works</h2>
+                <p id="howSub">Four simple steps to discover and apply for your entitled government benefits.</p>
+            </div>
+            <div class="steps-row">
+                <div class="step-card">
+                    <div class="step-num">1</div>
+                    <h3>Start a Chat</h3>
+                    <p>Click "Find Schemes For You" and tell us what you need in any language, voice or text.</p>
                 </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <h3>Share Your Details</h3>
-                    <p>Answer simple questions about your age, location, occupation, and income</p>
+                <div class="step-card">
+                    <div class="step-num">2</div>
+                    <h3>Share Your Profile</h3>
+                    <p>Answer a few simple questions about your age, state, occupation, and income.</p>
                 </div>
-                <div class="step">
-                    <div class="step-number">3</div>
+                <div class="step-card">
+                    <div class="step-num">3</div>
                     <h3>Discover Schemes</h3>
-                    <p>AI matches you with eligible schemes and explains benefits in your language</p>
+                    <p>AI matches your profile across 3,400+ schemes and shows you what you are eligible for.</p>
                 </div>
-                <div class="step">
-                    <div class="step-number">4</div>
-                    <h3>Apply Easily</h3>
-                    <p>Fill forms conversationally, get document guidance, and find nearest offices</p>
+                <div class="step-card">
+                    <div class="step-num">4</div>
+                    <h3>Apply with Pre-filled Forms</h3>
+                    <p>Get a ready-to-print form with your details filled in, plus guidance on where to submit.</p>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Languages Section -->
-    <section id="languages" class="languages-section">
-        <div class="container">
-            <h2 class="section-title" style="color: white;">Supported Languages</h2>
-            <p class="section-subtitle" style="color: rgba(255,255,255,0.9);">
-                Speak in your mother tongue. We understand you! Supporting 22+ Indian languages with AI-powered translation.
-            </p>
-            
-            <div class="languages-grid">
-                <div class="language-badge"><span>Hindi</span></div>
-                <div class="language-badge"><span>English</span></div>
-                <div class="language-badge"><span>Bengali</span></div>
-                <div class="language-badge"><span>Telugu</span></div>
-                <div class="language-badge"><span>Marathi</span></div>
-                <div class="language-badge"><span>Tamil</span></div>
-                <div class="language-badge"><span>Gujarati</span></div>
-                <div class="language-badge"><span>Kannada</span></div>
-                <div class="language-badge"><span>Malayalam</span></div>
-                <div class="language-badge"><span>Punjabi</span></div>
-                <div class="language-badge"><span>Odia</span></div>
-                <div class="language-badge"><span>Urdu</span></div>
-                <div class="language-badge"><span>Assamese</span></div>
-                <div class="language-badge"><span>Maithili</span></div>
-                <div class="language-badge"><span>Santali</span></div>
-                <div class="language-badge"><span>Kashmiri</span></div>
-                <div class="language-badge"><span>Nepali</span></div>
-                <div class="language-badge"><span>Sindhi</span></div>
-                <div class="language-badge"><span>Konkani</span></div>
-                <div class="language-badge"><span>Dogri</span></div>
-                <div class="language-badge"><span>Manipuri</span></div>
-                <div class="language-badge"><span>Bodo</span></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
     <section class="cta-section">
-        <div class="container">
-            <h2>Ready to Discover Your Benefits?</h2>
-            <p>Start your journey to accessing government welfare schemes today</p>
-            <button class="start-button" onclick="openChat()">
-                Start Chat Now →
-            </button>
-        </div>
+        <h2 id="ctaTitle">Ready to Discover Your Benefits?</h2>
+        <p id="ctaSub">Millions of Indians miss welfare schemes they are entitled to. Do not be one of them.</p>
+        <button class="btn-cta" onclick="openChat()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>Talk to JanSeva AI Now
+        </button>
     </section>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <p><strong>JanSeva AI</strong> - Seva Har Samasya Ki</p>
-            <p>Empowering 80 crore Indians to access their entitled benefits</p>
-            <p style="margin-top: 20px; opacity: 0.7;">
-                Built for AI for Bharat 2026 Hackathon | Team Vanguard3
-            </p>
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>JanSeva AI</h3>
+                    <p>Seva Har Samasya Ki. Empowering 80 crore Indians to access their entitled government welfare
+                        benefits through AI-powered, multilingual assistance.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4><a href="#categories">Browse Schemes</a><a href="#features">Features</a><a
+                        href="#how-it-works">How It Works</a><a href="#" onclick="openChat(); return false;">Talk to
+                        AI</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4><a href="https://myscheme.gov.in" target="_blank">MyScheme.gov.in</a><a
+                        href="https://pgportal.gov.in" target="_blank">Grievance Portal</a><a
+                        href="https://locator.csccloud.in" target="_blank">Find CSC</a><a
+                        href="https://services.india.gov.in" target="_blank">Services India</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Help</h4><a href="#">CSC: 1800-121-3468</a><a href="#">Privacy Policy</a><a href="#">Terms of
+                        Service</a><a href="#">Contact Us</a>
+                </div>
+            </div>
+            <div class="footer-bottom"><span>Built for AI for Bharat 2026 Hackathon | Team Vanguard3</span><span>Powered
+                    by Google Gemini AI</span></div>
         </div>
     </footer>
+    <button class="floating-chat-btn" onclick="openChat()" title="Talk to JanSeva AI">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+    </button>
+    <script>
+        // Load categories from API and populate the grid
+        fetch('/api/schemes/categories').then(r => r.json()).then(data => {
+            if (!data.success) return;
+            const icons = {
+                Agriculture: '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><path d=\'M12 21A10 10 0 0 0 2 11V3h8a10 10 0 0 0 10 10v8H12z\'/></svg>',
+                Education: '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><path d=\'M12 14l9-5-9-5-9 5 9 5z\'/><path d=\'M12 14v7\'/><path d=\'M5 10.11v5.8c0 2 3.1 3.8 7 3.8s7-1.8 7-3.8v-5.8\' /></svg>',
+                'Social welfare & Empowerment': '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><path d=\'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z\'/></svg>',
+                Health: '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><path d=\'M12 2v20M2 12h20\'/><circle cx=\'12\' cy=\'12\' r=\'10\'/></svg>',
+                'Banking,Financial Services and Insurance': '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><rect x=\'2\' y=\'6\' width=\'20\' height=\'12\' rx=\'2\'/><path d=\'M12 12h.01M17 12h.01M7 12h.01\'/></svg>',
+                'Business & Entrepreneurship': '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><rect x=\'2\' y=\'7\' width=\'20\' height=\'14\' rx=\'2\'/><path d=\'M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2\'/></svg>',
+                'Science, IT & Communications': '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><rect x=\'2\' y=\'3\' width=\'20\' height=\'14\' rx=\'2\'/><path d=\'M8 21h8M12 17v4\'/></svg>',
+                'Skill & Employment': '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' d=\'M12 14l9-5-9-5-9 5 9 5zm0 0v7m-7-5.8v5.8c0 2 3.1 3.8 7 3.8s7-1.8 7-3.8v-5.8\' /></svg>',
+                'Housing & Shelter': '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><path d=\'M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z\'/><path d=\'M9 22V12h6v10\'/></svg>',
+                'Transport & Infrastructure': '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><path d=\'M4 6a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2h-1.5l-2.5 4h-4l-2.5-4H6a2 2 0 01-2-2V6z\'/></svg>',
+                'Sports & Culture': '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><circle cx=\'12\' cy=\'12\' r=\'10\'/><path d=\'M12 2a10 10 0 00-10 10M22 12a10 10 0 00-10 10\'/></svg>',
+                'Utility & Sanitation': '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><path d=\'M12 2A10 10 0 002 12c0 5 10 10 10 10s10-5 10-10A10 10 0 0012 2z\'/></svg>',
+                'Women and Child': '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><circle cx=\'12\' cy=\'5\' r=\'3\'/><path d=\'M12 22V11M8 11h8M7 22h10\'/></svg>',
+                'Travel & Tourism': '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><path d=\'M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z\'/></svg>',
+                'Public Safety,Law & Justice': '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><path d=\'M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z\'/></svg>',
+                'Animal Husbandry': '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><circle cx=\'12\' cy=\'12\' r=\'10\'/><path d=\'M12 8v4l3 3\'/></svg>'
+            };
+            const colors = { Agriculture: '#f0fdf4', Education: '#eff6ff', 'Social welfare & Empowerment': '#fdf4ff', Health: '#fef2f2', 'Banking,Financial Services and Insurance': '#f0fdf4', 'Business & Entrepreneurship': '#fff7ed', 'Science, IT & Communications': '#eff6ff', 'Skill & Employment': '#fefce8', 'Housing & Shelter': '#fdf4ff', 'Transport & Infrastructure': '#f1f5f9', 'Sports & Culture': '#fefce8', 'Utility & Sanitation': '#f0fdf4', 'Women and Child': '#fdf4ff', 'Travel & Tourism': '#eff6ff', 'Public Safety,Law & Justice': '#fef2f2' };
+            const grid = document.getElementById('categoriesGrid');
+            data.data.categories.forEach(cat => {
+                const card = document.createElement('div');
+                card.className = 'category-card';
+                card.onclick = () => { window.location.href = `/search.html?category=${encodeURIComponent(cat.category)}`; };
+                card.innerHTML = '<div class="cat-icon" style="background:' + (colors[cat.category] || '#f1f5f9') + '; color: ' + (colors[cat.category] ? colors[cat.category].replace('fdf4ff', 'd946ef').replace('fff7ed', 'f97316').replace('eff6ff', '3b82f6').replace('f0fdf4', '22c55e').replace('fef2f2', 'ef4444').replace('f1f5f9', '64748b').replace('fefce8', 'eab308') : '#64748b') + ';">' + (icons[cat.category] || '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>') + '</div><h3>' + cat.category + '</h3><div class="cat-count">' + cat.count + ' Schemes</div>';
+                grid.appendChild(card);
+            });
+        }).catch(() => { });
+        // Header scroll shadow
+        window.addEventListener('scroll', () => { document.getElementById('siteHeader').classList.toggle('scrolled', window.scrollY > 10) });
+    </script>
+
+
+    <!-- Wizard Modal -->
+    <div class="wizard-modal" id="wizardModal">
+        <div class="wizard-container">
+            <div class="wizard-header">
+                <h2>Find Schemes</h2>
+                <button class="close-button" onclick="closeWizard()"
+                    style="color: black; border-color: var(--s200); background: var(--s100);">✕</button>
+            </div>
+            <div class="wizard-progress" id="wizardProgress">
+                <div class="wizard-step-dot active"></div>
+                <div class="wizard-step-dot"></div>
+                <div class="wizard-step-dot"></div>
+                <div class="wizard-step-dot"></div>
+                <div class="wizard-step-dot"></div>
+            </div>
+            <div class="wizard-body" id="wizardBody">
+                <!-- Step 1: Basic -->
+                <div class="wizard-step active" id="wizardStep1">
+                    <h3 class="wizard-title">Tell us about yourself</h3>
+                    <p class="wizard-subtitle">This helps us find schemes relevant to your state and age.</p>
+
+                    <label style="font-weight:700; margin-bottom:8px; display:block;">Select State</label>
+                    <select class="wizard-select" id="wizState" onchange="checkStep1()">
+                        <option value="">Select your state...</option>
+                        <option value="Maharashtra">Maharashtra</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                        <option value="Karnataka">Karnataka</option>
+                        <option value="Tamil Nadu">Tamil Nadu</option>
+                        <option value="Gujarat">Gujarat</option>
+                        <option value="West Bengal">West Bengal</option>
+                        <option value="Telangana">Telangana</option>
+                        <option value="Rajasthan">Rajasthan</option>
+                        <option value="Other">Other</option>
+                    </select>
+
+                    <label style="font-weight:700; margin-bottom:8px; display:block;">Age</label>
+                    <input type="number" class="wizard-input" id="wizAge" placeholder="e.g. 25" oninput="checkStep1()">
+                </div>
+
+                <!-- Step 2: Gender & Category -->
+                <div class="wizard-step" id="wizardStep2">
+                    <h3 class="wizard-title">Gender & Category</h3>
+                    <p class="wizard-subtitle">Select your gender and social category to find specific benefits.</p>
+
+                    <label style="font-weight:700; margin-bottom:8px; display:block;">Gender</label>
+                    <div class="wizard-grid">
+                        <div class="wizard-option" onclick="selectOption('gender', this, 'Male')">Male</div>
+                        <div class="wizard-option" onclick="selectOption('gender', this, 'Female')">Female</div>
+                    </div>
+
+                    <label style="font-weight:700; margin-bottom:8px; display:block;">Social Category</label>
+                    <div class="wizard-grid">
+                        <div class="wizard-option" onclick="selectOption('category', this, 'General')">General</div>
+                        <div class="wizard-option" onclick="selectOption('category', this, 'OBC')">OBC</div>
+                        <div class="wizard-option" onclick="selectOption('category', this, 'SC')">SC</div>
+                        <div class="wizard-option" onclick="selectOption('category', this, 'ST')">ST</div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Occupation -->
+                <div class="wizard-step" id="wizardStep3">
+                    <h3 class="wizard-title">Occupation & Education</h3>
+                    <p class="wizard-subtitle">Many schemes are tailored to specific professions or students.</p>
+
+                    <label style="font-weight:700; margin-bottom:8px; display:block;">Current Status</label>
+                    <div class="wizard-grid">
+                        <div class="wizard-option" onclick="selectOption('occupation', this, 'Student')">Student
+                        </div>
+                        <div class="wizard-option" onclick="selectOption('occupation', this, 'Farmer')">Farmer</div>
+                        <div class="wizard-option" onclick="selectOption('occupation', this, 'Unemployed')">
+                            Unemployed</div>
+                        <div class="wizard-option" onclick="selectOption('occupation', this, 'Self-Employed')">
+                            Self-Employed</div>
+                        <div class="wizard-option" onclick="selectOption('occupation', this, 'Govt Employee')">Govt
+                            Employee</div>
+                        <div class="wizard-option" onclick="selectOption('occupation', this, 'Private Sector')">
+                            Private Sector</div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Income -->
+                <div class="wizard-step" id="wizardStep4">
+                    <h3 class="wizard-title">Annual Family Income</h3>
+                    <p class="wizard-subtitle">Income is a key criteria for most financial assistance schemes.</p>
+
+                    <label style="font-weight:700; margin-bottom:8px; display:block;">Approximate Income (₹)</label>
+                    <input type="number" class="wizard-input" id="wizIncome" placeholder="e.g. 250000"
+                        oninput="checkStep4()">
+
+                    <div
+                        style="background: var(--g50); padding: 12px; border-radius: 8px; display: flex; gap: 12px; align-items: flex-start; margin-top: 16px;">
+                        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                            style="width:20px;height:20px;color:#f59e0b;flex-shrink:0">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 18v-5.25m0 0a6.01 6.01 0 001.5-.189m-1.5.189a6.01 6.01 0 01-1.5-.189m3.75 7.478a12.06 12.06 0 01-4.5 0m3.75 2.383a14.406 14.406 0 01-3 0M14.25 18v-.192c0-.983.658-1.82 1.508-2.316a7.5 7.5 0 10-7.516 0c.85.496 1.508 1.333 1.508 2.316V18" />
+                        </svg>
+                        <p style="font-size: 13px; color: var(--g800);">Your data is strictly used for showing
+                            eligibility. We do not store any personal information on our servers.</p>
+                    </div>
+                </div>
+
+                <!-- Step 5: Results -->
+                <div class="wizard-step" id="wizardStep5">
+                    <h3 class="wizard-title">Matching Schemes</h3>
+                    <p class="wizard-subtitle" id="wizResultsSubtitle">Finding best matches for you...</p>
+
+                    <div id="wizResultsContainer">
+                        <div style="text-align: center; padding: 40px;">
+                            <div class="typing-indicator active" style="justify-content: center; margin-bottom: 16px;">
+                                <span></span><span></span><span></span>
+                            </div>
+                            <p style="color: var(--s500); font-weight: 600;">Searching 3,400+ schemes...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="wizard-footer" id="wizardFooter">
+                <button class="btn-wizard-back" id="wizBackBtn" onclick="wizPrevStep()">Back</button>
+                <button class="btn-wizard-next" id="wizNextBtn" onclick="wizNextStep()" disabled>Continue</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Chat Modal -->
     <div class="chat-modal" id="chatModal">
@@ -825,51 +1581,129 @@
                 <div>
                     <h2>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"/>
-                            <path d="M12 6v6l4 2"/>
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 6v6l4 2" />
                         </svg>
                         JanSeva AI Chat
                     </h2>
                     <p style="opacity: 0.9; font-size: 0.9em;">Seva Har Samasya Ki</p>
                 </div>
-                <button class="close-button" onclick="closeChat()">✕</button>
-            </div>
-            
-            <div class="chat-messages" id="chatMessages">
-                <div class="message assistant">
-                    <div class="message-content">
-                        Hello! I'm JanSeva AI, your assistant for government welfare schemes. I can help you:<br><br>
-                        1. Discover schemes you're eligible for<br>
-                        2. Check eligibility<br>
-                        3. Apply for schemes<br>
-                        4. Find nearby offices<br>
-                        5. Get document guidance<br><br>
-                        How can I help you today?
-                    </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <select id="languageSelect" onchange="changeLanguage()"
+                        style="padding: 5px 10px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: white; outline: none; cursor: pointer;">
+                        <option value="en" style="color: black;">English</option>
+                        <option value="hi" style="color: black;">Hindi (हिंदी)</option>
+                        <option value="te" style="color: black;">Telugu (తెలుగు)</option>
+                        <option value="ta" style="color: black;">Tamil (தமிழ்)</option>
+                        <option value="bn" style="color: black;">Bengali (বাংলা)</option>
+                        <option value="mr" style="color: black;">Marathi (मराठी)</option>
+                    </select>
+                    <button id="voiceToggle" class="voice-toggle" onclick="toggleVoiceMode()" title="Toggle voice mode">
+                        <svg id="voiceToggleIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                            <line x1="23" y1="9" x2="17" y2="15" id="voiceMuteLine1"></line>
+                            <line x1="17" y1="9" x2="23" y2="15" id="voiceMuteLine2"></line>
+                        </svg>
+                        <span id="voiceToggleLabel">Voice Off</span>
+                    </button>
+                    <button class="close-button" onclick="closeChat()">✕</button>
                 </div>
             </div>
-            
+
+            <div class="chat-messages" id="chatMessages">
+                <!-- Messages will appear here dynamically -->
+            </div>
+
             <div class="typing-indicator" id="typingIndicator">
                 <span></span>
                 <span></span>
                 <span></span>
             </div>
-            
-            <div class="chat-input-container">
-                <input 
-                    type="text" 
-                    id="messageInput" 
-                    placeholder="Type your message here..."
-                    onkeypress="if(event.key==='Enter') sendMessage()"
-                >
-                <button id="sendButton" onclick="sendMessage()">Send</button>
+
+            <div style="display: flex; justify-content: center;">
+                <button id="stopSpeechBtn" class="stop-speech-btn" onclick="stopAI()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        style="width: 16px; height: 16px;">
+                        <circle cx="12" cy="12" r="10" />
+                        <rect x="9" y="9" width="6" height="6" />
+                    </svg>
+                    Stop Speaking
+                </button>
+            </div>
+
+            <div class="chat-input-container" style="flex-direction: column; gap: 5px;">
+                <div style="display: flex; gap: 10px; width: 100%; align-items: flex-end;">
+                    <textarea id="messageInput" placeholder="Type your message here... (Shift+Enter for new line)"
+                        rows="1"
+                        oninput="this.style.height = ''; this.style.height = (this.scrollHeight < 150 ? this.scrollHeight : 150) + 'px'"
+                        onkeydown="if(event.key==='Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); }"></textarea>
+
+                    <button id="aiButton" onclick="toggleMic()" Title="Voice Input"
+                        style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); padding: 10px; border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); min-width: 48px; min-height: 48px; border: none; cursor: pointer;">
+                        <svg id="micIcon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                            style="width: 24px; height: 24px;">
+                            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                            <line x1="12" y1="19" x2="12" y2="22" />
+                        </svg>
+                        <div id="voiceWave" class="voice-wave">
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                    </button>
+
+                    <button id="sendButton" onclick="sendMessage()">Send</button>
+                </div>
+                <div style="font-size: 11px; color: #888; text-align: center; margin-top: 5px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        style="width: 12px; height: 12px; vertical-align: middle;">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                    Your data is secure and will NOT be used to train AI models.
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         let sessionId = null;
-        
+        let voiceMode = false; // Voice is OFF by default
+        let lastAssistantMessage = ''; // Track last AI message for voice toggle
+
+        // Toggle voice mode on/off
+        function toggleVoiceMode() {
+            voiceMode = !voiceMode;
+            const btn = document.getElementById('voiceToggle');
+            const label = document.getElementById('voiceToggleLabel');
+            const muteLine1 = document.getElementById('voiceMuteLine1');
+            const muteLine2 = document.getElementById('voiceMuteLine2');
+
+            if (voiceMode) {
+                btn.classList.add('active');
+                label.textContent = 'Voice On';
+                // Change icon to speaker with waves
+                document.getElementById('voiceToggleIcon').innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
+                // Read the last assistant message from the start
+                const allMessages = document.querySelectorAll('#chatMessages .message.assistant .message-content');
+                if (allMessages.length > 0) {
+                    const lastMsg = allMessages[allMessages.length - 1].textContent.trim();
+                    const cleaned = lastMsg
+                        .replace(/\[FORM_DOWNLOAD:[^\]]+\]/g, 'Your application form is ready for download.')
+                        .replace(/http:\/\/localhost:3000\/api\/schemes\/form\/print\/[^\s]*/g, '');
+                    speakText(cleaned);
+                }
+            } else {
+                btn.classList.remove('active');
+                label.textContent = 'Voice Off';
+                // Change icon to muted speaker
+                document.getElementById('voiceToggleIcon').innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>';
+                // Stop any ongoing speech
+                if (synthesis) synthesis.cancel();
+                document.getElementById('stopSpeechBtn').style.display = 'none';
+            }
+        }
+
         // Open chat modal
         function openChat() {
             document.getElementById('chatModal').classList.add('active');
@@ -877,56 +1711,86 @@
                 initSession();
             }
         }
-        
-        // Close chat modal
+
+        // Close chat modal and reset session for the next user
         function closeChat() {
             document.getElementById('chatModal').classList.remove('active');
+            resetChatState();
         }
-        
+
+        // Reset chat UI state
+        function resetChatState() {
+            sessionId = null;
+            document.getElementById('chatMessages').innerHTML = '';
+            document.getElementById('messageInput').value = '';
+            document.getElementById('messageInput').style.height = '';
+        }
+
+        // Change language and refresh chat automatically
+        function changeLanguage() {
+            if (document.getElementById('chatModal').classList.contains('active')) {
+                resetChatState();
+                initSession();
+            }
+        }
+
         // Initialize session
         async function initSession() {
             try {
+                const language = document.getElementById('languageSelect').value;
                 const response = await fetch('http://localhost:3000/api/session', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ language: 'en' })
+                    body: JSON.stringify({ language: language })
                 });
                 const data = await response.json();
                 sessionId = data.data.sessionId;
-                console.log('Session created:', sessionId);
+                const greetings = {
+                    'en': "Hello! I'm JanSeva AI, your friendly assistant for government welfare schemes. I have access to over 3,400 government schemes across India.\n\nI can help you discover schemes you're eligible for, fill application forms, find nearby offices, and guide you on required documents.\n\nWhat would you like help with today?",
+                    'hi': "नमस्ते! मैं जनसेवा AI हूँ, सरकारी कल्याणकारी योजनाओं के लिए आपका दोस्ताना सहायक। मेरे पास भारत भर की 3,400 से ज़्यादा सरकारी योजनाओं की जानकारी है।\n\nमैं आपको योजनाएं खोजने, आवेदन फॉर्म भरने, नज़दीकी कार्यालय खोजने और ज़रूरी दस्तावेज़ों की जानकारी देने में मदद कर सकता हूँ।\n\nआज मैं आपकी कैसे मदद कर सकता हूँ?",
+                    'te': "నమస్కారం! నేను జనసేవా AI, ప్రభుత్వ సంక్షేమ పథకాల కోసం మీ స్నేహపూర్వక సహాయకుడిని. భారతదేశంలో 3,400 కంటే ఎక్కువ ప్రభుత్వ పథకాల సమాచారం నా వద్ద ఉంది.\n\nపథకాలు కనుగొనడం, దరఖాస్తు ఫారాలు నింపడం, సమీప కార్యాలయాలు కనుగొనడం మరియు అవసరమైన పత్రాల గురించి మార్గదర్శనం చేయడంలో నేను మీకు సహాయపడగలను.\n\nఈ రోజు మీకు ఎలా సహాయం కావాలి?",
+                    'ta': "வணக்கம்! நான் ஜன்சேவா AI, அரசு நலத்திட்டங்களுக்கான உங்கள் நட்புரீதியான உதவியாளர். இந்தியா முழுவதும் 3,400+ அரசு நலத்திட்டங்கள் பற்றிய தகவல்கள் என்னிடம் உள்ளன.\n\nநலத்திட்டங்களைக் கண்டறிதல், விண்ணப்பப் படிவங்களை நிரப்புதல், அருகிலுள்ள அலுவலகங்களைக் கண்டறிதல் மற்றும் ஆவண வழிகாட்டுதல் ஆகியவற்றில் நான் உங்களுக்கு உதவ முடியும்.\n\nஇன்று உங்களுக்கு எதில் உதவ வேண்டும்?",
+                    'bn': "নমস্কার! আমি জনসেবা AI, সরকারি কল্যাণমূলক প্রকল্পগুলির জন্য আপনার বন্ধুত্বপূর্ণ সহকারী। ভারত জুড়ে ৩,৪০০+ সরকারি প্রকল্পের তথ্য আমার কাছে আছে।\n\nআমি আপনাকে প্রকল্প খুঁজতে, আবেদনপত্র পূরণ করতে, কাছাকাছি অফিস খুঁজতে এবং প্রয়োজনীয় নথিপত্র সম্পর্কে গাইড করতে পারি।\n\nআজ আপনার কীসে সাহায্য দরকার?",
+                    'mr': "नमस्कार! मी जनसेवा AI आहे, सरकारी कल्याण योजनांसाठी तुमचा मैत्रीपूर्ण सहाय्यक. भारतभरातील ३,४००+ सरकारी योजनांची माहिती माझ्याकडे आहे.\n\nयोजना शोधणे, अर्ज फॉर्म भरणे, जवळची कार्यालये शोधणे आणि आवश्यक कागदपत्रांबद्दल मार्गदर्शन करणे यात मी तुमची मदत करू शकतो.\n\nआज मी तुमची कशात मदत करू?"
+                };
+                const greeting = greetings[language] || greetings['en'];
+                addMessage(greeting, 'assistant');
             } catch (error) {
                 console.error('Failed to create session:', error);
             }
         }
-        
+
         // Send message
         async function sendMessage() {
             const input = document.getElementById('messageInput');
             const message = input.value.trim();
-            
+
             if (!message) return;
-            
+
             // Add user message to chat
             addMessage(message, 'user');
             input.value = '';
-            
+            input.style.height = ''; // Reset height
+
             // Show typing indicator
             document.getElementById('typingIndicator').classList.add('active');
             document.getElementById('sendButton').disabled = true;
-            
+            document.getElementById('aiButton').disabled = true;
+
             try {
                 const response = await fetch('http://localhost:3000/api/message', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ sessionId, message })
                 });
-                
+
                 const data = await response.json();
-                
+
                 // Hide typing indicator
                 document.getElementById('typingIndicator').classList.remove('active');
                 document.getElementById('sendButton').disabled = false;
-                
+                document.getElementById('aiButton').disabled = false;
+
                 if (data.success) {
                     addMessage(data.data.message, 'assistant');
                 } else {
@@ -935,25 +1799,230 @@
             } catch (error) {
                 document.getElementById('typingIndicator').classList.remove('active');
                 document.getElementById('sendButton').disabled = false;
+                document.getElementById('aiButton').disabled = false;
                 addMessage('Error connecting to server. Please check if the server is running.', 'assistant');
             }
         }
-        
+
+        // Voice Interaction
+        let recognition = null;
+        let isListening = false;
+        let synthesis = window.speechSynthesis;
+
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+
+            recognition.onstart = () => {
+                isListening = true;
+                const aiBtn = document.getElementById('aiButton');
+                const micIcon = document.getElementById('micIcon');
+                const voiceWave = document.getElementById('voiceWave');
+
+                aiBtn.classList.add('pulse');
+                micIcon.style.display = 'none';
+                voiceWave.classList.add('active');
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('messageInput').value = transcript;
+                sendMessage();
+            };
+
+            recognition.onend = () => {
+                isListening = false;
+                const aiBtn = document.getElementById('aiButton');
+                const micIcon = document.getElementById('micIcon');
+                const voiceWave = document.getElementById('voiceWave');
+
+                aiBtn.classList.remove('pulse');
+                micIcon.style.display = 'block';
+                voiceWave.classList.remove('active');
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                recognition.onend();
+            };
+        }
+
+        function toggleMic() {
+            if (!recognition) {
+                alert("Speech recognition is not supported in your browser.");
+                return;
+            }
+
+            if (isListening) {
+                recognition.stop();
+            } else {
+                // Set language based on selection
+                const lang = document.getElementById('languageSelect').value;
+                const langMap = {
+                    'en': 'en-US',
+                    'hi': 'hi-IN',
+                    'te': 'te-IN',
+                    'ta': 'ta-IN',
+                    'bn': 'bn-IN',
+                    'mr': 'mr-IN'
+                };
+                recognition.lang = langMap[lang] || 'en-US';
+                recognition.start();
+            }
+        }
+
+        function speakText(text) {
+            if (!synthesis) return;
+
+            // Cancel any ongoing speech
+            synthesis.cancel();
+
+            // Strip emojis using regex before speaking
+            const emojiRegex = /[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F1E6}-\u{1F1FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F900}-\u{1F9FF}\u{1F018}-\u{1F093}\u{1F191}-\u{1F251}\u{1F6D0}-\u{1F6D7}\u{1F6E0}-\u{1F6EC}\u{1F6F0}-\u{1F6F3}\u{1F90D}-\u{1F978}\u{1F980}-\u{1F9AB}\u{1F9C0}-\u{1F9CB}\u{1F9D0}-\u{1F9FF}]/gu;
+            let cleanText = text.replace(emojiRegex, '');
+
+            // Clean specific labels
+            cleanText = cleanText.replace(/Type \d+ for/g, '');
+
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            const lang = document.getElementById('languageSelect').value;
+            const langMap = {
+                'en': 'en-US',
+                'hi': 'hi-IN',
+                'te': 'te-IN',
+                'ta': 'ta-IN',
+                'bn': 'bn-IN',
+                'mr': 'mr-IN'
+            };
+            const targetLang = langMap[lang] || 'en-US';
+            utterance.lang = targetLang;
+
+            // Pick the best, most natural-sounding voice available
+            const voices = synthesis.getVoices();
+            if (voices.length > 0) {
+                const langPrefix = targetLang.split('-')[0];
+                // Filter voices matching this language
+                const langVoices = voices.filter(v => v.lang === targetLang || v.lang.startsWith(langPrefix));
+
+                if (langVoices.length > 0) {
+                    // Priority: Google > Microsoft Natural/Neural > any other
+                    // "Natural" and "Neural" voices sound much more human
+                    const preferred = langVoices.find(v =>
+                        v.name.includes('Google') && !v.name.includes('espeak')
+                    ) || langVoices.find(v =>
+                        v.name.includes('Natural') || v.name.includes('Neural')
+                    ) || langVoices.find(v =>
+                        v.name.includes('Microsoft') && !v.name.includes('Mobile')
+                    ) || langVoices.find(v =>
+                        v.name.includes('Female') || v.name.includes('Zira') || v.name.includes('Neerja')
+                    ) || langVoices.find(v => !v.name.includes('espeak')) || langVoices[0];
+
+                    utterance.voice = preferred;
+                    console.log('Selected voice:', preferred.name, preferred.lang);
+                }
+            }
+
+            utterance.rate = 0.95;  // Slightly slower for clarity
+            utterance.pitch = 1.05; // Slightly higher for warmth
+
+            utterance.onstart = () => {
+                document.getElementById('stopSpeechBtn').style.display = 'flex';
+            };
+
+            utterance.onend = () => {
+                document.getElementById('stopSpeechBtn').style.display = 'none';
+            };
+
+            utterance.onerror = (e) => {
+                console.error('Speech error:', e);
+                document.getElementById('stopSpeechBtn').style.display = 'none';
+            };
+
+            synthesis.speak(utterance);
+        }
+
+        function stopAI() {
+            if (synthesis) {
+                synthesis.cancel();
+                document.getElementById('stopSpeechBtn').style.display = 'none';
+            }
+        }
+
+        // Process message text — detect form download markers and URLs
+        function processMessageText(text) {
+            // Replace [FORM_DOWNLOAD:slug:name?params] markers with download buttons
+            let processed = text.replace(/\[FORM_DOWNLOAD:([^\]]+)\]/g, (match, content) => {
+                // Parse: slug:name?params
+                const colonIdx = content.indexOf(':');
+                let slug, nameAndParams;
+                if (colonIdx > -1) {
+                    slug = content.substring(0, colonIdx);
+                    nameAndParams = content.substring(colonIdx + 1);
+                } else {
+                    slug = content;
+                    nameAndParams = 'Application Form';
+                }
+                // Split name and params
+                const qIdx = nameAndParams.indexOf('?');
+                let schemeName, params;
+                if (qIdx > -1) {
+                    schemeName = nameAndParams.substring(0, qIdx);
+                    params = nameAndParams.substring(qIdx);
+                } else {
+                    schemeName = nameAndParams;
+                    params = '';
+                }
+                const formUrl = `/api/schemes/form/print/${slug}${params}`;
+                return `<div style="margin-top: 8px;"><a href="${formUrl}" target="_blank" class="form-download-btn" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Download Filled Form: ${schemeName}</a></div>`;
+            });
+
+            // Also convert any plain http form print URLs into download buttons
+            processed = processed.replace(/(?:Pre-filled Form:\s*)?http:\/\/localhost:3000\/api\/schemes\/form\/print\/([a-zA-Z0-9_-]+)(\?[^\s<]*)?/g, (match, slug, params) => {
+                const formUrl = `/api/schemes/form/print/${slug}${params || ''}`;
+                return `<div style="margin-top: 8px;"><a href="${formUrl}" target="_blank" class="form-download-btn" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Download Application Form</a></div>`;
+            });
+
+            // Convert plain URLs to clickable links
+            processed = processed.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color: #0096c7; text-decoration: underline;">$1</a>');
+
+            // Convert newlines
+            processed = processed.replace(/\n/g, '<br>');
+
+            // Basic markdown bold
+            processed = processed.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+            return processed;
+        }
+
         // Add message to chat
         function addMessage(text, sender) {
             const chatMessages = document.getElementById('chatMessages');
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${sender}`;
-            
+
             const contentDiv = document.createElement('div');
             contentDiv.className = 'message-content';
-            contentDiv.innerHTML = text.replace(/\n/g, '<br>');
-            
+            contentDiv.innerHTML = processMessageText(text);
+
             messageDiv.appendChild(contentDiv);
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Speak out if it's the assistant AND voice mode is on
+            if (sender === 'assistant') {
+                // Always track the last assistant message
+                lastAssistantMessage = text;
+                if (voiceMode) {
+                    // Strip form markers before speaking
+                    const speakableText = text.replace(/\[FORM_DOWNLOAD:[^\]]+\]/g, 'Your application form is ready for download.')
+                        .replace(/http:\/\/localhost:3000\/api\/schemes\/form\/print\/[^\s]*/g, '');
+                    speakText(speakableText);
+                }
+            }
         }
-        
+
         // Smooth scroll for navigation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -965,5 +2034,237 @@
             });
         });
     </script>
+    <script type="text/javascript">
+        function translateSite() {
+            const lang = document.getElementById('siteLanguageSelect').value;
+
+            // Link website language state with the chat language state
+            document.getElementById('languageSelect').value = lang;
+
+            const translations = {
+                'en': {
+                    tagline: 'Seva Har Samasya Ki', subtitle: 'Service for Every Problem', desc: 'Voice-first, multilingual AI assistant helping Indian citizens discover and access government welfare schemes in their own language', stat: 'Citizens Eligible',
+                    probTitle: 'The Problem We Solve', probSub: "Millions of Indians miss out on welfare benefits they're entitled to",
+                    featTitle: 'Our Solution', featSub: 'AI-powered assistance that makes government schemes accessible to everyone',
+                    howTitle: 'How It Works', howSub: 'Simple 4-step process to access your benefits',
+                    ctaTitle: 'Ready to Discover Your Benefits?', ctaSub: 'Start your journey to accessing government welfare schemes today', ctaBtn: 'Start Chat Now →'
+                },
+                'hi': {
+                    tagline: 'सेवा हर समस्या की', subtitle: 'हर समस्या का समाधान', desc: 'भारत के नागरिकों को उनकी अपनी भाषा में सरकारी कल्याणकारी योजनाओं को खोजने और लाभ उठाने में मदद करने वाला बहुभाषी AI सहायक', stat: 'पात्र नागरिक',
+                    probTitle: 'हमारी समस्या का समाधान', probSub: 'लाखों भारतीय कल्याणकारी लाभों से चूक जाते हैं जिनके वे हकदार हैं',
+                    featTitle: 'हमारा समाधान', featSub: 'AI-संचालित सहायता जो सरकारी योजनाओं को सभी के लिए सुलभ बनाती है',
+                    howTitle: 'यह कैसे काम करता है', howSub: 'अपने लाभों तक पहुंचने के लिए सरल 4-चरणीय प्रक्रिया',
+                    ctaTitle: 'क्या आप अपने लाभों की खोज करने के लिए तैयार हैं?', ctaSub: 'आज ही सरकारी कल्याण योजनाओं तक पहुँचने की अपनी यात्रा शुरू करें', ctaBtn: 'अभी चैट शुरू करें →'
+                },
+                'te': {
+                    tagline: 'సేవా హర సమస్యా కీ', subtitle: 'ప్రతి సమస్యకు సేవ', desc: 'భారతీయ పౌరులు తమ సొంత భాషలో ప్రభుత్వ సంక్షేమ పథకాలను కనుగొనడానికి మరియు యాక్సెస్ చేయడానికి సహాయపడే బహుభాషా AI అసిస్టెంట్', stat: 'అర్హులైన పౌరులు',
+                    probTitle: 'మన సమస్యకు పరిష్కారం', probSub: 'లక్షలాది మంది భారతీయులు తాము అర్హులైన సంక్షేమ ప్రయోజనాలను కోల్పోతున్నారు',
+                    featTitle: 'మా పరిష్కారం', featSub: 'ప్రభుత్వ పథకాలను అందరికీ అందుబాటులోకి తెచ్చే AI-ఆధారిత సహాయం',
+                    howTitle: 'ఇది ఎలా పనిచేస్తుంది', howSub: 'మీ ప్రయోజనాలను యాక్సెస్ చేయడానికి సాధారణ 4-దశల ప్రక్రియ',
+                    ctaTitle: 'మీ ప్రయోజనాలను కనుగొనడానికి సిద్ధంగా ఉన్నారా?', ctaSub: 'ప్రభుత్వ సంక్షేమ పథకాలను యాక్సెస్ చేయడానికి మీ ప్రయాణాన్ని ఈరోజే ప్రారంభించండి', ctaBtn: 'చాట్ ప్రారంభించండి →'
+                },
+                'ta': {
+                    tagline: 'சேவா ஹர் சமஸ்யா கி', subtitle: 'ஒவ்வொரு பிரச்சனைக்கும் சேவை', desc: 'இந்திய குடிமக்கள் தங்களது சொந்த மொழியில் அரசு நலத்திட்டங்களை கண்டறிய உதவும் பன்மொழி AI உதவியாளர்', stat: 'தகுதியான குடிமக்கள்',
+                    probTitle: 'பிரச்சனைக்கு தீர்வு', probSub: 'மில்லியன் கணக்கான இந்தியர்கள் தங்களுக்கு உரிமை உள்ள நலத்திட்டங்களை இழக்கின்றனர்',
+                    featTitle: 'எங்கள் தீர்வு', featSub: 'அரசு நலத்திட்டங்களை அனைவருக்கும் அணுகக்கூடியதாக மாற்றுவதற்கான AI உதவியாளர்',
+                    howTitle: 'எப்படி வேலை செய்கிறது', howSub: 'உங்கள் பலன்களை அணுக எளிய 4-படி முறை',
+                    ctaTitle: 'உங்கள் பலன்களை அறிய தயாரா?', ctaSub: 'அரசு நலத்திட்டங்களை அணுக இன்று உங்கள் பயணத்தை தொடங்குங்கள்', ctaBtn: 'சம்பாஷிக்க தொடங்குங்கள் →'
+                },
+                'bn': {
+                    tagline: 'সেবা হর সমস্যা কি', subtitle: 'প্রতিটি সমস্যার জন্য পরিষেবা', desc: 'ভারতীয় নাগরিকদের তাদের নিজস্ব ভাষায় সরকারি কল্যাণমূলক প্রকল্পগুলি আবিষ্কার করতে সাহায্য করার জন্য মাল্টিলিঙ্গুয়াল এআই সহকারী', stat: 'যোগ্য নাগরিক',
+                    probTitle: 'সমস্যা সমাধান', probSub: 'লক্ষ লক্ষ ভারতীয় নিজেদের প্রাপ্য কল্যাণমূলক সুবিধা থেকে বঞ্চিত হচ্ছেন',
+                    featTitle: 'আমাদের সমাধান', featSub: 'AI-চালিত সহায়তা যা সরকারি প্রকল্পগুলিকে সকলের জন্য অ্যাক্সেসযোগ্য করে তোলে',
+                    howTitle: 'কিভাবে কাজ করে', howSub: 'আপনার সুবিধা অ্যাক্সেস করার সহজ 4-পদক্ষেপ প্রক্রিয়া',
+                    ctaTitle: 'আপনার সুবিধা আবিষ্কার করতে প্রস্তুত?', ctaSub: 'সরকারি কল্যাণমূলক প্রকল্পগুলিতে অ্যাক্সেস করার জন্য আজই আপনার যাত্রা শুরু করুন', ctaBtn: 'চ্যাট শুরু করুন →'
+                },
+                'mr': {
+                    tagline: 'सेवा हर समस्या की', subtitle: 'प्रत्येक समस्येसाठी सेवा', desc: 'भारतीय नागरिकांना त्यांच्या स्वतःच्या भाषेत सरकारी कल्याणकारी योजना शोधण्यात मदत करणारा बहुभाषिक एआय सहाय्यक', stat: 'पात्र नागरिक',
+                    probTitle: 'आमची समस्या सोडवणे', probSub: 'लाखो भारतीय ज्या कल्याणकारी लाभांसाठी पात्र आहेत ते गमावत आहेत',
+                    featTitle: 'आमचा उपाय', featSub: 'AI-चालित सहाय्य जे सरकारी योजना प्रत्येकासाठी प्रवेशयोग्य बनवते',
+                    howTitle: 'हे कसे कार्य करते', howSub: 'आपल्या लाभांमध्ये प्रवेश करण्यासाठी सोपी 4-चरण प्रक्रिया',
+                    ctaTitle: 'आपले लाभ शोधण्यासाठी तयार आहात?', ctaSub: 'सरकारी कल्याणकारी योजनांमध्ये प्रवेश करण्यासाठी आजच आपला प्रवास सुरू करा', ctaBtn: 'चॅट सुरू करा →'
+                }
+            };
+
+            const t = translations[lang] || translations['en'];
+            document.getElementById('heroTagline').innerText = t.tagline;
+            document.getElementById('heroSubtitle').innerText = t.subtitle;
+            document.getElementById('heroDesc').innerText = t.desc;
+            document.getElementById('stat1Label').innerText = t.stat;
+
+            document.getElementById('probTitle').innerText = t.probTitle;
+            document.getElementById('probSub').innerText = t.probSub;
+
+            document.getElementById('featTitle').innerText = t.featTitle;
+            document.getElementById('featSub').innerText = t.featSub;
+
+            document.getElementById('howTitle').innerText = t.howTitle;
+            document.getElementById('howSub').innerText = t.howSub;
+
+            document.getElementById('ctaTitle').innerText = t.ctaTitle;
+            document.getElementById('ctaSub').innerText = t.ctaSub;
+            document.getElementById('ctaBtn').innerText = t.ctaBtn;
+        }
+    </script>
+
+    <script>
+        // Wizard Logic
+        let currentStep = 1;
+        const totalSteps = 5;
+        const wizData = { gender: '', category: '', occupation: '' };
+
+        function openWizard() {
+            document.getElementById('wizardModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            currentStep = 1;
+            updateWizardUI();
+        }
+
+        function closeWizard() {
+            document.getElementById('wizardModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function selectOption(key, element, value) {
+            wizData[key] = value;
+            const siblings = element.parentElement.children;
+            for (let el of siblings) el.classList.remove('selected');
+            element.classList.add('selected');
+
+            if (currentStep === 2 && wizData.gender && wizData.category) {
+                document.getElementById('wizNextBtn').disabled = false;
+            }
+            if (currentStep === 3 && wizData.occupation) {
+                document.getElementById('wizNextBtn').disabled = false;
+            }
+        }
+
+        function checkStep1() {
+            const st = document.getElementById('wizState').value;
+            const age = document.getElementById('wizAge').value;
+            document.getElementById('wizNextBtn').disabled = !(st && age);
+        }
+
+        function checkStep4() {
+            const inc = document.getElementById('wizIncome').value;
+            document.getElementById('wizNextBtn').disabled = !inc;
+        }
+
+        function updateWizardUI() {
+            // Update dots
+            const dots = document.getElementById('wizardProgress').children;
+            for (let i = 0; i < dots.length; i++) {
+                dots[i].className = 'wizard-step-dot' + (i < currentStep ? ' active' : '');
+            }
+
+            // Update steps
+            for (let i = 1; i <= totalSteps; i++) {
+                document.getElementById('wizardStep' + i).classList.remove('active');
+            }
+            document.getElementById('wizardStep' + currentStep).classList.add('active');
+
+            // Update footer
+            const backBtn = document.getElementById('wizBackBtn');
+            const nextBtn = document.getElementById('wizNextBtn');
+
+            backBtn.style.display = currentStep > 1 && currentStep < 5 ? 'block' : 'none';
+
+            if (currentStep === 5) {
+                document.getElementById('wizardFooter').style.display = 'none';
+                fetchResults();
+            } else {
+                document.getElementById('wizardFooter').style.display = 'flex';
+                nextBtn.innerText = currentStep === 4 ? 'Submit' : 'Continue';
+
+                // Set disabled based on step requirements
+                if (currentStep === 1) checkStep1();
+                else if (currentStep === 2) nextBtn.disabled = !(wizData.gender && wizData.category);
+                else if (currentStep === 3) nextBtn.disabled = !wizData.occupation;
+                else if (currentStep === 4) checkStep4();
+            }
+        }
+
+        function wizNextStep() {
+            if (currentStep < totalSteps) {
+                currentStep++;
+                updateWizardUI();
+            }
+        }
+
+        function wizPrevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateWizardUI();
+            }
+        }
+
+        function fetchResults() {
+            const userProfile = {
+                state: document.getElementById('wizState').value,
+                age: parseInt(document.getElementById('wizAge').value) || undefined,
+                gender: wizData.gender ? wizData.gender.toLowerCase() : undefined,
+                category: wizData.category ? wizData.category.toLowerCase() : undefined,
+                occupation: wizData.occupation,
+                income: parseInt(document.getElementById('wizIncome').value) || undefined
+            };
+
+            // Use our existing eligibility endpoint!
+            fetch('/api/eligibility/check', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userProfile })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    const container = document.getElementById('wizResultsContainer');
+                    if (!data.success || !data.data.eligibleSchemes || data.data.eligibleSchemes.length === 0) {
+                        container.innerHTML = '<div style="text-align:center; padding: 40px;"><h3 style="color:var(--s900)">No exact matches found</h3><p style="color:var(--s500); margin-top:8px;">Try adjusting your criteria or ask our AI to help you search broadly.</p><button class="btn-primary" style="margin-top:24px;" onclick="closeWizard(); openChat();">Talk to AI</button></div>';
+                        document.getElementById('wizResultsSubtitle').innerText = '0 schemes found';
+                        return;
+                    }
+
+                    const schemes = data.data.eligibleSchemes;
+                    document.getElementById('wizResultsSubtitle').innerText = 'Found ' + schemes.length + ' schemes you might be eligible for';
+
+                    let html = '';
+                    schemes.forEach((sm, idx) => {
+                        const basicTitle = sm.title || sm.schemeName || 'Government Scheme';
+                        const catTitle = sm.category || 'General';
+                        // The backend returns a full string usually for "title" like "[1] Scheme Name"
+                        const cleanTitle = basicTitle.replace(/^\[\d+\]\s*/, '');
+
+                        html += `
+                        <div class="scheme-result-card">
+                            <h3>${cleanTitle}</h3>
+                            <div class="scheme-result-tags">
+                                <span class="scheme-result-tag">${catTitle}</span>
+                            </div>
+                            <p>${(sm.description || sm.reason || 'Click below to learn more about this scheme').substring(0, 150)}...</p>
+                            <button class="btn-primary" onclick="chatAboutScheme('${cleanTitle.replace(/'/g, "\'")}')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                </svg>
+                                Check Full Details via AI
+                            </button>
+                        </div>
+                    `;
+                    });
+                    container.innerHTML = html;
+                })
+                .catch(err => {
+                    document.getElementById('wizResultsContainer').innerHTML = '<div style="text-align:center; padding: 20px; color: red;">Failed to load schemes. Please try chatting directly with the AI.</div>';
+                });
+        }
+
+        function chatAboutScheme(schemeName) {
+            closeWizard();
+            openChat();
+            setTimeout(() => {
+                document.getElementById('messageInput').value = 'Tell me everything about ' + schemeName + ', check my eligibility and give me the application form.';
+                sendMessage();
+            }, 1000);
+        }
+    </script>
 </body>
+
 </html>

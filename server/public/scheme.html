@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JanSeva AI - Scheme Details</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #1e3c72;
+            --secondary: #2a5298;
+            --accent: #f97316;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --bg-body: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --success: #22c55e;
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        /* Site Header */
+        .site-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 1.25rem;
+        }
+
+        .logo-text span {
+            color: var(--accent);
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .header-nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .header-nav a:hover {
+            color: var(--primary);
+        }
+
+        /* Main Container */
+        .scheme-container {
+            max-width: 1280px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        /* Left Navigation */
+        .sticky-nav {
+            position: sticky;
+            top: 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            padding: 1rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+            text-decoration: none;
+            display: block;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            background: #eff6ff;
+            color: var(--primary);
+        }
+
+        /* Main Content Area */
+        .content-area {
+            background: var(--surface);
+            padding: 3rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .breadcrumb {
+            margin-bottom: 2rem;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .breadcrumb a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .scheme-ministry {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .scheme-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+
+        .scheme-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 3rem;
+        }
+
+        .tag {
+            background: white;
+            border: 1px solid var(--success);
+            color: var(--success);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 3rem 0 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .section-title:first-child {
+            margin-top: 0;
+        }
+
+        .content-body {
+            font-size: 1.05rem;
+            color: var(--text-main);
+            line-height: 1.8;
+        }
+
+        .content-body p {
+            margin-bottom: 1rem;
+        }
+
+        .content-body ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .content-body li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Right Sidebar Actions */
+        .action-sidebar {
+            position: sticky;
+            top: 100px;
+        }
+
+        .btn-check {
+            width: 100%;
+            background: var(--success);
+            color: white;
+            padding: 1.25rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 14px 0 rgba(34, 197, 94, 0.39);
+            transition: transform 0.2s;
+            margin-bottom: 1rem;
+        }
+
+        .btn-check:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-ai {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.25rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 14px 0 rgba(30, 60, 114, 0.39);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform 0.2s;
+            margin-bottom: 2rem;
+        }
+
+        .btn-ai:hover {
+            transform: translateY(-2px);
+        }
+
+        .widget-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        .widget-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .share-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .share-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .share-icon:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .loader {
+            text-align: center;
+            padding: 4rem;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        @media(max-width: 1024px) {
+            .scheme-container {
+                grid-template-columns: 1fr 300px;
+            }
+
+            .sticky-nav {
+                display: none;
+            }
+        }
+
+        @media(max-width: 768px) {
+            .scheme-container {
+                grid-template-columns: 1fr;
+            }
+
+            .action-sidebar {
+                position: static;
+                order: -1;
+                margin-bottom: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="/" class="logo-area">
+                <div class="logo-icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                        style="width:24px;height:24px">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                    </svg>
+                </div>
+                <div class="logo-text">Jan<span>Seva</span> AI</div>
+            </a>
+            <div class="header-nav">
+                <a href="/">Home</a>
+                <a href="/search.html">Search Schemes</a>
+            </div>
+        </div>
+    </header>
+
+    <div id="loader" class="loader">Loading scheme details...</div>
+
+    <main class="scheme-container" id="mainContent" style="display: none;">
+
+        <nav class="sticky-nav">
+            <a href="#details" class="nav-item active">Details</a>
+            <a href="#benefits" class="nav-item">Benefits</a>
+            <a href="#eligibility" class="nav-item">Eligibility</a>
+            <a href="#application" class="nav-item">Application Process</a>
+            <a href="#documents" class="nav-item">Documents Required</a>
+        </nav>
+
+        <section class="content-area">
+            <div class="breadcrumb" onclick="window.location.href='/search.html'">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    style="width:16px;height:16px">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+                Back to Search
+            </div>
+
+            <div class="scheme-ministry" id="sMinistry">Ministry Data</div>
+            <h1 class="scheme-title" id="sTitle">Scheme Title Placeholder</h1>
+
+            <div class="scheme-tags" id="sTags">
+                <!-- Tags mapped dynamically -->
+            </div>
+
+            <div class="content-body">
+                <h2 class="section-title" id="details">Details</h2>
+                <div id="cDetails"></div>
+
+                <h2 class="section-title" id="benefits">Benefits</h2>
+                <div id="cBenefits"></div>
+
+                <h2 class="section-title" id="eligibility">Eligibility</h2>
+                <div id="cEligibility"></div>
+
+                <h2 class="section-title" id="application">Application Process</h2>
+                <div id="cApplication"></div>
+
+                <h2 class="section-title" id="documents">Documents Required</h2>
+                <div id="cDocuments"></div>
+            </div>
+        </section>
+
+        <aside class="action-sidebar">
+            <button class="btn-check" onclick="window.location.href='/'">Check Eligibility</button>
+            <button class="btn-ai" onclick="openChatWithContext()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    style="width:20px;height:20px">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+                Chat via JanSeva AI
+            </button>
+
+            <div class="widget-card">
+                <div class="widget-title">News and Updates</div>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">No new news and updates available.</p>
+            </div>
+
+            <div class="widget-card">
+                <div class="widget-title">Share</div>
+                <div class="share-icons">
+                    <div class="share-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
+                            </path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg></div>
+                    <div class="share-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                        </svg></div>
+                    <div class="share-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2">
+                            <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                        </svg></div>
+                </div>
+            </div>
+        </aside>
+
+    </main>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const slug = urlParams.get('slug');
+        let schemeNameForAI = '';
+
+        if (!slug) {
+            document.getElementById('loader').innerText = 'No scheme ID provided.';
+        } else {
+            fetch(`/api/schemes/${slug}`)
+                .then(res => res.json())
+                .then(res => {
+                    if (res.success && res.data) {
+                        const s = res.data;
+                        schemeNameForAI = s.scheme_name;
+
+                        document.getElementById('loader').style.display = 'none';
+                        document.getElementById('mainContent').style.display = 'grid';
+
+                        document.title = `${s.scheme_name} - JanSeva AI`;
+                        document.getElementById('sTitle').innerText = s.scheme_name;
+                        document.getElementById('sMinistry').innerText = s.level === 'State' ? 'State Government' : 'Central Government';
+
+                        document.getElementById('sTags').innerHTML = s.tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+                        document.getElementById('cDetails').innerHTML = `<p>${(s.details || '').replace(/\n/g, '<br>')}</p>`;
+                        document.getElementById('cBenefits').innerHTML = `<p>${(s.benefits || '').replace(/\n/g, '<br>')}</p>`;
+                        document.getElementById('cEligibility').innerHTML = `<p>${(s.eligibility || '').replace(/\n/g, '<br>')}</p>`;
+                        document.getElementById('cApplication').innerHTML = `<p>${(s.application || '').replace(/\n/g, '<br>')}</p>`;
+                        document.getElementById('cDocuments').innerHTML = `<ul>${(s.documentChecklist || []).map(d => `<li>${d}</li>`).join('')}</ul>`;
+                    } else {
+                        document.getElementById('loader').innerText = 'Scheme not found.';
+                    }
+                })
+                .catch(err => {
+                    console.error('Error fetching scheme', err);
+                    document.getElementById('loader').innerText = 'Error loading scheme details.';
+                });
+        }
+
+        function openChatWithContext() {
+            // Store scheme name in sessionStorage to be picked up by index.html Chat logic
+            sessionStorage.setItem('janseva_chat_intent', 'Explain scheme: ' + schemeNameForAI);
+            window.location.href = '/?chat=true';
+        }
+
+        // Active nav switching
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(n => n.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+    </script>
+</body>
+
+</html>

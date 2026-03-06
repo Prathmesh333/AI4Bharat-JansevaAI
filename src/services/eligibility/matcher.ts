@@ -11,9 +11,9 @@ export async function checkEligibility(
   schemes: Scheme[]
 ): Promise<EligibilityResult[]> {
   try {
-    logger.info('Checking eligibility', { 
+    logger.info('Checking eligibility', {
       profileState: userProfile.state,
-      schemesCount: schemes.length 
+      schemesCount: schemes.length
     });
 
     if (!userProfile.age || !userProfile.state) {
@@ -25,27 +25,27 @@ export async function checkEligibility(
       );
     }
 
-    const results: EligibilityResult[] = schemes.map(scheme => 
+    const results: EligibilityResult[] = schemes.map(scheme =>
       evaluateSchemeEligibility(userProfile, scheme)
     );
 
     // Sort by match score (highest first)
     results.sort((a, b) => b.matchScore - a.matchScore);
 
-    logger.info('Eligibility check completed', { 
+    logger.info('Eligibility check completed', {
       totalSchemes: schemes.length,
-      eligibleSchemes: results.filter(r => r.eligible).length 
+      eligibleSchemes: results.filter(r => r.eligible).length
     });
 
     return results;
 
   } catch (error) {
     logger.error('Eligibility check failed', error as Error);
-    
+
     if (error instanceof JanSevaError) {
       throw error;
     }
-    
+
     throw new JanSevaError(
       ErrorCodes.ELIG_SEARCH_FAILED,
       'Failed to check eligibility',
@@ -82,7 +82,7 @@ function evaluateSchemeEligibility(
   // Gender check
   if (criteria.gender && criteria.gender.length > 0) {
     totalCriteria++;
-    if (profile.gender && criteria.gender.includes(profile.gender)) {
+    if (profile.gender && criteria.gender.includes(profile.gender.toLowerCase())) {
       matchScore++;
     } else {
       missingCriteria.push(`Gender must be ${criteria.gender.join(' or ')}`);
@@ -90,9 +90,9 @@ function evaluateSchemeEligibility(
   }
 
   // State check
-  if (criteria.states && criteria.states.length > 0) {
+  if (criteria.states && criteria.states.length > 0 && criteria.states[0] !== '') {
     totalCriteria++;
-    if (profile.state && criteria.states.includes(profile.state)) {
+    if (profile.state && criteria.states.some(s => s.toLowerCase() === profile.state.toLowerCase())) {
       matchScore++;
     } else {
       missingCriteria.push(`Must be resident of ${criteria.states.join(', ')}`);
@@ -100,7 +100,7 @@ function evaluateSchemeEligibility(
   }
 
   // Income check
-  if (criteria.income) {
+  if (criteria.income && (criteria.income.min !== undefined || criteria.income.max !== undefined)) {
     totalCriteria++;
     if (profile.income !== undefined) {
       const incomeMatch = checkIncome(profile.income, criteria.income);
@@ -117,7 +117,7 @@ function evaluateSchemeEligibility(
   // Category check
   if (criteria.category && criteria.category.length > 0) {
     totalCriteria++;
-    if (profile.category && criteria.category.includes(profile.category)) {
+    if (profile.category && criteria.category.some(c => c.toLowerCase() === profile.category?.toLowerCase())) {
       matchScore++;
     } else {
       missingCriteria.push(`Category must be ${criteria.category.join(', ')}`);
@@ -127,35 +127,25 @@ function evaluateSchemeEligibility(
   // Occupation check
   if (criteria.occupation && criteria.occupation.length > 0) {
     totalCriteria++;
-    if (profile.occupation && criteria.occupation.includes(profile.occupation)) {
+    if (profile.occupation && criteria.occupation.some(o => o.toLowerCase() === profile.occupation?.toLowerCase())) {
       matchScore++;
     } else {
       missingCriteria.push(`Occupation must be ${criteria.occupation.join(', ')}`);
     }
   }
 
-  // Land ownership check
-  if (criteria.landOwnership !== undefined) {
-    totalCriteria++;
-    if (profile.landOwnership === criteria.landOwnership) {
-      matchScore++;
-    } else {
-      missingCriteria.push(`Land ownership: ${criteria.landOwnership ? 'required' : 'not allowed'}`);
-    }
+  // If the scheme has literally zero structured criteria defined in the CSV tags (totalCriteria = 0),
+  // we treat it as a broad scheme and give it a base score so it isn't disqualified. 
+  // We'll give it a 0.5 score.
+  let finalScore = 0;
+  if (totalCriteria === 0) {
+    finalScore = 0.5;
+  } else {
+    finalScore = matchScore / totalCriteria;
   }
 
-  // Ration card check
-  if (criteria.rationCard && criteria.rationCard.length > 0) {
-    totalCriteria++;
-    if (profile.rationCard && criteria.rationCard.includes(profile.rationCard)) {
-      matchScore++;
-    } else {
-      missingCriteria.push(`Ration card type must be ${criteria.rationCard.join(', ')}`);
-    }
-  }
-
-  const finalScore = totalCriteria > 0 ? matchScore / totalCriteria : 0;
-  const eligible = finalScore >= 0.7; // 70% match threshold
+  // Lowered threshold from 0.7 to 0.4 to be more lenient with unstructured DB data
+  const eligible = finalScore >= 0.4;
 
   return {
     schemeId: scheme.schemeId,
@@ -185,7 +175,7 @@ export function suggestAlternativeSchemes(
   allSchemes: Scheme[]
 ): EligibilityResult[] {
   // Find schemes with partial match (40-69% match score)
-  const results = allSchemes.map(scheme => 
+  const results = allSchemes.map(scheme =>
     evaluateSchemeEligibility(userProfile, scheme)
   );
 

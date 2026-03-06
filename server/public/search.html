@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JanSeva AI - Find Government Schemes</title>
+    <!-- We will reuse existing index.html styles for the header and typography -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #1e3c72;
+            --secondary: #2a5298;
+            --accent: #f97316;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --bg-body: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --success: #22c55e;
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        /* Site Header - Duplicate from index.html for consistency */
+        .site-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .header-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-weight: 800;
+            font-size: 1.25rem;
+        }
+
+        .logo-text span {
+            color: var(--accent);
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .header-nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .header-nav a:hover {
+            color: var(--primary);
+        }
+
+        /* Main Directory Layout */
+        .directory-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        /* Search Header */
+        .search-hero {
+            grid-column: 1 / -1;
+            margin-bottom: 1rem;
+        }
+
+        .search-bar-wrapper {
+            display: flex;
+            gap: 0;
+            align-items: center;
+            background: var(--surface);
+            border: 2px solid var(--primary);
+            border-radius: var(--radius-sm);
+            padding: 0;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+            outline: none;
+        }
+
+        .search-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+
+        .search-btn:hover {
+            background: var(--secondary);
+        }
+
+        /* Tabs mimicking myscheme */
+        .scheme-tabs {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            padding: 1rem 0;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .tab.active {
+            color: var(--primary);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--success);
+            border-radius: 3px 3px 0 0;
+        }
+
+        /* Results Header */
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .results-count {
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .results-count span {
+            color: var(--text-main);
+            font-size: 1.1rem;
+        }
+
+        /* Sidebar Filters */
+        .sidebar {
+            background: transparent;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .filter-reset {
+            color: var(--success);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .filter-group {
+            border-top: 1px solid var(--border);
+            padding: 1.25rem 0;
+        }
+
+        .filter-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 0.75rem;
+            color: var(--text-main);
+        }
+
+        .filter-label svg {
+            width: 16px;
+            height: 16px;
+            color: var(--success);
+        }
+
+        .filter-select {
+            width: 100%;
+            border: 1px solid var(--border);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            outline: none;
+            background: var(--surface);
+            cursor: pointer;
+        }
+
+        /* Scheme Cards */
+        .scheme-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .scheme-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .scheme-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: #cbd5e1;
+        }
+
+        .scheme-ministry {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .scheme-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .scheme-title:hover {
+            color: var(--primary);
+        }
+
+        .scheme-desc {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .scheme-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tag {
+            background: white;
+            border: 1px solid var(--success);
+            color: var(--success);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Loading State */
+        .loader {
+            display: none;
+            padding: 3rem;
+            text-align: center;
+            color: var(--text-muted);
+            grid-column: 1 / -1;
+        }
+
+        .loader.active {
+            display: block;
+        }
+
+        @media(max-width: 900px) {
+            .directory-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+
+            /* Could add a mobile toggle button */
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="site-header" id="siteHeader">
+        <div class="header-inner">
+            <a href="/" class="logo-area">
+                <div class="logo-icon">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                        style="width:24px;height:24px">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                    </svg>
+                </div>
+                <div class="logo-text">Jan<span>Seva</span> AI</div>
+            </a>
+            <div class="header-nav">
+                <a href="/">Home</a>
+                <a href="/search.html" style="color: var(--primary);">Search Schemes</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="directory-container">
+
+        <div class="search-hero">
+            <form id="searchForm" class="search-bar-wrapper" onsubmit="handleSearch(event)">
+                <input type="text" id="searchInput" class="search-input" placeholder="Enter scheme name to search...">
+                <button type="submit" class="search-btn">
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                        style="width:20px;height:20px">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+        <div class="scheme-tabs">
+            <div class="tab active">All Schemes</div>
+            <div class="tab">State Schemes</div>
+            <div class="tab">Central Schemes</div>
+        </div>
+
+        <aside class="sidebar">
+            <div class="filter-header">
+                <div class="filter-title">Filter By</div>
+                <a href="#" class="filter-reset" onclick="resetFilters()">Reset Filters</a>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-label">State <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M12 5v14m-7-7h14" />
+                    </svg></div>
+                <select class="filter-select" id="stateFilter">
+                    <option value="">Select State</option>
+                    <option value="Maharashtra">Maharashtra</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                    <option value="Karnataka">Karnataka</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-label">Scheme Category <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M12 5v14m-7-7h14" />
+                    </svg></div>
+                <select class="filter-select" id="categoryFilter">
+                    <option value="">Select Category</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-label">Gender <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M12 5v14m-7-7h14" />
+                    </svg></div>
+                <select class="filter-select" id="genderFilter">
+                    <option value="">Select</option>
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                    <option value="Transgender">Transgender</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <div class="filter-label">Caste <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M12 5v14m-7-7h14" />
+                    </svg></div>
+                <select class="filter-select" id="casteFilter">
+                    <option value="">Select</option>
+                    <option value="ST">ST</option>
+                    <option value="SC">SC</option>
+                    <option value="OBC">OBC</option>
+                    <option value="General">General</option>
+                </select>
+            </div>
+
+            <button class="search-btn" style="width:100%; justify-content:center; border-radius:6px; margin-top: 1rem;"
+                onclick="applyFilters()">Apply Filters</button>
+        </aside>
+
+        <section class="results-area">
+            <div class="results-header">
+                <div class="results-count">Total <span id="totalSchemes">0</span> schemes available</div>
+                <select class="filter-select" style="width:auto; border-color:transparent; font-weight:600;">
+                    <option>Sort : Relevance</option>
+                    <option>Sort : Newly Added</option>
+                </select>
+            </div>
+
+            <div id="loader" class="loader">Loading amazing schemes for you...</div>
+
+            <div class="scheme-list" id="schemeList">
+                <!-- Dynamically populated via JS -->
+            </div>
+
+            <div style="text-align:center; padding: 2rem;">
+                <button class="search-btn" id="loadMoreBtn"
+                    style="display:none; margin:0 auto; border-radius:24px; background: white; color: var(--primary); border: 1px solid var(--primary);"
+                    onclick="loadPage(currentPage + 1)">Load More</button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        let currentPage = 1;
+
+        // Load Categories on init
+        fetch('/api/schemes/categories')
+            .then(res => res.json())
+            .then(res => {
+                if (res.success && res.data.categories) {
+                    const sel = document.getElementById('categoryFilter');
+                    res.data.categories.forEach(c => {
+                        sel.add(new Option(c.category, c.category));
+                    });
+                }
+            });
+
+        function renderCard(scheme) {
+            const tagsHtml = (scheme.tags || []).slice(0, 5).map(tag => `<span class="tag">${tag}</span>`).join('');
+
+            return `
+                <div class="scheme-card">
+                    <div class="scheme-ministry">${scheme.level === 'State' ? 'State Government' : 'Central Government'} - ${(scheme.category || 'General Welfare')}</div>
+                    <a href="scheme.html?slug=${scheme.slug}" class="scheme-title">${scheme.scheme_name || scheme.schemeName || 'Government Scheme'}</a>
+                    <p class="scheme-desc">${scheme.excerpt || ''}...</p>
+                    <div class="scheme-tags">
+                        ${tagsHtml}
+                        <span class="tag" style="border-color: var(--primary); color: var(--primary)">Read More →</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadPage(page = 1, searchQuery = '') {
+            document.getElementById('loader').classList.add('active');
+            if (page === 1) document.getElementById('schemeList').innerHTML = '';
+
+            currentPage = page;
+
+            // Hit our default paginated endpoint if no complex search required
+            // Or hit search endpoint
+            const url = searchQuery
+                ? '/api/schemes/search'
+                : `/api/schemes?page=${page}&pageSize=10`;
+
+            fetch(url, {
+                method: searchQuery ? 'POST' : 'GET',
+                headers: searchQuery ? { 'Content-Type': 'application/json' } : undefined,
+                body: searchQuery ? JSON.stringify({ query: searchQuery, limit: 10 }) : undefined
+            })
+                .then(res => res.json())
+                .then(res => {
+                    document.getElementById('loader').classList.remove('active');
+                    if (res.success) {
+                        const list = res.data; // array of schemes
+                        document.getElementById('totalSchemes').textContent = res.total || list.length;
+
+                        if (list.length > 0) {
+                            list.forEach(s => {
+                                document.getElementById('schemeList').insertAdjacentHTML('beforeend', renderCard(s));
+                            });
+                            document.getElementById('loadMoreBtn').style.display = 'block';
+                        } else {
+                            document.getElementById('loadMoreBtn').style.display = 'none';
+                            if (page === 1) document.getElementById('schemeList').innerHTML = '<p>No schemes found.</p>';
+                        }
+                    }
+                })
+                .catch(err => {
+                    document.getElementById('loader').classList.remove('active');
+                    console.error(err);
+                });
+        }
+
+        function handleSearch(e) {
+            e.preventDefault();
+            const q = document.getElementById('searchInput').value;
+            loadPage(1, q);
+        }
+
+        function applyFilters() {
+            // Simplified: In full integration, we would POST all these fields to evaluateEligibilityRAG or advancedSearch
+            const state = document.getElementById('stateFilter').value;
+            const cat = document.getElementById('categoryFilter').value;
+            const query = [state, cat].filter(Boolean).join(' ');
+            loadPage(1, query);
+        }
+
+        function resetFilters() {
+            document.getElementById('stateFilter').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('genderFilter').value = '';
+            document.getElementById('casteFilter').value = '';
+            loadPage(1);
+        }
+
+        // Init load
+        loadPage(1);
+    </script>
+</body>
+
+</html>

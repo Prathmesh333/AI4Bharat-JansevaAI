@@ -1,0 +1,8 @@
+﻿src/handlers/conversation.ts(3,61): error TS2307: Cannot find module 'aws-lambda' or its corresponding type declarations.
+src/handlers/session.ts(3,61): error TS2307: Cannot find module 'aws-lambda' or its corresponding type declarations.
+src/handlers/voice.ts(3,61): error TS2307: Cannot find module 'aws-lambda' or its corresponding type declarations.
+src/services/voice/polly.ts(39,25): error TS2769: No overload matches this call.
+  Overload 2 of 2, '(input: SynthesizeSpeechCommandInput): SynthesizeSpeechCommand', gave the following error.
+    Type 'string' is not assignable to type 'VoiceId | undefined'.
+  Overload 2 of 2, '(input: SynthesizeSpeechCommandInput): SynthesizeSpeechCommand', gave the following error.
+    Type 'string' is not assignable to type 'LanguageCode | undefined'.
