@@ -2372,48 +2372,56 @@
         }
 
         // Process message text — detect form download markers and URLs
+        function safeDecodeURIComponent(value) {
+            try {
+                return decodeURIComponent(value || '');
+            } catch (error) {
+                return value || '';
+            }
+        }
+
+        function buildFormDownloadButton(identifier, params = '', schemeName = '', label = 'Download Application Form') {
+            const normalizedIdentifier = (identifier || '').trim().replace(/^\/+|\/+$/g, '');
+            if (!normalizedIdentifier) {
+                return '';
+            }
+
+            const encodedIdentifier = encodeURIComponent(safeDecodeURIComponent(normalizedIdentifier));
+            const readableName = safeDecodeURIComponent(schemeName).trim();
+            const buttonLabel = readableName ?                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 `Download Filled Form: ${escapeHtml(readableName)}` : label;
+            const formUrl = "/api/schemes/form/print/" + encodedIdentifier + (params || '');
+
+            return                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 `<div style="margin-top: 8px;"><a href="${formUrl}" target="_blank" class="form-download-btn" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>${buttonLabel}</a></div>`;
+        }
+
         function processMessageText(text) {
-            // Replace [FORM_DOWNLOAD:slug:name?params] markers with download buttons
+            const formButtonPlaceholders = [];
+            const stashFormButton = (html) => {
+                const placeholder =                                                                                                                                                                                                                             `__FORM_BUTTON_${formButtonPlaceholders.length}__`;
+                formButtonPlaceholders.push(html);
+                return placeholder;
+            };
+
             let processed = text.replace(/\[FORM_DOWNLOAD:([^\]]+)\]/g, (match, content) => {
-                // Parse: slug:name?params
                 const colonIdx = content.indexOf(':');
-                let slug, nameAndParams;
-                if (colonIdx > -1) {
-                    slug = content.substring(0, colonIdx);
-                    nameAndParams = content.substring(colonIdx + 1);
-                } else {
-                    slug = content;
-                    nameAndParams = 'Application Form';
-                }
-                // Split name and params
+                const schemeIdentifier = colonIdx > -1 ? content.substring(0, colonIdx) : content;
+                const nameAndParams = colonIdx > -1 ? content.substring(colonIdx + 1) : 'Application Form';
                 const qIdx = nameAndParams.indexOf('?');
-                let schemeName, params;
-                if (qIdx > -1) {
-                    schemeName = nameAndParams.substring(0, qIdx);
-                    params = nameAndParams.substring(qIdx);
-                } else {
-                    schemeName = nameAndParams;
-                    params = '';
-                }
-                const formUrl = `/api/schemes/form/print/${slug}${params}`;
-                return `<div style="margin-top: 8px;"><a href="${formUrl}" target="_blank" class="form-download-btn" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Download Filled Form: ${schemeName}</a></div>`;
+                const schemeName = qIdx > -1 ? nameAndParams.substring(0, qIdx) : nameAndParams;
+                const params = qIdx > -1 ? nameAndParams.substring(qIdx) : '';
+                return stashFormButton(buildFormDownloadButton(schemeIdentifier, params, schemeName));
             });
 
-            // Also convert any plain http form print URLs into download buttons
-            processed = processed.replace(/(?:Pre-filled Form:\s*)?(?:https?:\/\/[^\s<]+)?\/api\/schemes\/form\/print\/([a-zA-Z0-9_-]+)(\?[^\s<]*)?/g, (match, slug, params) => {
-                const formUrl = `/api/schemes/form/print/${slug}${params || ''}`;
-                return `<div style="margin-top: 8px;"><a href="${formUrl}" target="_blank" class="form-download-btn" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Download Application Form</a></div>`;
+            processed = processed.replace(/(?:Pre-filled Form:\s*)?(?:https?:\/\/[^\s<]+)?\/api\/schemes\/form\/print\/([^?\s<]+)(\?[^\s<]*)?/g, (match, schemeIdentifier, params) => {
+                return stashFormButton(buildFormDownloadButton(schemeIdentifier, params || ''));
             });
 
-            // Convert plain URLs to clickable links
             processed = processed.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color: #0096c7; text-decoration: underline;">$1</a>');
-
-            // Convert newlines
             processed = processed.replace(/\n/g, '<br>');
-
-            // Basic markdown bold
             processed = processed.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-
+            formButtonPlaceholders.forEach((html, index) => {
+                processed = processed.replace('__FORM_BUTTON_' + index + '__', html);
+            });
             return processed;
         }
 

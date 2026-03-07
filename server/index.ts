@@ -8,7 +8,7 @@ import { extractIntent } from '../src/services/conversation/bedrock';
 import { transitionState, addMessageToContext, getNextState, resetContext } from '../src/services/conversation/stateManager';
 import { checkEligibility } from '../src/services/eligibility/matcher';
 import { searchSchemesPaginated } from '../src/services/schemes/search';
-import { initializeDatabase, getSchemeCount, getAllCategories, getAllCategoriesWithCounts, getSchemeBySlug, searchSchemesByText, searchSchemesByCategory, searchSchemesByLevel, advancedSearch, getAllSchemes } from '../src/services/schemes/schemeDatabase';
+import { initializeDatabase, getSchemeCount, getAllCategories, getAllCategoriesWithCounts, getSchemeBySlug, resolveSchemeByIdentifier, searchSchemesByText, searchSchemesByCategory, searchSchemesByLevel, advancedSearch, getAllSchemes } from '../src/services/schemes/schemeDatabase';
 import { detectLanguage } from '../src/services/voice/transcribe';
 import { findNearestCSC } from '../src/services/location/csc';
 import { getDocumentGuidance } from '../src/services/location/documents';
@@ -18,7 +18,7 @@ import { generatePrintableForm, FormData } from '../src/services/form/pdfGenerat
 import { saveForm, getAllSavedForms, getSavedFormById, deleteSavedForm } from './formStorage';
 
 const app = express();
-const PORT = Number(process.env.PORT || 3000);
+const PORT = Number(process.env.PORT || 8080);
 const STATIC_DIR = path.resolve(__dirname, 'public');
 const rawCorsOrigins = (process.env.CORS_ORIGINS || '')
   .split(',')
@@ -27,17 +27,17 @@ const rawCorsOrigins = (process.env.CORS_ORIGINS || '')
 
 const corsOptions: cors.CorsOptions = rawCorsOrigins.length > 0
   ? {
-      origin: (origin, callback) => {
-        if (!origin || rawCorsOrigins.includes(origin)) {
-          callback(null, true);
-          return;
-        }
-        callback(new Error(`Origin ${origin} is not allowed by CORS`));
-      },
-    }
+    origin: (origin, callback) => {
+      if (!origin || rawCorsOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(new Error(`Origin ${origin} is not allowed by CORS`));
+    },
+  }
   : {
-      origin: true,
-    };
+    origin: true,
+  };
 
 const FORM_FIELD_ALIASES: Record<string, string> = {
   applicant_name: 'full_name',
@@ -98,6 +98,19 @@ function normalizeFormData(rawData: Record<string, unknown> = {}): FormData {
   }
 
   return normalized;
+}
+
+function buildProfileSearchQuery(userProfile: UserProfile = {} as UserProfile): string {
+  return [
+    userProfile.state,
+    userProfile.district,
+    userProfile.occupation,
+    userProfile.category,
+    userProfile.gender,
+  ]
+    .filter(value => typeof value === 'string' && value.trim().length > 0)
+    .join(' ')
+    .trim();
 }
 
 app.use(cors(corsOptions));
@@ -174,7 +187,7 @@ async function startServer() {
   // Chat Message — Now with real scheme context
   // ========================================
   app.post('/api/message', async (req, res) => {
-    const { sessionId, message } = req.body;
+    const { sessionId, message, schemeSlug, schemeName } = req.body;
     const session = sessions.get(sessionId);
 
     if (!session) {
@@ -203,6 +216,21 @@ async function startServer() {
 
       // Search for relevant schemes based on conversation context (RAG)
       let matchedSchemes: any[] = [];
+      const explicitSchemeIdentifier =
+        typeof schemeSlug === 'string' && schemeSlug.trim().length > 0
+          ? schemeSlug.trim()
+          : typeof schemeName === 'string' && schemeName.trim().length > 0
+            ? schemeName.trim()
+            : context.selectedSchemes?.[0];
+      const explicitScheme = explicitSchemeIdentifier
+        ? resolveSchemeByIdentifier(explicitSchemeIdentifier)
+        : null;
+
+      if (explicitScheme) {
+        matchedSchemes.push(explicitScheme);
+        context.selectedSchemes = [explicitScheme.slug || explicitScheme.scheme_name];
+      }
+
       const trimmedMessage = message.trim();
       const isJustNumber = /^\d+$/.test(trimmedMessage);
 
@@ -217,7 +245,16 @@ async function startServer() {
 
       // We search if the combined query is meaningful, or if the user explicitly typed a command that isn't just a navigation number
       if (searchQuery.length > 5) {
-        matchedSchemes = searchSchemesByText(searchQuery, 10);
+        const searchedSchemes = searchSchemesByText(searchQuery, 10);
+        const existingSlugs = new Set(matchedSchemes.map(s => s.slug));
+
+        for (const scheme of searchedSchemes) {
+          if (existingSlugs.has(scheme.slug)) {
+            continue;
+          }
+          matchedSchemes.push(scheme);
+          existingSlugs.add(scheme.slug);
+        }
       }
 
       // Generate AI response using Gemini — now with scheme context
@@ -382,7 +419,7 @@ async function startServer() {
         return;
       }
 
-      const scheme = getSchemeBySlug(slug);
+      const scheme = resolveSchemeByIdentifier(slug);
       if (!scheme) {
         res.status(404).json({
           success: false,
@@ -429,7 +466,7 @@ async function startServer() {
         return;
       }
 
-      const scheme = getSchemeBySlug(slug);
+      const scheme = resolveSchemeByIdentifier(slug);
       if (!scheme) {
         res.status(404).json({
           success: false,
@@ -475,7 +512,7 @@ async function startServer() {
   // ========================================
   app.get('/api/schemes/form/print/:slug', async (req, res) => {
     try {
-      const scheme = getSchemeBySlug(req.params.slug);
+      const scheme = resolveSchemeByIdentifier(req.params.slug);
       if (!scheme) {
         res.status(404).send('Scheme not found');
         return;
@@ -579,7 +616,7 @@ async function startServer() {
       const { userProfile, category, level, slug } = req.body;
 
       // Search for relevant schemes using advanced search
-      // Search for a broad set of schemes so the matcher has enough data
+      // For broad discovery, use profile-based search across the full dataset first.
       let csvSchemes;
       if (slug) {
         const targetedScheme = getSchemeBySlug(slug);
@@ -592,11 +629,31 @@ async function startServer() {
         }
         csvSchemes = [targetedScheme];
       } else {
-        csvSchemes = advancedSearch({
+        const discoveryQuery = buildProfileSearchQuery(userProfile);
+        const rankedResults = await searchSchemesPaginated({
+          text: discoveryQuery,
+          language: Language.ENGLISH,
+          userProfile,
           category,
           level,
-          limit: 40, // Reduced to 40 to prevent Gemini token truncation error
+          page: 1,
+          pageSize: 200,
         });
+
+        csvSchemes = rankedResults.results
+          .map(result => getSchemeBySlug(result.slug))
+          .filter((scheme): scheme is NonNullable<typeof scheme> => Boolean(scheme));
+
+        // Fallback if ranked search returns nothing usable.
+        if (csvSchemes.length === 0) {
+          csvSchemes = advancedSearch({
+            query: discoveryQuery,
+            category,
+            level,
+            tags: userProfile?.occupation ? [userProfile.occupation] : undefined,
+            limit: 200,
+          });
+        }
       }
 
       // Convert to Scheme format for the eligibility matcher
@@ -626,18 +683,28 @@ async function startServer() {
         rawEligibility: s.eligibility, // Required for RAG
       }));
 
-      // Use the RAG AI evaluator instead of the hardcoded logic
-      let results = await evaluateEligibilityRAG(userProfile, schemes as any);
-      if (slug && results.length === 0) {
-        // For single-scheme checks, fall back to the deterministic matcher so the UI still gets a result.
+      let results;
+      if (slug) {
+        // Keep the AI evaluator for single-scheme reviews, but fall back if it returns nothing.
+        results = await evaluateEligibilityRAG(userProfile, schemes as any);
+        if (results.length === 0) {
+          results = await checkEligibility(userProfile, schemes as any);
+        }
+      } else {
         results = await checkEligibility(userProfile, schemes as any);
       }
+
+      const eligibleResults = results
+        .filter(r => r.eligible || r.matchScore >= 0.4)
+        .sort((a, b) => b.matchScore - a.matchScore);
+
+      const limitedEligibleResults = slug ? eligibleResults.slice(0, 5) : eligibleResults.slice(0, 12);
 
       res.json({
         success: true,
         data: {
-          eligibleSchemes: results,
-          ineligibleSchemes: slug ? results.filter(r => !r.eligible) : []
+          eligibleSchemes: limitedEligibleResults,
+          ineligibleSchemes: slug ? results.filter(r => !r.eligible).slice(0, 5) : []
         },
         totalSchemesSearched: csvSchemes.length,
       });
@@ -739,11 +806,11 @@ async function startServer() {
   // ========================================
   // Start server
   // ========================================
-  app.listen(PORT, () => {
-    console.log('\n JanSeva AI - Local Development Server');
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log('\n JanSeva AI - Local Server');
     console.log('Seva Har Samasya Ki (Service for Every Problem)\n');
     console.log('='.repeat(60));
-    console.log(`\n Server running at http://localhost:${PORT}`);
+    console.log(`\n Server running at http://0.0.0.0:${PORT}`);
     console.log(`\n Open http://localhost:${PORT} in your browser`);
     console.log('\n API Endpoints:');
     console.log('  GET  /api/health');

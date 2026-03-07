@@ -150,7 +150,7 @@ function createPDFContent(form: GeneratedForm, template: FormTemplate): string {
   content += `Date: ${new Date(form.createdAt).toLocaleDateString()}\n\n`;
   
   template.fields.forEach(field => {
-    const value = form.fields[field.fieldId] || 'N/A';
+    const value = form.fields[field.fieldId] || '';
     content += `${field.fieldName}: ${value}\n`;
   });
   

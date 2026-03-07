@@ -1,202 +1,89 @@
-# JanSeva AI - Deployment Guide
+# JanSeva AI - AWS Deployment Guide
+
+This guide describes how to deploy the JanSeva AI application to AWS using **AWS App Runner** (for the server) and **AWS CDK** (for infrastructure).
 
 ## Prerequisites
 
-1. **AWS Account** with appropriate permissions
-2. **AWS CLI** installed and configured
-3. **Node.js 18+** installed
-4. **AWS CDK** installed globally
+1. **AWS Account** with administrator access
+2. **AWS CLI** installed and configured (`aws configure`)
+3. **Node.js 22+**
+4. **AWS CDK** installed globally (`npm install -g aws-cdk`)
+5. **Gemini API Key** (from Google AI Studio)
 
-## Step-by-Step Deployment
+## Quick Deployment (Windows/PowerShell)
 
-### 1. Configure AWS Credentials
+We have provided a script to automate the build and deployment process:
 
-```bash
-aws configure
-# Enter your AWS Access Key ID
-# Enter your AWS Secret Access Key
-# Enter your default region (ap-south-1 recommended)
+```powershell
+./deploy-aws.ps1
 ```
 
-### 2. Install Dependencies
+This script will:
+1. Verify your AWS credentials.
+2. Build the TypeScript application and bundle assets into `dist/`.
+3. Deploy the CDK stack which provisions:
+   - **App Runner Service**: Runs the monolithic Express server.
+   - **S3 Bucket**: Stores saved application forms.
+   - **DynamoDB Tables**: Manages user sessions and profiles.
+   - **IAM Roles**: Grants permissions for Bedrock (Gemini), S3, and DynamoDB.
+
+## Manual Steps
+
+### 1. Configure Environment
+
+Ensure your `.env` file has the necessary keys:
+```
+GOOGLE_API_KEY=your_gemini_api_key_here
+AWS_REGION=ap-south-1
+```
+
+### 2. Build the Application
 
 ```bash
 npm install
-```
-
-### 3. Set Environment Variables
-
-Copy `.env.example` to `.env` and update:
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env`:
-```
-AWS_REGION=ap-south-1
-AWS_ACCOUNT_ID=your-account-id-here
-```
-
-### 4. Bootstrap AWS CDK (First Time Only)
-
-```bash
-npx cdk bootstrap aws://YOUR_ACCOUNT_ID/ap-south-1
-```
-
-### 5. Build TypeScript
-
-```bash
 npm run build
 ```
 
-### 6. Deploy Infrastructure
+### 3. Deploy Infrastructure
 
 ```bash
-npm run deploy
+# Bootstrap CDK if it's your first time in this region
+cdk bootstrap
+
+# Deploy the stack
+cdk deploy
 ```
 
-This will create:
-- DynamoDB tables (sessions, user profiles)
-- S3 buckets (scheme documents, forms)
-- API Gateway endpoints
-- Lambda functions (when added)
-- IAM roles and policies
+## Post-Deployment
 
-### 7. Note the Outputs
+After deployment, CDK will output the **AppRunnerUrl**. Open this URL in your browser to access the live application.
 
-After deployment, CDK will output:
-- API Gateway endpoint URL
-- DynamoDB table names
-- S3 bucket names
+### Configure Gemini Access
 
-### 8. Request Bedrock Model Access
-
-1. Go to AWS Console > Bedrock
-2. Navigate to "Model access"
-3. Request access to "Claude 3.5 Sonnet"
-4. Wait for approval (usually instant)
-
-### 9. Test the Deployment
-
-```bash
-# Test API endpoint
-curl https://your-api-gateway-url/dev/health
-
-# Run integration tests
-npm test
-```
-
-## Post-Deployment Configuration
-
-### Upload Scheme Documents
-
-```bash
-# Upload scheme data to S3
-aws s3 cp schemes/ s3://janseva-scheme-docs-YOUR_ACCOUNT/ --recursive
-```
-
-### Configure OpenSearch (Optional)
-
-For production RAG functionality:
-1. Create OpenSearch domain
-2. Update `.env` with OpenSearch endpoint
-3. Run embedding generation script
+App Runner uses the `JanSevaInstanceRole` created by CDK. Ensure your AWS account has access to the models in the **Amazon Bedrock** console (specifically Claude 3.5 Sonnet or the models used by the assistant) if you are using Bedrock. If using Google Generative AI (Gemini), ensure the `GOOGLE_API_KEY` is set in the App Runner environment variables.
 
 ## Monitoring
 
-### CloudWatch Logs
-
-```bash
-# View Lambda logs
-aws logs tail /aws/lambda/janseva-voice-handler --follow
-
-# View API Gateway logs
-aws logs tail /aws/apigateway/janseva-api --follow
-```
-
-### CloudWatch Metrics
-
-Monitor in AWS Console:
-- Lambda invocations
-- API Gateway requests
-- DynamoDB read/write capacity
-- Error rates
-
-## Cost Estimation
-
-### Development (10K users/month)
-- Lambda: ~$50/month
-- DynamoDB: ~$25/month
-- S3: ~$5/month
-- Bedrock: ~$500/month
-- API Gateway: ~$35/month
-- **Total: ~$615/month**
-
-### Production (100K users/month)
-- Lambda: ~$200/month
-- DynamoDB: ~$100/month
-- S3: ~$20/month
-- Bedrock: ~$5,000/month
-- API Gateway: ~$350/month
-- **Total: ~$5,670/month**
+- **Logs**: View application logs in the AWS App Runner console under the "Logs" tab.
+- **Metrics**: Monitor CPU and Memory usage in the "Monitoring" tab.
 
 ## Troubleshooting
 
-### CDK Deploy Fails
+### Build Fails
+Ensure you are using Node.js 22 and that `npm run build` completes without errors locally.
+
+### App Runner Deployment Fails
+Check the "Service logs" in the App Runner console. Common issues include:
+- Incorrect `PORT` (should be 8080).
+- Missing environment variables.
+- Permission issues with the Instance Role.
+
+## Cleanup
+
+To remove all AWS resources and stop incurring costs:
 
 ```bash
-# Check AWS credentials
-aws sts get-caller-identity
-
-# Check CDK version
-cdk --version
-
-# Clean and retry
-rm -rf cdk.out
-npm run deploy
+cdk destroy
 ```
 
-### Bedrock Access Denied
-
-1. Ensure model access is granted in Bedrock console
-2. Check IAM role has bedrock:InvokeModel permission
-3. Verify region supports Bedrock (us-east-1, us-west-2)
-
-### DynamoDB Throttling
-
-Increase provisioned capacity or switch to on-demand billing:
-```bash
-aws dynamodb update-table \
-  --table-name janseva-sessions \
-  --billing-mode PAY_PER_REQUEST
-```
-
-## Rollback
-
-To remove all resources:
-
-```bash
-npm run destroy
-```
-
-⚠️ Warning: This will delete all data!
-
-## Next Steps
-
-1. Deploy infrastructure
-2. Upload scheme documents
-3. Test API endpoints
-4. Configure monitoring
-5. Set up CI/CD pipeline
-6. Enable auto-scaling
-7. Configure backups
-8. Set up alerts
-
-## Support
-
-For deployment issues:
-- Check AWS CloudWatch logs
-- Review CDK deployment output
-- Verify IAM permissions
-- Check service quotas
+⚠️ **Warning**: This will delete the S3 bucket and DynamoDB tables, causing loss of all saved data.

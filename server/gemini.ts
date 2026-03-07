@@ -71,6 +71,7 @@ CONVERSATION FLOW:
    [FORM_DOWNLOAD:{scheme_slug}:{scheme_name}?full_name={value}&father_name={value}&date_of_birth={value}&gender={value}&mobile_number={value}&address={value}&district={value}&state={value}&pincode={value}&aadhaar_number={value}&email={value}&annual_income={value}&caste_category={value}&occupation={value}&education_level={value}&institution_name={value}&course_name={value}&bank_account={value}&ifsc_code={value}&bank_name={value}&spouse_name={value}]
    
    CRITICAL rules for the marker:
+   - The first value after FORM_DOWNLOAD MUST be the exact scheme slug from SYSTEM CONTEXT (for example: astpss). Never put the human-readable scheme name there.
    - Use the EXACT field IDs shown above (full_name, father_name, date_of_birth, mobile_number, aadhaar_number, education_level, etc.)
    - Replace {value} with the actual data the user gave you
    - URL-encode spaces as %20 and special characters
@@ -103,7 +104,7 @@ RULES:
         }
         systemInstruction += '\n';
       });
-      systemInstruction += `\n[Remember: After presenting scheme details, naturally offer to help fill the application form and find the nearest Common Service Center.]\n`;
+      systemInstruction += `\n[Remember: After presenting scheme details, naturally offer to help fill the application form and find the nearest Common Service Center. When generating FORM_DOWNLOAD, the first token must exactly match one of the listed Slug (for form link) values.]\n`;
     }
 
     const model = genAI.getGenerativeModel({

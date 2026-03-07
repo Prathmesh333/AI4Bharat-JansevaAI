@@ -26,6 +26,7 @@
   "author": "Vanguard3",
   "license": "MIT",
   "devDependencies": {
+    "@aws-cdk/aws-apprunner-alpha": "^2.100.0-alpha.0",
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.0",
