@@ -118,5 +118,38 @@ Techstack1.png
 usecase.png
 userflow.png
 
+# Keep logos
+!janseva-logo.png
+!janseva-logo.svg
+
+# Documentation files (internal use only)
+AI4Bharat.txt
+ProblemStatements.txt
+design.md
+requirements.md
+IMPLEMENTATION_PLAN.md
+PITCH_DECK_SCRIPT.md
+PPT_CONTENT.md
+PRESENTATION_CONTENT.md
+PRE_PUSH_CHECKLIST.md
+PROJECT_OVERVIEW.md
+SUBMISSION_FORM_CONTENT.md
+TECHNICAL_ARCHITECTURE.md
+GITHUB_READY.md
+GITHUB_SETUP.md
+QUICK_START.md
+SETUP.md
+
+# Presentation files
+*.pptx
+*.pdf
+Idea*.pptx
+JanSevaAI*.pdf
+JanSevaAI*.pptx
+
+# Deployment files (use CDK instead)
+apprunner.yaml
+Dockerfile
+
 # Kiro specific
 .kiro/
