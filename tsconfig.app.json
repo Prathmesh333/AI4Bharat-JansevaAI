@@ -5,6 +5,7 @@
     "outDir": "dist"
   },
   "include": [
+    "lambda-handler.ts",
     "server/**/*.ts",
     "src/config/**/*.ts",
     "src/types/**/*.ts",

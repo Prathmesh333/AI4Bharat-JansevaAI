@@ -4,11 +4,18 @@ package-lock.json
 
 # Build outputs
 dist/
+dist-lambda/
 build/
 cdk.out/
 *.js.map
 *.d.ts
 !jest.config.js
+!scripts/bundle-lambda.js
+
+# Compiled JavaScript files (TypeScript project)
+*.js
+!jest.config.js
+!scripts/*.js
 
 # Environment variables
 .env
@@ -77,3 +84,39 @@ ENV/
 # Presentation files (keep in repo but ignore large media)
 *.pptx~
 ~$*.pptx
+
+# Temporary/Debug files
+errors.txt
+errors_utf8.txt
+stderr.txt
+stderr_utf8.txt
+response.json
+response_utf8.json
+test_matcher.js
+inject_wizard.js
+archive.zip
+
+# Build directories
+dist-lambda/
+
+# Images (screenshots/diagrams)
+chatconvo.png
+component.png
+docchecklist.png
+flowdiagram.jpg
+formgeneration.png
+highlvlarch.png
+Mobile.png
+photo-portfolio.jpg
+processflow.png
+TECHSTAC_AIML.png
+TECHSTAC.png
+TECHSTAC2.png
+TECHSTAC3.png
+Techstack.png
+Techstack1.png
+usecase.png
+userflow.png
+
+# Kiro specific
+.kiro/

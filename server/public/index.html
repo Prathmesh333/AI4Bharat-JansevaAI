@@ -1738,8 +1738,11 @@
         </svg>
     </button>
     <script>
+        // API Configuration
+        const API_BASE_URL = 'https://zz3f5dt1ee.execute-api.ap-south-2.amazonaws.com/prod';
+        
         // Load categories from API and populate the grid
-        fetch('/api/schemes/categories').then(r => r.json()).then(data => {
+        fetch(`${API_BASE_URL}/api/schemes/categories`).then(r => r.json()).then(data => {
             if (!data.success) return;
             const icons = {
                 Agriculture: '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' style=\'width:24px;height:24px\'><path d=\'M12 21A10 10 0 0 0 2 11V3h8a10 10 0 0 0 10 10v8H12z\'/></svg>',
@@ -2158,7 +2161,7 @@
         async function initSession() {
             try {
                 const language = document.getElementById('languageSelect').value;
-                const response = await fetch('/api/session', {
+                const response = await fetch(`${API_BASE_URL}/api/session`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ language: language })
@@ -2199,7 +2202,7 @@
             document.getElementById('aiButton').disabled = true;
 
             try {
-                const response = await fetch('/api/message', {
+                const response = await fetch(`${API_BASE_URL}/api/message`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ sessionId, message })
@@ -2389,7 +2392,7 @@
             const encodedIdentifier = encodeURIComponent(safeDecodeURIComponent(normalizedIdentifier));
             const readableName = safeDecodeURIComponent(schemeName).trim();
             const buttonLabel = readableName ?                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 `Download Filled Form: ${escapeHtml(readableName)}` : label;
-            const formUrl = "/api/schemes/form/print/" + encodedIdentifier + (params || '');
+            const formUrl = `${API_BASE_URL}/api/schemes/form/print/${encodedIdentifier}${params || ''}`;
 
             return                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 `<div style="margin-top: 8px;"><a href="${formUrl}" target="_blank" class="form-download-btn" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>${buttonLabel}</a></div>`;
         }
@@ -2673,7 +2676,7 @@
             };
 
             // Use our existing eligibility endpoint!
-            fetch('/api/eligibility/check', {
+            fetch(`${API_BASE_URL}/api/eligibility/check`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(getEligibilityRequestPayload(userProfile))
@@ -2937,7 +2940,7 @@
             `;
 
             try {
-                const response = await fetch('/api/location/csc', {
+                const response = await fetch(`${API_BASE_URL}/api/location/csc`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

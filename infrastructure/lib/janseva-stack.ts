@@ -2,10 +2,10 @@ import * as cdk from 'aws-cdk-lib';
 import * as path from 'path';
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb';
 import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import * as iam from 'aws-cdk-lib/aws-iam';
-import * as apprunner from '@aws-cdk/aws-apprunner-alpha';
 import { Construct } from 'constructs';
 
 export class JanSevaStack extends cdk.Stack {
@@ -29,7 +29,29 @@ export class JanSevaStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
-    // S3 Buckets
+    // S3 Bucket for Frontend
+    const websiteBucket = new s3.Bucket(this, 'WebsiteBucket', {
+      bucketName: `janseva-website-${this.account}`,
+      websiteIndexDocument: 'index.html',
+      websiteErrorDocument: 'index.html',
+      publicReadAccess: true,
+      blockPublicAccess: new s3.BlockPublicAccess({
+        blockPublicAcls: false,
+        blockPublicPolicy: false,
+        ignorePublicAcls: false,
+        restrictPublicBuckets: false,
+      }),
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
+    });
+
+    // Deploy frontend files to S3
+    new s3deploy.BucketDeployment(this, 'DeployWebsite', {
+      sources: [s3deploy.Source.asset(path.join(__dirname, '../../server/public'))],
+      destinationBucket: websiteBucket,
+    });
+
+    // S3 Buckets for backend
     const schemeDocsBucket = new s3.Bucket(this, 'SchemeDocsBucket', {
       bucketName: `janseva-scheme-docs-${this.account}`,
       encryption: s3.BucketEncryption.S3_MANAGED,
@@ -51,22 +73,22 @@ export class JanSevaStack extends cdk.Stack {
       ],
     });
 
-    // IAM Role for App Runner / Lambda
-    const instanceRole = new iam.Role(this, 'JanSevaInstanceRole', {
-      assumedBy: new iam.ServicePrincipal('tasks.apprunner.amazonaws.com'),
+    // IAM Role for Lambda
+    const lambdaRole = new iam.Role(this, 'JanSevaLambdaRole', {
+      assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
       managedPolicies: [
         iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole'),
       ],
     });
 
     // Grant permissions
-    sessionTable.grantReadWriteData(instanceRole);
-    userProfileTable.grantReadWriteData(instanceRole);
-    schemeDocsBucket.grantReadWrite(instanceRole);
-    formsBucket.grantReadWrite(instanceRole);
+    sessionTable.grantReadWriteData(lambdaRole);
+    userProfileTable.grantReadWriteData(lambdaRole);
+    schemeDocsBucket.grantReadWrite(lambdaRole);
+    formsBucket.grantReadWrite(lambdaRole);
 
     // Bedrock permissions
-    instanceRole.addToPolicy(new iam.PolicyStatement({
+    lambdaRole.addToPolicy(new iam.PolicyStatement({
       actions: [
         'bedrock:InvokeModel',
         'bedrock:InvokeModelWithResponseStream',
@@ -75,7 +97,7 @@ export class JanSevaStack extends cdk.Stack {
     }));
 
     // Transcribe/Polly/Translate permissions
-    instanceRole.addToPolicy(new iam.PolicyStatement({
+    lambdaRole.addToPolicy(new iam.PolicyStatement({
       actions: [
         'transcribe:*',
         'polly:*',
@@ -84,38 +106,42 @@ export class JanSevaStack extends cdk.Stack {
       resources: ['*'],
     }));
 
-    // App Runner Service (Monolithic)
-    const appService = new apprunner.Service(this, 'JanSevaAppService', {
-      source: apprunner.Source.fromAsset({
-        assetPath: path.resolve(__dirname, '../../'),
-        imageConfiguration: {
-          port: 8080,
-          environmentVariables: {
-            NODE_ENV: 'production',
-            PORT: '8080',
-            FORMS_BUCKET: formsBucket.bucketName,
-            AWS_REGION: this.region,
-          },
-        },
-      }),
-      instanceRole: instanceRole,
+    // Lambda Function with bundled code
+    const apiLambda = new lambda.Function(this, 'JanSevaApiFunction', {
+      runtime: lambda.Runtime.NODEJS_22_X,
+      handler: 'index.handler',
+      code: lambda.Code.fromAsset(path.join(__dirname, '../../dist-lambda')),
+      role: lambdaRole,
+      timeout: cdk.Duration.seconds(30),
+      memorySize: 1024,
+      environment: {
+        NODE_ENV: 'production',
+        FORMS_BUCKET: formsBucket.bucketName,
+        SESSION_TABLE_NAME: sessionTable.tableName,
+        USER_PROFILE_TABLE_NAME: userProfileTable.tableName,
+        GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
+      },
     });
 
-    // API Gateway (Legacy/Optional - App Runner has its own URL)
-    const api = new apigateway.RestApi(this, 'JanSevaAPI', {
-      restApiName: 'JanSeva AI API',
-      description: 'API for JanSeva AI voice assistant',
+    // API Gateway
+    const api = new apigateway.LambdaRestApi(this, 'JanSevaApi', {
+      handler: apiLambda,
+      proxy: true,
+      description: 'JanSeva AI API Gateway',
       deployOptions: {
-        stageName: 'dev',
-        throttlingRateLimit: 100,
-        throttlingBurstLimit: 200,
+        stageName: 'prod',
       },
     });
 
     // Outputs
-    new cdk.CfnOutput(this, 'AppRunnerUrl', {
-      value: appService.serviceUrl,
-      description: 'The URL of the JanSeva AI App Runner service',
+    new cdk.CfnOutput(this, 'WebsiteUrl', {
+      value: websiteBucket.bucketWebsiteUrl,
+      description: 'The URL of the JanSeva AI website',
+    });
+
+    new cdk.CfnOutput(this, 'ApiUrl', {
+      value: api.url,
+      description: 'The URL of the JanSeva AI API',
     });
 
     new cdk.CfnOutput(this, 'FormsBucketName', {

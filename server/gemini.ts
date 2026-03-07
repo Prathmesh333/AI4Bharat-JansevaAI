@@ -108,7 +108,7 @@ RULES:
     }
 
     const model = genAI.getGenerativeModel({
-      model: 'gemini-3.1-flash-lite-preview',
+      model: 'gemini-3-flash-preview',
       systemInstruction: systemInstruction,
     });
 
@@ -150,7 +150,7 @@ export async function generateFormFields(scheme: CsvScheme): Promise<any[] | nul
   if (!genAI) return null;
 
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.1-flash-lite-preview' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' });
 
     const prompt = `Analyze this Indian government scheme and extract the form fields needed for application.
 
@@ -272,7 +272,7 @@ export async function evaluateEligibilityRAG(
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-3.1-flash-lite-preview' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' });
 
     // Format user profile
     const profileText = Object.entries(userProfile)

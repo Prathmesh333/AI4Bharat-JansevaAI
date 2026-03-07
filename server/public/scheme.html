@@ -1482,7 +1482,7 @@
             `);
 
             try {
-                const response = await fetch('/api/eligibility/check', {
+                const response = await fetch(`${API_BASE_URL}/api/eligibility/check`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -1537,10 +1537,13 @@
             });
         }
 
+        // API Configuration
+        const API_BASE_URL = 'https://zz3f5dt1ee.execute-api.ap-south-2.amazonaws.com/prod';
+        
         if (!slug) {
             document.getElementById('loader').innerText = 'No scheme ID provided.';
         } else {
-            fetch(`/api/schemes/${slug}`)
+            fetch(`${API_BASE_URL}/api/schemes/${slug}`)
                 .then(res => res.json())
                 .then(res => {
                     if (res.success && res.data) {
@@ -1860,7 +1863,7 @@
             const encodedIdentifier = encodeURIComponent(safeDecodeURIComponent(normalizedIdentifier));
             const readableName = safeDecodeURIComponent(schemeName).trim();
             const buttonLabel = readableName ? `Download Filled Form: ${escapeHtmlText(readableName)}` : label;
-            const formUrl = "/api/schemes/form/print/" + encodedIdentifier + (params || '');
+            const formUrl = `${API_BASE_URL}/api/schemes/form/print/${encodedIdentifier}${params || ''}`;
 
             return `<a href="${formUrl}" target="_blank" class="form-download-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>${buttonLabel}</a>`;
         }
@@ -1934,7 +1937,7 @@
 
         async function initChatSession() {
             const language = document.getElementById('chatLanguageSelect').value || 'en';
-            const response = await fetch('/api/session', {
+            const response = await fetch(`${API_BASE_URL}/api/session`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ language })
@@ -2036,7 +2039,7 @@
             input.disabled = true;
 
             try {
-                const response = await fetch('/api/message', {
+                const response = await fetch(`${API_BASE_URL}/api/message`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

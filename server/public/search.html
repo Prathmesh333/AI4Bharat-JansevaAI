@@ -600,8 +600,11 @@
             loadPage(1, buildFilterQuery());
         }
 
+        // API Configuration
+        const API_BASE_URL = 'https://zz3f5dt1ee.execute-api.ap-south-2.amazonaws.com/prod';
+
         // Load Categories on init
-        fetch('/api/schemes/categories')
+        fetch(`${API_BASE_URL}/api/schemes/categories`)
             .then(res => res.json())
             .then(res => {
                 if (res.success && res.data.categories) {
@@ -722,7 +725,7 @@
                     return;
                 }
 
-                fetch('/api/schemes/search', {
+                fetch(`${API_BASE_URL}/api/schemes/search`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -752,7 +755,7 @@
                 return;
             }
 
-            const url = `/api/schemes?page=${page}&pageSize=${pageSize}`;
+            const url = `${API_BASE_URL}/api/schemes?page=${page}&pageSize=${pageSize}`;
 
             fetch(url, {
                 method: 'GET'
