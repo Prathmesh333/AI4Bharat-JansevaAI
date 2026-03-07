@@ -16,7 +16,17 @@ import { generatePrintableForm, FormData } from './src/services/form/pdfGenerato
 import { findNearestCSC } from './src/services/location/csc';
 
 const app = express();
-app.use(cors({ origin: true }));
+app.use(cors({
+  origin: [
+    'https://d2xlnq3yj86lrz.cloudfront.net',
+    'http://janseva-website-868784310681.s3-website.ap-south-2.amazonaws.com',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 const sessions = new Map<string, any>();
@@ -152,7 +162,22 @@ app.post('/api/message', async (req, res) => {
   try {
     let context = addMessageToContext(session.context, 'user', message, session.language);
     const intent = extractIntent(message);
-    const matchedSchemes = searchSchemesByText(message, 5);
+    
+    // Better scheme matching - check if message contains scheme name in quotes
+    let matchedSchemes = searchSchemesByText(message, 5);
+    
+    // If message contains "scheme" and quotes, try to extract and search more specifically
+    const schemeNameMatch = message.match(/scheme\s+"([^"]+)"/i) || message.match(/help with\s+(?:the\s+)?(?:scheme\s+)?"([^"]+)"/i);
+    if (schemeNameMatch && schemeNameMatch[1]) {
+      const schemeName = schemeNameMatch[1];
+      console.log(`[DEBUG] Extracted scheme name: "${schemeName}"`);
+      // Search more specifically for this scheme
+      const specificMatches = searchSchemesByText(schemeName, 10);
+      if (specificMatches.length > 0) {
+        matchedSchemes = specificMatches;
+      }
+    }
+    
     console.log(`[DEBUG] Message: "${message}", Matched ${matchedSchemes.length} schemes:`, matchedSchemes.map(s => s.scheme_name));
     const conversationHistory = context.conversationHistory.map((msg: Message) => ({ role: msg.role, content: msg.content }));
     const response = await generateAIResponse(message, conversationHistory, session.language, matchedSchemes);

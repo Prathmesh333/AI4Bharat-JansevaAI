@@ -542,7 +542,7 @@ export function generatePrintableForm(
         <div class="helpline-item">
           <strong>Nearest CSC</strong>
           Find your nearest CSC with JanSeva AI:<br>
-          <a href="http://janseva-website-868784310681.s3-website.ap-south-2.amazonaws.com/?csc=true" style="color: #1565c0;">Open CSC Finder</a>
+          <a href="https://d2xlnq3yj86lrz.cloudfront.net/?csc=true" style="color: #1565c0;">Open CSC Finder</a>
         </div>
       </div>
     </div>

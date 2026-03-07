@@ -6,6 +6,8 @@ import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
 import * as iam from 'aws-cdk-lib/aws-iam';
+import * as cloudfront from 'aws-cdk-lib/aws-cloudfront';
+import * as origins from 'aws-cdk-lib/aws-cloudfront-origins';
 import { Construct } from 'constructs';
 
 export class JanSevaStack extends cdk.Stack {
@@ -32,15 +34,8 @@ export class JanSevaStack extends cdk.Stack {
     // S3 Bucket for Frontend
     const websiteBucket = new s3.Bucket(this, 'WebsiteBucket', {
       bucketName: `janseva-website-${this.account}`,
-      websiteIndexDocument: 'index.html',
-      websiteErrorDocument: 'index.html',
-      publicReadAccess: true,
-      blockPublicAccess: new s3.BlockPublicAccess({
-        blockPublicAcls: false,
-        blockPublicPolicy: false,
-        ignorePublicAcls: false,
-        restrictPublicBuckets: false,
-      }),
+      publicReadAccess: false,
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
     });
@@ -112,7 +107,7 @@ export class JanSevaStack extends cdk.Stack {
       handler: 'index.handler',
       code: lambda.Code.fromAsset(path.join(__dirname, '../../dist-lambda')),
       role: lambdaRole,
-      timeout: cdk.Duration.seconds(30),
+      timeout: cdk.Duration.seconds(120),
       memorySize: 1024,
       environment: {
         NODE_ENV: 'production',
@@ -133,10 +128,41 @@ export class JanSevaStack extends cdk.Stack {
       },
     });
 
+    // CloudFront Distribution for HTTPS
+    const distribution = new cloudfront.Distribution(this, 'WebsiteDistribution', {
+      defaultBehavior: {
+        origin: origins.S3BucketOrigin.withOriginAccessControl(websiteBucket),
+        viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+        allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+        cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
+        cachePolicy: cloudfront.CachePolicy.CACHING_OPTIMIZED,
+      },
+      defaultRootObject: 'index.html',
+      errorResponses: [
+        {
+          httpStatus: 404,
+          responseHttpStatus: 200,
+          responsePagePath: '/index.html',
+          ttl: cdk.Duration.minutes(5),
+        },
+        {
+          httpStatus: 403,
+          responseHttpStatus: 200,
+          responsePagePath: '/index.html',
+          ttl: cdk.Duration.minutes(5),
+        },
+      ],
+    });
+
     // Outputs
     new cdk.CfnOutput(this, 'WebsiteUrl', {
-      value: websiteBucket.bucketWebsiteUrl,
-      description: 'The URL of the JanSeva AI website',
+      value: `https://${distribution.distributionDomainName}`,
+      description: 'The HTTPS URL of the JanSeva AI website (CloudFront)',
+    });
+
+    new cdk.CfnOutput(this, 'CloudFrontDistributionId', {
+      value: distribution.distributionId,
+      description: 'CloudFront Distribution ID',
     });
 
     new cdk.CfnOutput(this, 'ApiUrl', {
