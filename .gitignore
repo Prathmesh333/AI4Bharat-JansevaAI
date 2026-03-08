@@ -139,6 +139,12 @@ GITHUB_READY.md
 GITHUB_SETUP.md
 QUICK_START.md
 SETUP.md
+IMPLEMENTATION_STATUS.md
+TEST_RESULTS.md
+PPT_PROTOTYPE_SUBMISSION.md
+PROTOTYPE_SUBMISSION_PPT.md
+DIAGRAM_PROMPTS.md
+GEMINI_SETUP.md
 
 # Presentation files
 *.pptx
@@ -150,6 +156,10 @@ JanSevaAI*.pptx
 # Deployment files (use CDK instead)
 apprunner.yaml
 Dockerfile
+deploy-aws.ps1
 
 # Kiro specific
 .kiro/
+
+# Demo files
+demo/
