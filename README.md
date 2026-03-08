@@ -10,7 +10,7 @@
 [![AWS](https://img.shields.io/badge/Powered_by-AWS_Bedrock-FF9900?style=flat-square&logo=amazon-aws)](https://aws.amazon.com/bedrock/)
 [![Languages](https://img.shields.io/badge/Languages-10+_Indian-green?style=flat-square)](.)
 
-[Demo Video](#demo) • [Documentation](#documentation) • [Architecture](#architecture) • [Team](#team)
+[Demo Video](#demo) • [Documentation](#documentation) • [Architecture](#architecture) • 
 
 </div>
 
@@ -369,7 +369,7 @@ Prize Pool: ₹40 Lakhs
 
 ## Contact
 
-- **Project Lead**: [Your Name] - [email@example.com](mailto:email@example.com)
+- **Project Lead**: Prathamesh Nikam - prathmeshnikam2208@gmail.com(mailto:prathmeshnikam2208@gmail.com)
 - **GitHub**: [@your-team](https://github.com/your-team)
 - **Hackathon**: [AI for Bharat 2026](https://vision.hack2skill.com/event/ai-for-bharat)
 
