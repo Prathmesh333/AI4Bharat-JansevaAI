@@ -361,16 +361,12 @@ Prize Pool: ₹40 Lakhs
 - Complete: Design Document (Complete architecture with security, scalability, CI/CD)
 - Complete: Implementation Plan (15 tasks with property-based testing)
 - Complete: Technical Architecture (AWS services, data models, API specs)
-- Planned: Demo Video (3-5 minutes)
-- Planned: Working Prototype
-- Planned: Submission Form (To be completed by Jan 25, 2026)
 
 ---
 
 ## Contact
 
 - **Project Lead**: Prathamesh Nikam - prathmeshnikam2208@gmail.com(mailto:prathmeshnikam2208@gmail.com)
-- **GitHub**: [@your-team](https://github.com/your-team)
 - **Hackathon**: [AI for Bharat 2026](https://vision.hack2skill.com/event/ai-for-bharat)
 
 ---
